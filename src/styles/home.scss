@@ -17,58 +17,67 @@ nav {
         font-weight: 600;
         letter-spacing: -0.02em;
         @include text-gradient($text-inverse, $text-muted);
+        z-index: 101; // Keeps logo above mobile menu
     }
 
-    .nav-links {
-        display: flex;
-        gap: 2.5rem;
+    .mobile-toggle {
+        display: none; // Hidden on desktop
+        background: transparent;
+        border: none;
+        color: $text-inverse;
+        font-size: 1.5rem;
+        cursor: pointer;
+        z-index: 101;
+        transition: transform $transition-base;
 
-        a {
-            font-size: $font-size-sm;
-            color: $text-muted;
-            font-weight: 500;
-
-            &:hover,
-            &.active {
-                color: $text-inverse;
-            }
+        &:active {
+            transform: scale(0.9);
         }
     }
 
-    .auth-buttons {
+    .nav-menu {
         display: flex;
-        gap: 1rem;
         align-items: center;
+        gap: 2.5rem;
+        transition: all $transition-smooth;
 
-        .signup {
-            padding: 0.5rem 1.25rem;
-            font-size: $font-size-sm;
-            font-weight: 500;
-            border-radius: $radius-sm;
-            background: $text-inverse;
-            color: $bg-dark;
-            transition: all $transition-base;
+        .nav-links {
+            display: flex;
+            gap: 2.5rem;
 
-            &:hover {
-                background: $text-muted;
-                transform: scale(0.98);
-            }
-
-            &.logout {
-                background: transparent;
+            a {
+                font-size: $font-size-sm;
                 color: $text-muted;
-                border: 1px solid $border-subtle;
+                font-weight: 500;
 
-                &:hover {
+                &:hover,
+                &.active {
                     color: $text-inverse;
-                    border-color: $border-hover;
                 }
             }
         }
-    }
 
-    .mob {
-        display: none;
+        .auth-buttons {
+            display: flex;
+            gap: 1rem;
+            align-items: center;
+
+            .signup {
+                padding: 0.5rem 1.25rem;
+                font-size: $font-size-sm;
+                font-weight: 500;
+                border-radius: $radius-sm;
+                background: $text-inverse;
+                color: $bg-dark;
+                transition: all $transition-base;
+                white-space: nowrap;
+
+                &:hover {
+                    background: $text-muted;
+                    transform: scale(0.98);
+                }
+            }
+        }
     }
 }
 
@@ -82,7 +91,6 @@ nav {
     position: relative;
     overflow: hidden;
 
-    // Glowing grid background
     &::after {
         content: '';
         position: absolute;
@@ -320,6 +328,10 @@ footer {
                 display: flex;
                 gap: 1rem;
                 margin-top: 1rem;
+
+                a {
+                    font-size: 1.2rem;
+                }
             }
         }
     }
@@ -384,15 +396,57 @@ footer {
 
 @media (max-width: 768px) {
     nav {
-        padding: 1rem 2rem;
+        padding: 1rem 1.5rem;
 
-        .nav-links,
-        .auth-buttons:not(.mob) {
-            display: none;
+        .mobile-toggle {
+            display: block;
         }
 
-        .mob {
-            display: flex;
+        .nav-menu {
+            position: absolute;
+            top: 100%;
+            left: 0;
+            width: 100%;
+            flex-direction: column;
+            background: rgba(10, 10, 10, 0.98);
+            backdrop-filter: blur(20px);
+            border-bottom: 1px solid $border-subtle;
+            padding: 2rem;
+            gap: 2rem;
+
+            // Hidden State
+            opacity: 0;
+            visibility: hidden;
+            transform: translateY(-20px);
+
+            // Active State
+            &.active {
+                opacity: 1;
+                visibility: visible;
+                transform: translateY(0);
+            }
+
+            .nav-links {
+                flex-direction: column;
+                width: 100%;
+                text-align: center;
+                gap: 1.5rem;
+
+                a {
+                    font-size: 1rem;
+                }
+            }
+
+            .auth-buttons {
+                width: 100%;
+                justify-content: center;
+
+                .signup {
+                    width: 100%;
+                    text-align: center;
+                    padding: 0.75rem;
+                }
+            }
         }
     }
 
