@@ -14,10 +14,6 @@ function Home() {
     const [activeSection, setActiveSection] = useState("home");
     const [isUserAuthenticated, setIsUserAuthenticated] = useState(false);
 
-    useEffect(() => {
-        setIsUserAuthenticated(isAuthenticated());
-    }, []);
-
     const handleLogout = () => {
         logout(toast);
         setIsUserAuthenticated(false);
@@ -38,12 +34,11 @@ function Home() {
 
     useEffect(() => {
         const sections = document.querySelectorAll("section");
-
         const observer = new IntersectionObserver(
             (entries) => {
                 entries.forEach((entry) => {
                     if (entry.isIntersecting) {
-                        setActiveSection(entry.target.id);
+                        setActiveSection(entry.target.id || 'home');
                     }
                 });
             },
@@ -53,6 +48,7 @@ function Home() {
         );
 
         sections.forEach((section) => observer.observe(section));
+        setIsUserAuthenticated(isAuthenticated());
 
         return () => observer.disconnect();
     }, []);
