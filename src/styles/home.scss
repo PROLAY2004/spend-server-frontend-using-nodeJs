@@ -230,12 +230,12 @@ nav {
 // Footer
 footer {
     border-top: 1px solid $border-subtle;
-    padding: 4rem 4rem 2rem;
+    padding: 4rem 2rem 2rem;
     background: $bg-dark;
 
     .footer-content {
         max-width: 1200px;
-        grid-template-columns: 2fr 1fr 1fr;
+        grid-template-columns: 1fr 1fr;
         gap: clamp(2rem, 5vw, 4rem);
 
         .footer-logo {

@@ -44,7 +44,7 @@ function Home() {
 
             <main>
                 <section id="home" className="hero d-flex align-items-center justify-content-center flex-column text-center position-relative overflow-hidden">
-                    <span className="pill text-uppercase mb-3 fw-semibold py-2 px-3 d-inline-block">Finance Made Simple</span>
+                    <span className="pill text-uppercase mb-4 fw-semibold py-2 px-3 d-inline-block">Finance Made Simple</span>
                     <h1 className='fw-bold'>Master your money.<br />Pixel by pixel.</h1>
                     <p className='fw-normal mb-5'>Effortlessly record your daily expenses, manage lend/borrow entries, and generate professional invoices — built with clean design and performance in mind.</p>
                     <Link className="cta-button px-4 py-3 fw-semibold btn" to="/dashboard">Go to Dashboard</Link>
@@ -93,25 +93,26 @@ function Home() {
             </main>
 
             <footer>
-                <div className="footer-content d-grid my-0 mx-auto mb-5">
+                <div className="footer-content d-grid my-0 mx-auto mb-4">
                     <div className="footer-logo">
                         <a href="#" className="logo">Spend Server.</a>
                         <p>A precision-crafted financial tracker enabling you to take full control of your expenses, lending, and invoicing within a highly secure, intuitive ecosystem.</p>
                     </div>
-                    <div className="link-group">
-                        <h4>Platform</h4>
-                        <a href="#home">Home</a>
-                        <a href="#about">About</a>
-                    </div>
-                    <div className="link-group">
-                        <h4>Connect</h4>
-                        <a href="mailto:SpendServer@gmail.com">Email</a>
-                        <a href="#contact">Contact</a>
+                    <div className="d-flex gap-5">
+                        <div className="link-group w-100">
+                            <h4>Platform</h4>
+                            <a href="#home">Home</a>
+                            <a href="#about">About</a>
+                        </div>
+                        <div className="link-group w-100">
+                            <h4>Connect</h4>
+                            <a href="mailto:SpendServer@gmail.com">Email</a>
+                            <a href="#contact">Contact</a>
+                        </div>
                     </div>
                 </div>
                 <div className="footer-bottom d-flex justify-content-between align-items-center">
                     <p>&copy; 2026 Spend Server. All rights reserved.</p>
-                    <p>Designed with precision.</p>
                 </div>
             </footer>
         </>
