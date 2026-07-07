@@ -1,18 +1,5 @@
 @import './variables';
 
-// Mixins
-@mixin flex-center {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
-
-@mixin flex-between {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-}
-
 @mixin text-gradient($color1, $color2) {
     background: linear-gradient(135deg, $color1 0%, $color2 100%);
     -webkit-background-clip: text;
@@ -60,21 +47,6 @@ body {
     -moz-osx-font-smoothing: grayscale;
     overflow-x: hidden;
     position: relative;
-
-    // Subtle background mesh/glow
-    &::before {
-        content: '';
-        position: fixed;
-        top: 0;
-        left: 0;
-        width: 100vw;
-        height: 100vh;
-        background:
-            radial-gradient(circle at 50% 0%, $primary-glow 0%, transparent 50%),
-            radial-gradient(circle at 100% 100%, rgba(255, 255, 255, 0.02) 0%, transparent 30%);
-        z-index: -1;
-        pointer-events: none;
-    }
 }
 
 a {
