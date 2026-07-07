@@ -1,19 +1,61 @@
-import { useState } from 'react';
-import {Link} from 'react-router-dom';
+import { useEffect, useState } from "react";
+import { Link, useNavigate } from 'react-router-dom';
+import { toast } from 'react-toastify';
+
+import isAuthenticated from '../../utils/checkAuth.js';
+import logout from '../../utils/logout.js';
 import '../../styles/home.scss';
 
 function Home() {
+    const navigate = useNavigate();
+
     // State to handle mobile menu toggle
     const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+    const [activeSection, setActiveSection] = useState("home");
+    const [isUserAuthenticated, setIsUserAuthenticated] = useState(false);
 
-    const toggleMenu = () => {
-        setIsMobileMenuOpen(!isMobileMenuOpen);
-    };
+    useEffect(() => {
+        setIsUserAuthenticated(isAuthenticated());
+    }, []);
 
-    // Close menu when a link is clicked
-    const closeMenu = () => {
+    const handleLogout = () => {
+        logout(toast);
+        setIsUserAuthenticated(false);
+    }
+
+    const scrollToSection = (id) => {
+        const section = document.getElementById(id);
+
+        if (section) {
+            section.scrollIntoView({
+                behavior: "smooth",
+                block: "start",
+            });
+        }
+
         setIsMobileMenuOpen(false);
     };
+
+    useEffect(() => {
+        const sections = document.querySelectorAll("section");
+
+        const observer = new IntersectionObserver(
+            (entries) => {
+                entries.forEach((entry) => {
+                    if (entry.isIntersecting) {
+                        setActiveSection(entry.target.id);
+                    }
+                });
+            },
+            {
+                threshold: 0.6,
+            }
+        );
+
+        sections.forEach((section) => observer.observe(section));
+
+        return () => observer.disconnect();
+    }, []);
 
     return (
         <>
@@ -23,7 +65,7 @@ function Home() {
                 {/* Mobile Hamburger Toggle */}
                 <button
                     className="mobile-toggle d-block d-md-none bg-transparent border-0 cursor-pointer"
-                    onClick={toggleMenu}
+                    onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
                     aria-label="Toggle navigation"
                 >
                     <i className={`bi ${isMobileMenuOpen ? 'bi-x-lg' : 'bi-list'}`}></i>
@@ -32,12 +74,32 @@ function Home() {
                 {/* Nav Menu Wrapper */}
                 <div className={`nav-menu ${isMobileMenuOpen ? 'active' : ''}`}>
                     <div className="nav-links d-flex gap-4">
-                        <a href="#home" className="nav-link active" onClick={closeMenu}>Home</a>
-                        <a href="#about" className="nav-link" onClick={closeMenu}>Features</a>
-                        <a href="#contact" className="nav-link" onClick={closeMenu}>Contact</a>
+                        <button
+                            className={`nav-link ${activeSection === "home" ? "active" : ""}`}
+                            onClick={() => scrollToSection("home")}
+                        >
+                            Home
+                        </button>
+
+                        <button
+                            className={`nav-link ${activeSection === "about" ? "active" : ""}`}
+                            onClick={() => scrollToSection("about")}
+                        >
+                            Features
+                        </button>
+                        <button
+                            className={`nav-link ${activeSection === "contact" ? "active" : ""}`}
+                            onClick={() => scrollToSection("contact")}
+                        >
+                            Contact
+                        </button>
                     </div>
                     <div className="auth-buttons d-flex gap-3 align-items-center">
-                        <Link className="signup btn fw-semibold" to="/Auth/Login/">Sign In</Link>
+                        {isUserAuthenticated ? (
+                            <button className="signup btn fw-semibold" onClick={handleLogout}>Logout</button>
+                        ) : (
+                            <Link className="signup btn fw-semibold" to="/login">Sign In</Link>
+                        )}
                     </div>
                 </div>
             </nav>
@@ -47,7 +109,15 @@ function Home() {
                     <span className="pill text-uppercase mb-4 fw-semibold py-2 px-3 d-inline-block">Finance Made Simple</span>
                     <h1 className='fw-bold'>Master your money.<br />Pixel by pixel.</h1>
                     <p className='fw-normal mb-5'>Effortlessly record your daily expenses, manage lend/borrow entries, and generate professional invoices — built with clean design and performance in mind.</p>
-                    <Link className="cta-button px-4 py-3 fw-semibold btn" to="/dashboard">Go to Dashboard</Link>
+                    {isUserAuthenticated ? (
+                        <Link className="cta-button px-4 py-3 fw-semibold btn" to="/dashboard">
+                            Go to Dashboard
+                        </Link>
+                    ) : (
+                        <Link className="cta-button px-4 py-3 fw-semibold btn" to="/login">
+                            Get Started for Free
+                        </Link>
+                    )}
                 </section>
 
                 <section id="about" className="section my-0 mx-auto">
