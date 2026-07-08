@@ -3,6 +3,8 @@ import { Link } from 'react-router-dom';
 
 import isAuthenticated from '../../utils/checkAuth.js';
 import Navbar from '../../components/common/Navbar.jsx';
+import Footer from '../../components/common/Footer.jsx';
+import Contact from './Contact.jsx';
 
 import '../../styles/home.scss';
 
@@ -95,63 +97,10 @@ function Home() {
                     </div>
                 </section>
 
-                <section id="contact" className="section my-0 mx-auto pt-0">
-                    <h2>Get in touch.</h2>
-                    <p className='mb-4'>Questions about the platform or need to report an issue? Drop us a line.</p>
-
-                    <form className="contact-form py-5 px-4 p-sm-5">
-                        <div className="form-group">
-                            <input type="text" name="Name" placeholder="Full Name" required />
-                        </div>
-                        <div className="form-group">
-                            <input type="email" name="Email" placeholder="Email Address" required />
-                        </div>
-                        <div className="form-group">
-                            <textarea placeholder="How can we help?" name="Msg" required></textarea>
-                        </div>
-                        <button type="submit" className="cta-button"> <i className="bi bi-send"></i> Send Message </button>
-                    </form>
-                </section>
+                <Contact />
             </main>
 
-            <footer>
-                <div className="footer-content d-grid my-0 mx-auto mb-4">
-                    <div className="footer-logo">
-                        <a href="#" className="logo">Spend Server.</a>
-                        <p>A precision-crafted financial tracker enabling you to take full control of your expenses, lending, and invoicing within a highly secure, intuitive ecosystem.</p>
-                    </div>
-                    <div className="d-flex gap-5">
-                        <div className="link-group w-100">
-                            <h4>Platform</h4>
-                            <button
-                                className="bg-transparent border-0  text-decoration-none cursor-pointer"
-                                onClick={() => scrollToSection("home")}
-                            >
-                                Home
-                            </button>
-                            <button
-                                className="bg-transparent border-0  text-decoration-none cursor-pointer"
-                                onClick={() => scrollToSection("about")}
-                            >
-                                About
-                            </button>
-                        </div>
-                        <div className="link-group w-100">
-                            <h4>Connect</h4>
-                            <a href="mailto:SpendServer@gmail.com">Email</a>
-                            <button
-                                className="bg-transparent border-0  text-decoration-none cursor-pointer"
-                                onClick={() => scrollToSection("contact")}
-                            >
-                                Contact
-                            </button>
-                        </div>
-                    </div>
-                </div>
-                <div className="footer-bottom d-flex justify-content-between align-items-center">
-                    <p>&copy; 2026 Spend Server. All rights reserved.</p>
-                </div>
-            </footer>
+            <Footer scrollToSection={scrollToSection} />
         </>
     );
 }

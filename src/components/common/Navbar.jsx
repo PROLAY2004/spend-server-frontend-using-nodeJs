@@ -4,7 +4,7 @@ import { toast } from 'react-toastify';
 
 import logout from '../../utils/logout.js';
 
-function Nav({ isUserAuthenticated, setIsUserAuthenticated, activeSection, isMobileMenuOpen, setIsMobileMenuOpen, scrollToSection }) {
+function Nav({ isAuthenticated, setIsUserAuthenticated, activeSection, isMobileMenuOpen, setIsMobileMenuOpen, scrollToSection }) {
         const handleLogout = () => {
         logout(toast);
         setIsUserAuthenticated(false);
@@ -47,7 +47,7 @@ function Nav({ isUserAuthenticated, setIsUserAuthenticated, activeSection, isMob
                     </button>
                 </div>
                 <div className="auth-buttons d-flex gap-3 align-items-center">
-                    {isUserAuthenticated ? (
+                    {isAuthenticated ? (
                         <button className="signup btn fw-semibold" onClick={handleLogout}>Logout</button>
                     ) : (
                         <Link className="signup btn fw-semibold" to="/login">Sign In</Link>
