@@ -262,7 +262,8 @@ footer {
                 margin-bottom: 1.5rem;
             }
 
-            a {
+            a,
+            button {
                 display: block;
                 color: $text-muted;
                 font-size: $font-size-sm;
