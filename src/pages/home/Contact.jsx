@@ -53,7 +53,7 @@ function Contact() {
                 <div className="form-group">
                     <textarea name='message' placeholder="How can we help?" value={formData.message} onChange={handleChange}></textarea>
                 </div>
-                <button disabled={loading} type="submit" className="cta-button">{loading ? (
+                <button disabled={loading} type="submit" className="cta-button d-flex align-items-center justify-content-center gap-2">{loading ? (
                     <>
                         <div
                             className="spinner-border"
