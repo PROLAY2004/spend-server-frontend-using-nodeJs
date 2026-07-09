@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <title>Spend Server - Login</title>
+    <link rel="stylesheet" href="{% static 'CSS/Auth/login.css' %}">
+    <link rel="icon" href="{% static 'Images/icon.png' %}" type="image/x-icon">
+    <!-- Font Awesome CDN -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"
+        integrity="sha512-..." crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <style>
+        /* Responsive Design */
+        @media (max-width: 900px) {
+            .box {
+                width: 90%;
+                height: auto;
+                flex-direction: column;
+                max-width: 600px;
+            }
+
+            .content,
+            .login {
+                width: 100%;
+                padding: 40px 30px;
+                max-width: 600px;
+            }
+
+            .content {
+                padding-bottom: 30px;
+                display: none;
+            }
+
+            .hero-text h2 {
+                font-size: 26px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .box {
+                width: 95%;
+                border-radius: 8px;
+            }
+
+            .content,
+            .login {
+                padding: 30px 20px;
+            }
+
+            .hero-text h2 {
+                font-size: 22px;
+            }
+
+            .welcome-container h3 {
+                font-size: 20px;
+            }
+
+            .input-group input {
+                height: 42px;
+            }
+
+            .btn {
+                height: 42px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div id="global-loader">
+        <div class="loader-spinner"></div>
+    </div>
+    <main class="box">
+        <div class="content">
+            <div class="logo-container">
+                <i class="fa-solid fa-code fa-lg"></i>
+                <h1>Spend Server</h1>
+            </div>
+            <div class="hero-text">
+                <h2>Smart Spending,<br>Simplified</h2>
+                <p>Track, analyze, and optimize your expenses with our powerful platform.</p>
+            </div>
+        </div>
+        <div class="login">
+            <div class="welcome-container">
+                <h3>Welcome Back!</h3>
+                <p class="subtext">Sign in to access your dashboard and continue managing your expenses.</p>
+            </div>
+
+            <form class="auth-form" method="post">
+                <div class="form-group">
+                    <label for="email">Email Address</label>
+                    <div class="input-group">
+                        <i class="fas fa-envelope"></i>
+                        <input type="email" id="email" name="mail" placeholder="your@email.com" required>
+                    </div>
+                </div>
+
+                <button type="submit" class="btn btn-primary">
+                    <i class="fas fa-sign-in-alt"></i> Sign In
+                </button>
+
+                <div class="divider">
+                    <span>Or continue with</span>
+                </div>
+
+                <button type="button" class="btn btn-google" onclick="handleGoogleLogin()">
+                    <i class="fab fa-google"></i> Google
+                </button>
+            </form>
+        </div>
+    </main>
+</body>
+
+
+</html>
