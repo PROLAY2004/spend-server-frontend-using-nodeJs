@@ -1,9 +1,58 @@
-function OtpPage({ display, setDisplay }) {
+import { useState, useEffect } from "react";
+import { toast } from 'react-toastify';
+
+import sendOtp from "./sendOtp.js";
+
+function OtpPage({ display, setDisplay, email }) {
+    const OTP_TIME = 120; // 2 minutes
+
+    const [timeLeft, setTimeLeft] = useState(OTP_TIME);
+    const [canResend, setCanResend] = useState(false);
+    const [btnText, setBtnText] = useState('Resend OTP');
+
+    useEffect(() => {
+        if (display) {
+            setTimeLeft(OTP_TIME);
+            setCanResend(false);
+        }
+    }, [display]);
+
+    useEffect(() => {
+        if (!display) return;
+
+        if (timeLeft === 0) {
+            setCanResend(true);
+            return;
+        }
+
+        const timer = setTimeout(() => {
+            setTimeLeft((prev) => prev - 1);
+        }, 1000);
+
+        return () => clearTimeout(timer);
+    }, [timeLeft, display]);
+
+    const minutes = String(Math.floor(timeLeft / 60)).padStart(2, "0");
+    const seconds = String(timeLeft % 60).padStart(2, "0");
+
+    const handleResend = async () => {
+        setBtnText('Please Wait...');
+
+        const isSuccess = await sendOtp(toast, email);
+
+        setBtnText('Resend Otp');
+
+        if (isSuccess) {
+            setCanResend(false);
+            setTimeLeft(OTP_TIME);
+        }
+    };
+
     return (
         <div className={display ? 'login w-100 py-5 px-4 px-sm-5 d-flex flex-column position-relative' : 'd-none'} >
             <div className="welcome-container">
                 <h3 className='fs-4 fw-bold mb-3'>OTP Verification</h3>
-                <p className="subtext mb-3">We've sent a verification code to your email address</p>
+                <p className="subtext mb-3">We've sent a verification code to your email address. Check spam section also for the code.</p>
             </div>
 
             <form className="auth-htmlForm w-100 d-flex flex-column position-relative z-1 gap-4">
@@ -20,8 +69,23 @@ function OtpPage({ display, setDisplay }) {
                 </button>
 
                 <div className="resend-container">
-                    <p>Didn’t receive the code? <a href="/Auth/Login/">Resend</a></p>
-                    <p className="timer">00:30</p>
+                    <p className="mb-0">
+                        Didn't receive the code?{" "}
+
+                        {canResend ? (
+                            <button
+                                type="button"
+                                className="resendBtn"
+                                onClick={handleResend}
+                            >
+                                {btnText}
+                            </button>
+                        ) : (
+                            <span className="timer">
+                                {minutes}:{seconds}
+                            </span>
+                        )}
+                    </p>
                 </div>
             </form>
         </div>

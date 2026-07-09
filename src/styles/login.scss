@@ -175,14 +175,15 @@
 
 .resend-container {
     text-align: center;
-    margin-top: 20px;
     font-size: 14px;
     color: rgba(255, 255, 255, 0.7);
 }
 
-.resend-container a {
+.resend-container .resendBtn {
     color: rgb(113, 85, 249);
     text-decoration: none;
+    background: transparent;
+        border: none;
     font-weight: 500;
     transition: opacity 0.3s ease;
 }
