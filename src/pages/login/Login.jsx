@@ -15,6 +15,12 @@ function Login() {
 
     useEffect(() => {
         if (isAuthenticated()) {
+            toast.success('An Active Session Already Exists.', {
+                position: 'bottom-right',
+                autoClose: 5000,
+                theme: 'dark',
+            });
+
             navigate('/dashboard', { replace: true })
         }
     }, [])

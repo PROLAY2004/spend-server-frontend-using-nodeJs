@@ -1,14 +1,22 @@
 import { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import { toast } from 'react-toastify';
 
 import sendOtp from "./sendOtp.js";
+import login from "./userLogin.js";
 
 function OtpPage({ display, setDisplay, email }) {
+    const navigate = useNavigate();
     const OTP_TIME = 120; // 2 minutes
 
     const [timeLeft, setTimeLeft] = useState(OTP_TIME);
     const [canResend, setCanResend] = useState(false);
+    const [otp, setOtp] = useState('');
+    const [loading, setLoading] = useState(false);
     const [btnText, setBtnText] = useState('Resend OTP');
+
+    const minutes = String(Math.floor(timeLeft / 60)).padStart(2, "0");
+    const seconds = String(timeLeft % 60).padStart(2, "0");
 
     useEffect(() => {
         if (display) {
@@ -32,8 +40,18 @@ function OtpPage({ display, setDisplay, email }) {
         return () => clearTimeout(timer);
     }, [timeLeft, display]);
 
-    const minutes = String(Math.floor(timeLeft / 60)).padStart(2, "0");
-    const seconds = String(timeLeft % 60).padStart(2, "0");
+    const handleSubmit = async (e) => {
+        e.preventDefault();
+
+        const isLoggedIn = await login(toast, { email, otp });
+
+        if (isLoggedIn) {
+            localStorage.setItem('access_token', isLoggedIn.access_token);
+            localStorage.setItem('refresh_token', isLoggedIn.refresh_token);
+
+            navigate('/dashboard', { replace: true });
+        }
+    }
 
     const handleResend = async () => {
         setBtnText('Please Wait...');
@@ -55,12 +73,12 @@ function OtpPage({ display, setDisplay, email }) {
                 <p className="subtext mb-3">We've sent a verification code to your email address. Check spam section also for the code.</p>
             </div>
 
-            <form className="auth-htmlForm w-100 d-flex flex-column position-relative z-1 gap-4">
+            <form className="auth-htmlForm w-100 d-flex flex-column position-relative z-1 gap-4" onSubmit={handleSubmit}>
                 <div className="htmlForm-group d-flex flex-column gap-2">
                     <label htmlFor="otp" className='fw-semibold'>Enter 6 Digit Code</label>
                     <div className="input-group position-relative d-flex align-items-center">
                         <i className="bi bi-key position-absolute"></i>
-                        <input type="text" className='w-100' placeholder="123456" />
+                        <input type="text" className='w-100' placeholder="123456" value={otp} onChange={(e) => setOtp(e.target.value)} />
                     </div>
                 </div>
 
