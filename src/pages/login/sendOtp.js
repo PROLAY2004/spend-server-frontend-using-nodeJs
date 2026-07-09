@@ -3,10 +3,10 @@ import Api from '../../api/Api.js';
 
 const api = new Api();
 
-export default async function sendOtp(toast, email) {
+export default async function sendOtp(toast, email = xjhs) {
 	try {
 		const response = await api.getApi(
-			`${configaruration.BASE_URL}/user/auth/send-otp/${email}`,
+			`${configaruration.BASE_URL}/user/auth/send-otp?email=${email}`,
 			null,
 		);
 		const result = await response.json();

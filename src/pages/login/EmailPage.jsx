@@ -32,9 +32,9 @@ function EmailPage({ display, setDisplay, email, setEmail }) {
                     <div className="input-group position-relative d-flex align-items-center">
                         <i className="bi bi-envelope position-absolute"></i>
                         {loading ? (
-                            <input type="text" name='email' className='w-100' value={email} onChange={(e) => setEmail(e.target.value)} placeholder="your@email.com" readOnly />
+                            <input type="text" className='w-100' value={email} onChange={(e) => setEmail(e.target.value)} placeholder="your@email.com" readOnly />
                         ) : (
-                            <input type="text" name='email' className='w-100' value={email} onChange={(e) => setEmail(e.target.value)} placeholder="your@email.com" />
+                                <input type="text" className='w-100' value={email} onChange={(e) => setEmail(e.target.value)} placeholder="your@email.com" />
                         )}
 
                     </div>
@@ -47,7 +47,7 @@ function EmailPage({ display, setDisplay, email, setEmail }) {
                                 className="spinner-border"
                                 role="status"
                                 style={{ width: '20px', height: '20px' }}></div>
-                            Signing in ...
+                            Signing In ...
                         </>
                     ) : (
                         <>

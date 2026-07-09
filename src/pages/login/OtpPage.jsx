@@ -42,8 +42,11 @@ function OtpPage({ display, setDisplay, email }) {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
+        setLoading(true);
 
         const isLoggedIn = await login(toast, { email, otp });
+
+        setLoading(false);
 
         if (isLoggedIn) {
             localStorage.setItem('access_token', isLoggedIn.access_token);
@@ -78,12 +81,29 @@ function OtpPage({ display, setDisplay, email }) {
                     <label htmlFor="otp" className='fw-semibold'>Enter 6 Digit Code</label>
                     <div className="input-group position-relative d-flex align-items-center">
                         <i className="bi bi-key position-absolute"></i>
-                        <input type="text" className='w-100' placeholder="123456" value={otp} onChange={(e) => setOtp(e.target.value)} />
+                        {loading ? (
+                            <input type="text" className='w-100' placeholder="123456" value={otp} onChange={(e) => setOtp(e.target.value)} readOnly />
+                        ) : (
+                                <input type="text" className='w-100' placeholder="123456" value={otp} onChange={(e) => setOtp(e.target.value)} />
+                        )}
                     </div>
                 </div>
 
-                <button type="submit" className="btn btn-primary">
-                    <i className="bi bi-check-circle"></i> Verify & Continue
+                <button disabled={loading} type="submit" className="btn btn-primary position-relative d-flex align-items-center justify-content-center gap-2 overflow-hidden border-0">
+                    {loading ? (
+                        <>
+                            <div
+                                className="spinner-border"
+                                role="status"
+                                style={{ width: '20px', height: '20px' }}></div>
+                            Verifying...
+                        </>
+                    ) : (
+                        <>
+                            <i className="bi bi-check-circle"></i>
+                            Verify & Continue
+                        </>
+                    )}
                 </button>
 
                 <div className="resend-container">
