@@ -1,16 +1,15 @@
-import configaruration from '../../config/config.js';
 import Api from '../../api/Api.js';
+import configaruration from '../../config/config.js';
 
 const api = new Api();
 
-export default async function login(toast, loginData) {
+const googleResponse = async (authResult, toast) => {
 	try {
-		const response = await api.postApi(
-			`${configaruration.BASE_URL}/user/auth/login`,
+		const res = await api.getApi(
+			`${configaruration.BASE_URL}/user/auth/google/?code=${authResult.code}`,
 			null,
-			loginData,
 		);
-		const result = await response.json();
+		const result = await res.json();
 
 		if (result.success) {
 			toast.success(result.message, {
@@ -41,4 +40,6 @@ export default async function login(toast, loginData) {
 
 		return false;
 	}
-}
+};
+
+export default googleResponse;

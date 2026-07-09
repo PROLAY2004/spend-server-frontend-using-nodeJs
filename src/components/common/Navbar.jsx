@@ -48,9 +48,9 @@ function Nav({ isAuthenticated, setIsUserAuthenticated, activeSection, isMobileM
                 </div>
                 <div className="auth-buttons d-flex gap-3 align-items-center">
                     {isAuthenticated ? (
-                        <button className="signup btn fw-semibold" onClick={handleLogout}>Logout</button>
+                        <button className="signup btn fw-semibold h-auto" onClick={handleLogout}>Logout</button>
                     ) : (
-                        <Link className="signup btn fw-semibold" to="/login">Sign In</Link>
+                            <Link className="signup btn fw-semibold h-auto" to="/login">Sign In</Link>
                     )}
                 </div>
             </div>

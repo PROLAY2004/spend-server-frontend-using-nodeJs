@@ -1,9 +1,13 @@
 import { useState } from 'react';
 import { toast } from 'react-toastify';
+import { useNavigate } from 'react-router-dom';
+import { useGoogleLogin } from '@react-oauth/google';
 
 import sendOtp from './sendOtp.js';
+import googleResponse from './googleAuth.js';
 
 function EmailPage({ display, setDisplay, email, setEmail }) {
+    const navigate = useNavigate();
     const [loading, setLoading] = useState(false);
 
     const handleSubmit = async (e) => {
@@ -18,6 +22,24 @@ function EmailPage({ display, setDisplay, email, setEmail }) {
             setDisplay(true);
         }
     }
+
+    const loginWithGoogle = useGoogleLogin({
+        onSuccess: async (response) => {
+            const isLogged = await googleResponse(response, toast);
+
+            if (isLogged) {
+                const redirectPath = localStorage.getItem('postLoginRedirect') || '/dashboard';
+                localStorage.removeItem('postLoginRedirect');
+                navigate(redirectPath, { replace: true });
+            }
+        },
+        onError: (err) => {
+            toast.error("Google login failed");
+            console.log(err);
+        },
+
+        flow: 'auth-code',
+    });
 
     return (
         <div className={display ? 'd-none' : 'login w-100 py-5 px-4 px-sm-5 flex-column position-relative d-flex'}>
@@ -61,7 +83,7 @@ function EmailPage({ display, setDisplay, email, setEmail }) {
                     <span>Or continue with</span>
                 </div>
 
-                <button type="button" className="btn btn-google">
+                <button type="button" disabled={loading} className="btn btn-google" onClick={loginWithGoogle}>
                     <i className="bi bi-google"></i> Google
                 </button>
             </form>

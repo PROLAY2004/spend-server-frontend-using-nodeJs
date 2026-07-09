@@ -49,10 +49,9 @@ function OtpPage({ display, setDisplay, email }) {
         setLoading(false);
 
         if (isLoggedIn) {
-            localStorage.setItem('access_token', isLoggedIn.access_token);
-            localStorage.setItem('refresh_token', isLoggedIn.refresh_token);
-
-            navigate('/dashboard', { replace: true });
+            const redirectPath = localStorage.getItem('postLoginRedirect') || '/dashboard';
+            localStorage.removeItem('postLoginRedirect');
+            navigate(redirectPath, { replace: true });
         }
     }
 
