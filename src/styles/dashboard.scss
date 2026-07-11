@@ -1,279 +1,59 @@
-@import './common/root';
+@import './mixins/root';
 
 // Dashboard Layout Shell
 .dashboard-wrapper {
-    display: flex;
-    height: 100vh;
     background-color: $bg-dark;
-    overflow: hidden;
-    position: relative;
-}
-
-// Sidebar Overlay for Mobile
-.sidebar-overlay {
-    display: none;
-    position: fixed;
-    inset: 0;
-    background: rgba(0, 0, 0, 0.6);
-    backdrop-filter: blur(4px);
-    z-index: 90;
-    opacity: 0;
-    transition: opacity $transition-base;
-
-    &.active {
-        opacity: 1;
-    }
-
-    @media (max-width: 576px) {
-        display: block;
-        pointer-events: none;
-
-        &.active {
-            pointer-events: all;
-        }
-    }
 }
 
 // Main Content Area
 .main-content {
-    flex-grow: 1;
-    display: flex;
-    flex-direction: column;
-    height: 100vh;
-    overflow-y: auto;
-
-    .top-header {
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        padding: 1.5rem 2rem;
-        border-bottom: 1px solid $border-subtle;
-        background: rgba(10, 10, 10, 0.85);
-        backdrop-filter: blur(16px);
-        position: sticky;
-        top: 0;
-        z-index: 10;
-
-        .header-left {
-            display: flex;
-            align-items: center;
-
-            .hamburger {
-                display: none;
-                background: none;
-                border: none;
-                color: $text-inverse;
-                font-size: 1.5rem;
-                cursor: pointer;
-
-                @media (max-width: 576px) {
-                    display: block;
-                    margin-right: 1rem;
-                }
-            }
-
-            .header-title-group {
-                h1 {
-                    font-size: $font-size-lg;
-                    font-weight: 600;
-                    color: $text-inverse;
-                    margin-bottom: 0.2rem;
-                }
-
-                .breadcrumbs {
-                    font-size: $font-size-xs;
-                    color: $text-muted;
-
-                    span {
-                        margin: 0 0.4rem;
-                        color: $border-subtle;
-                    }
-
-                    .current {
-                        color: $primary-light;
-                        font-weight: 500;
-                    }
-                }
-            }
-        }
-
-        .header-right {
-            .export-btn {
-                display: flex;
-                align-items: center;
-                gap: 0.5rem;
-                background: $bg-surface-elevated;
-                border: 1px solid $border-subtle;
-                color: $text-inverse;
-                padding: 0.5rem 1rem;
-                border-radius: $radius-sm;
-                font-size: $font-size-sm;
-                font-weight: 500;
-                cursor: pointer;
-                transition: all $transition-base;
-
-                i {
-                    color: $primary-light;
-                }
-
-                &:hover {
-                    border-color: $border-hover;
-                    background: rgba(255, 255, 255, 0.05);
-                    transform: translateY(-1px);
-                }
-            }
-        }
+    .dashboard-body {
+        max-width: 1200px;
     }
 
-    .dashboard-body {
-        padding: 2rem;
-        max-width: 1400px;
-        margin: 0 auto;
-        width: 100%;
+    @media (max-width: 992px) and (min-width: 576px) {
+        margin-left: 76px;
+    }
+
+    @media(min-width: 993px) {
+        margin-left: 260px;
     }
 }
 
 // Analytics Cards
 .stats-grid {
-    display: grid;
     grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-    gap: 1.5rem;
-    margin-bottom: 2.5rem;
-
-    .stat-card {
-        @include glass-panel;
-        padding: 1.25rem 1.5rem;
-        display: flex;
-        flex-direction: column;
-        position: relative;
-        overflow: hidden;
-
-        &::before {
-            content: '';
-            position: absolute;
-            top: -20px;
-            right: -20px;
-            width: 100px;
-            height: 100px;
-            background: radial-gradient(circle, $primary-glow 0%, transparent 70%);
-            border-radius: 50%;
-            z-index: 0;
-            pointer-events: none;
-        }
-
-        .stat-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: flex-start;
-            margin-bottom: 1rem;
-            position: relative;
-            z-index: 1;
-
-            h4 {
-                font-size: $font-size-sm;
-                color: $text-muted;
-                font-weight: 500;
-            }
-
-            .icon-wrapper {
-                width: 32px;
-                height: 32px;
-                border-radius: 8px;
-                background: rgba(255, 255, 255, 0.03);
-                border: 1px solid $border-subtle;
-                display: flex;
-                align-items: center;
-                justify-content: center;
-                color: $primary-light;
-                font-size: 1rem;
-            }
-        }
-
-        .stat-body {
-            position: relative;
-            z-index: 1;
-            display: flex;
-            align-items: flex-end;
-            justify-content: space-between;
-
-            .stat-value {
-                font-size: 1.8rem;
-                font-weight: 700;
-                color: $text-inverse;
-                letter-spacing: -0.02em;
-                line-height: 1;
-            }
-
-            .stat-trend {
-                font-size: $font-size-xs;
-                font-weight: 500;
-                display: flex;
-                align-items: center;
-                gap: 0.2rem;
-                padding: 0.2rem 0.5rem;
-                border-radius: 99px;
-
-                &.positive {
-                    background: rgba(16, 185, 129, 0.1);
-                    color: #10b981;
-                }
-
-                &.negative {
-                    background: rgba(239, 68, 68, 0.1);
-                    color: #ef4444;
-                }
-
-                &.neutral {
-                    background: rgba(255, 255, 255, 0.05);
-                    color: $text-muted;
-                }
-            }
-        }
-    }
 }
 
 // Charts Section 
 .charts-grid {
-    display: grid;
     grid-template-columns: 1fr 1fr;
-    gap: 1.5rem;
-    margin-bottom: 2rem;
 
-    @media (max-width: 992px) {
+    @media (max-width: 768px) {
         grid-template-columns: 1fr;
     }
 }
 
 .chart-card {
     @include glass-panel;
-    padding: 1.5rem;
-    display: flex;
-    flex-direction: column;
 
     &.full-width {
         grid-column: 1 / -1;
     }
 
     .chart-header {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        margin-bottom: 1.5rem;
-        padding-bottom: 1rem;
         border-bottom: 1px solid rgba(255, 255, 255, 0.03);
 
         h3 {
             font-size: $font-size-base;
             color: $text-inverse;
-            font-weight: 600;
         }
 
         select {
-            background: rgba(0, 0, 0, 0.3);
+            background: rgba(0, 0, 0, 0.8) !important;
             border: 1px solid $border-subtle;
             color: $text-muted;
             font-size: $font-size-xs;
-            padding: 0.4rem 0.8rem;
             border-radius: $radius-sm;
             outline: none;
             cursor: pointer;
@@ -288,12 +68,7 @@
     }
 
     .chart-container {
-        position: relative;
         height: 260px;
-        width: 100%;
-        display: flex;
-        justify-content: center;
-        align-items: center;
 
         &.tall {
             height: 350px;

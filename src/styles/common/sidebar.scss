@@ -1,4 +1,25 @@
-@import './common/root';
+@import '../mixins/root';
+
+// Sidebar Overlay for Mobile
+.sidebar-overlay {
+    background: rgba(0, 0, 0, 0.6);
+    backdrop-filter: blur(4px);
+    z-index: 90;
+    opacity: 0;
+    transition: opacity $transition-base;
+
+    &.active {
+        opacity: 1;
+    }
+
+    @media (max-width: 576px) {
+        pointer-events: none;
+
+        &.active {
+            pointer-events: all;
+        }
+    }
+}
 
 .sidebar {
     background: $bg-surface;
@@ -141,7 +162,7 @@
     // Responsive Logic
     width: 260px;
 
-    @media (max-width: 992px) and (min-width: 577px) {
+    @media (max-width: 992px) and (min-width: 575px) {
         width: 76px;
         
         .nav-links-scrollable a span,
@@ -214,7 +235,7 @@
         }
     }
 
-    @media (max-width: 576px) {
+    @media (max-width: 575px) {
         position: fixed;
         width: 260px;
         transform: translateX(-100%);

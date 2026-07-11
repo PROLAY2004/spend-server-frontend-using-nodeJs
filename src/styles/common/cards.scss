@@ -1,0 +1,62 @@
+@import '../mixins/root';
+
+.stat-card {
+    @include glass-panel;
+    padding: 1.25rem 1.5rem;
+
+    &::before {
+        content: '';
+        position: absolute;
+        top: -20px;
+        right: -20px;
+        width: 100px;
+        height: 100px;
+        background: radial-gradient(circle, $primary-glow 0%, transparent 70%);
+        border-radius: 50%;
+        z-index: 0;
+        pointer-events: none;
+    }
+
+    .stat-header {
+        h4 {
+            font-size: $font-size-sm;
+            color: $text-muted;
+        }
+
+        .icon-wrapper {
+            width: 32px;
+            height: 32px;
+            border-radius: 8px;
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid $border-subtle;
+            color: $primary-light;
+            font-size: 1rem;
+        }
+    }
+
+    .stat-body {
+        .stat-value {
+            color: $text-inverse;
+            letter-spacing: -0.02em;
+        }
+
+        .stat-trend {
+            font-size: $font-size-xs;
+            
+            &.positive {
+                background: rgba(16, 185, 129, 0.1);
+                color: #10b981;
+            }
+
+            &.negative {
+                background: rgba(239, 68, 68, 0.1);
+                color: #ef4444;
+            }
+
+            &.neutral {
+                background: rgba(255, 255, 255, 0.05);
+                color: $text-muted;
+            }
+        }
+    }
+}

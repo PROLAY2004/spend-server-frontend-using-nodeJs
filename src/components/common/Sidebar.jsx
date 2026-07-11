@@ -3,14 +3,14 @@ import { useState, useEffect } from 'react';
 import { toast } from 'react-toastify';
 
 import logout from '../../utils/logout.js';
-import '../../styles/sidebar.scss';
+import '../../styles/common/sidebar.scss';
 
 function Sidebar({ isMobileOpen, sidebarRef }) {
     return (
         <>
-            <div className={`sidebar-overlay ${isMobileOpen ? 'active' : ''}`} onClick={() => setIsMobileOpen(false)}></div>
+            <div className={`sidebar-overlay d-block d-sm-none top-0 start-0 end-0 bottom-0 position-fixed ${isMobileOpen ? 'active' : ''}`} onClick={() => setIsMobileOpen(false)}></div>
 
-            <aside className={`sidebar d-flex flex-column flex-shrink-0 h-100 ${isMobileOpen ? 'mobile-open' : ''}`} ref={sidebarRef}>
+            <aside className={`sidebar position-fixed d-flex flex-column flex-shrink-0 h-100 ${isMobileOpen ? 'mobile-open' : ''}`} ref={sidebarRef}>
                 {/* Top Section - Fixed */}
                 <div className="sidebar-header-fixed flex-shrink-0 pb-3">
                     <div className="brand text-center py-4 px-3">

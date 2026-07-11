@@ -15,7 +15,10 @@ import {
 } from 'chart.js';
 import { Doughnut, Line, Bar } from 'react-chartjs-2';
 
-import Sidebar from '../../components/dashboard/sidebar.jsx';
+import Sidebar from '../../components/common/Sidebar.jsx';
+import Header from '../../components/common/Header.jsx';
+import Cards from '../../components/dashboard/Cards.jsx';
+
 import '../../styles/dashboard.scss';
 
 ChartJS.register(CategoryScale, LinearScale, PointElement, LineElement, BarElement, ArcElement, Title, Tooltip, Legend, Filler);
@@ -106,107 +109,56 @@ export default function Dashboard() {
     };
 
     return (
-        <div className="dashboard-wrapper">
+        <div className="dashboard-wrapper d-flex h-100 overflow-hidden position relative">
             <Sidebar isMobileOpen={isMobileOpen} sidebarRef={sidebarRef}/>
 
-            <main className="main-content">
-                <header className="top-header">
-                    <div className="header-left">
-                        <button className="hamburger" onClick={() => setIsMobileOpen(true)}>
-                            <i className="bi bi-list"></i>
-                        </button>
-                        <div className="header-title-group">
-                            <h1>Dashboard</h1>
-                            <div className="breadcrumbs">
-                                Home <span>/</span> <span className="current">Overview</span>
-                            </div>
-                        </div>
-                    </div>
-                    <div className="header-right">
-                        <button className="export-btn">
-                            <i className="bi bi-cloud-download"></i>
-                            Export Data
-                        </button>
-                    </div>
-                </header>
+            <main className="main-content d-flex flex-column h-100 flex-grow-1 overflow-auto overflow-x-hidden">
+                <Header/>
 
-                <div className="dashboard-body">
-                    <div className="stats-grid">
-                        <div className="stat-card">
-                            <div className="stat-header">
-                                <h4>Total Savings</h4>
-                                <div className="icon-wrapper"><i className="bi bi-piggy-bank"></i></div>
-                            </div>
-                            <div className="stat-body">
-                                <div className="stat-value">₹45,230</div>
-                                <div className="stat-trend positive">
-                                    <i className="bi bi-arrow-up-short"></i> 12%
-                                </div>
-                            </div>
-                        </div>
-                        <div className="stat-card">
-                            <div className="stat-header">
-                                <h4>Unpaid Categories</h4>
-                                <div className="icon-wrapper"><i className="bi bi-exclamation-circle"></i></div>
-                            </div>
-                            <div className="stat-body">
-                                <div className="stat-value">4</div>
-                                <div className="stat-trend neutral">
-                                    <i className="bi bi-dash"></i> 0%
-                                </div>
-                            </div>
-                        </div>
-                        <div className="stat-card">
-                            <div className="stat-header">
-                                <h4>Total Due Amount</h4>
-                                <div className="icon-wrapper"><i className="bi bi-wallet2"></i></div>
-                            </div>
-                            <div className="stat-body">
-                                <div className="stat-value">₹12,500</div>
-                                <div className="stat-trend negative">
-                                    <i className="bi bi-arrow-down-short"></i> 4%
-                                </div>
-                            </div>
-                        </div>
+                <div className="dashboard-body w-100 my-0 mx-auto p-3 p-md-4">
+                    <div className="stats-grid d-grid gap-3 mb-4">
+                        <Cards cardNumber={1} cardTitle={'Total Savings'} />
+                        <Cards cardNumber={2} cardTitle={'Unpaid Categories'} />
+                        <Cards cardNumber={3} cardTitle={'Total Due Amount'} />
                     </div>
 
-                    <div className="charts-grid">
-                        <div className="chart-card">
-                            <div className="chart-header">
-                                <h3>Amount Overview</h3>
+                    <div className="charts-grid d-grid gap-3 mb-4">
+                        <div className="chart-card p-4 d-flex flex-column">
+                            <div className="chart-header d-flex justify-content-between align-items-center mb-4 pb-3">
+                                <h3 className="fw-semibold">Amount Overview</h3>
                             </div>
                             <div className="chart-container">
                                 <Doughnut data={doughnut1Data} options={{ ...doughnutOptions, elements: { center: { text: 'Total Spend', value: '₹46,500' } } }} plugins={[centerTextPlugin]} />
                             </div>
                         </div>
 
-                        <div className="chart-card">
-                            <div className="chart-header">
-                                <h3>Records Overview</h3>
+                        <div className="chart-card p-4 d-flex flex-column">
+                            <div className="chart-header d-flex justify-content-between align-items-center mb-4 pb-3">
+                                <h3 className="fw-semibold">Records Overview</h3>
                             </div>
                             <div className="chart-container">
                                 <Doughnut data={doughnut2Data} options={{ ...doughnutOptions, elements: { center: { text: 'Total Records', value: '180' } } }} plugins={[centerTextPlugin]} />
                             </div>
                         </div>
 
-                        <div className="chart-card full-width">
-                            <div className="chart-header">
-                                <h3>Spend Activity</h3>
-                                <select value={lineFilter} onChange={(e) => setLineFilter(e.target.value)}>
+                        <div className="chart-card p-4 d-flex flex-column full-width">
+                            <div className="chart-header d-flex justify-content-between align-items-center mb-4 pb-3">
+                                <h3 className="fw-semibold">Spend Activity</h3>
+                                <select className='py-2 px-3' value={lineFilter} onChange={(e) => setLineFilter(e.target.value)}>
                                     <option value="thisWeek">This Week</option>
                                     <option value="thisMonth">This Month</option>
                                     <option value="thisYear">This Year</option>
                                 </select>
                             </div>
-                            <div className="chart-container tall">
+                            <div className="chart-container position-relative d-flex justify-content-center align-items-center w-100 tall">
                                 <Line data={lineData} options={lineOptions} />
                             </div>
                         </div>
 
-                        <div className="chart-card full-width">
-                            <div className="chart-header">
-                                <h3>Spend by Category</h3>
-                                <select value={barFilter} onChange={(e) => setBarFilter(e.target.value)}>
+                        <div className="chart-card p-4 d-flex flex-column full-width">
+                            <div className="chart-header d-flex justify-content-between align-items-center mb-4 pb-3">
+                                <h3 className="fw-semibold">Spend by Category</h3>
+                                <select className='py-2 px-3' value={barFilter} onChange={(e) => setBarFilter(e.target.value)}>
                                     <option value="today">Today</option>
                                     <option value="thisWeek">This Week</option>
                                     <option value="thisMonth">This Month</option>
@@ -214,7 +166,7 @@ export default function Dashboard() {
                                     <option value="lifetime">Lifetime</option>
                                 </select>
                             </div>
-                            <div className="chart-container tall">
+                            <div className="chart-container  position-relative d-flex justify-content-center align-items-center w-100 tall">
                                 <Bar data={barData} options={barOptions} />
                             </div>
                         </div>
