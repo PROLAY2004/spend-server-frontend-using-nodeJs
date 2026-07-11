@@ -2,6 +2,7 @@ import { createBrowserRouter } from 'react-router-dom';
 import { GoogleOAuthProvider } from '@react-oauth/google';
 
 import configaruration from '../config/config.js';
+import ProtectedRoute from './ProtectedRoute.jsx';
 import Home from '../pages/home/Home.jsx';
 import Login from '../pages/login/Login.jsx';
 
@@ -16,6 +17,14 @@ const router = createBrowserRouter([
             <GoogleOAuthProvider clientId={configaruration.CLIENT_ID}>
                 <Login />
             </GoogleOAuthProvider>
+        ),
+    },
+    {
+        path: '/dashboard',
+        element: (
+            <ProtectedRoute>
+                <Login />
+            </ProtectedRoute>
         ),
     },
     {
