@@ -5,6 +5,7 @@ import configaruration from '../config/config.js';
 import ProtectedRoute from './ProtectedRoute.jsx';
 import Home from '../pages/home/Home.jsx';
 import Login from '../pages/login/Login.jsx';
+import Dashboard from '../pages/dashboard/dashboard.jsx';
 
 const router = createBrowserRouter([
     {
@@ -23,7 +24,7 @@ const router = createBrowserRouter([
         path: '/dashboard',
         element: (
             <ProtectedRoute>
-                <Login />
+                <Dashboard />
             </ProtectedRoute>
         ),
     },
