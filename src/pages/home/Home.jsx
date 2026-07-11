@@ -2,8 +2,8 @@ import { useEffect, useState } from "react";
 import { Link } from 'react-router-dom';
 
 import isAuthenticated from '../../utils/checkAuth.js';
-import Navbar from '../../components/common/Navbar.jsx';
-import Footer from '../../components/common/Footer.jsx';
+import Navbar from '../../components/home/Navbar.jsx';
+import Footer from '../../components/home/Footer.jsx';
 import Contact from './Contact.jsx';
 
 import '../../styles/home.scss';

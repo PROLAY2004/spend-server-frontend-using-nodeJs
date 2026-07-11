@@ -1,9 +1,9 @@
-@import './common/root'; // Adjust path if necessary
+@import './common/root';
 
 // Dashboard Layout Shell
 .dashboard-wrapper {
     display: flex;
-    min-height: 100vh;
+    height: 100vh;
     background-color: $bg-dark;
     overflow: hidden;
     position: relative;
@@ -14,7 +14,7 @@
     display: none;
     position: fixed;
     inset: 0;
-    background: rgba(0, 0, 0, 0.5);
+    background: rgba(0, 0, 0, 0.6);
     backdrop-filter: blur(4px);
     z-index: 90;
     opacity: 0;
@@ -34,142 +34,6 @@
     }
 }
 
-// Sidebar
-.sidebar {
-    background: $bg-surface;
-    border-right: 1px solid $border-subtle;
-    display: flex;
-    flex-direction: column;
-    transition: width $transition-smooth, transform $transition-smooth;
-    z-index: 100;
-    flex-shrink: 0;
-
-    .sidebar-header {
-        height: 70px;
-        display: flex;
-        align-items: center;
-        padding: 0 1.5rem;
-        border-bottom: 1px solid $border-subtle;
-
-        .logo-text {
-            font-weight: 600;
-            font-size: $font-size-base;
-            @include text-gradient($text-inverse, $text-muted);
-            white-space: nowrap;
-            opacity: 1;
-            transition: opacity $transition-base;
-        }
-    }
-
-    .nav-links {
-        padding: 1.5rem 0.75rem;
-        display: flex;
-        flex-direction: column;
-        gap: 0.5rem;
-
-        a {
-            display: flex;
-            align-items: center;
-            padding: 0.75rem;
-            border-radius: $radius-sm;
-            color: $text-muted;
-            font-size: $font-size-sm;
-            transition: all $transition-base;
-            white-space: nowrap;
-            overflow: hidden;
-
-            i {
-                font-size: 1.2rem;
-                min-width: 24px;
-                display: flex;
-                justify-content: center;
-                margin-right: 1rem;
-            }
-
-            span {
-                transition: opacity $transition-base;
-            }
-
-            &:hover,
-            &.active {
-                background: rgba(255, 255, 255, 0.05);
-                color: $text-inverse;
-            }
-
-            &.active {
-                border-left: 3px solid $primary;
-                background: linear-gradient(90deg, rgba(124, 58, 237, 0.1) 0%, transparent 100%);
-            }
-        }
-    }
-
-    // Responsive Logic
-    // Desktop (> 992px)
-    width: 250px;
-
-    // Tablet (576px - 992px)
-    @media (max-width: 992px) and (min-width: 577px) {
-        width: 70px;
-
-        .sidebar-header .logo-text {
-            opacity: 0;
-            display: none;
-        }
-
-        .nav-links a span {
-            opacity: 0;
-            display: none;
-        }
-
-        .nav-links a {
-            justify-content: center;
-            padding: 0.75rem 0;
-        }
-
-        .nav-links a i {
-            margin-right: 0;
-        }
-
-        &:hover {
-            width: 250px;
-            position: absolute;
-            height: 100vh;
-            box-shadow: 10px 0 30px rgba(0, 0, 0, 0.5);
-
-            .sidebar-header .logo-text {
-                opacity: 1;
-                display: block;
-            }
-
-            .nav-links a span {
-                opacity: 1;
-                display: inline;
-            }
-
-            .nav-links a {
-                justify-content: flex-start;
-                padding: 0.75rem;
-            }
-
-            .nav-links a i {
-                margin-right: 1rem;
-            }
-        }
-    }
-
-    // Mobile (< 576px)
-    @media (max-width: 576px) {
-        position: fixed;
-        height: 100vh;
-        width: 250px;
-        transform: translateX(-100%);
-
-        &.mobile-open {
-            transform: translateX(0);
-        }
-    }
-}
-
 // Main Content Area
 .main-content {
     flex-grow: 1;
@@ -179,62 +43,85 @@
     overflow-y: auto;
 
     .top-header {
-        height: 70px;
         display: flex;
         align-items: center;
         justify-content: space-between;
-        padding: 0 2rem;
+        padding: 1.5rem 2rem;
         border-bottom: 1px solid $border-subtle;
-        background: rgba(10, 10, 10, 0.8);
-        backdrop-filter: blur(12px);
+        background: rgba(10, 10, 10, 0.85);
+        backdrop-filter: blur(16px);
         position: sticky;
         top: 0;
         z-index: 10;
 
-        .hamburger {
-            display: none;
-            background: none;
-            border: none;
-            color: $text-inverse;
-            font-size: 1.5rem;
-            cursor: pointer;
-
-            @media (max-width: 576px) {
-                display: block;
-                margin-right: 1rem;
-            }
-        }
-
         .header-left {
             display: flex;
             align-items: center;
-        }
 
-        .breadcrumbs {
-            font-size: $font-size-xs;
-            color: $text-muted;
-
-            span {
-                margin: 0 0.5rem;
-                color: $border-subtle;
-            }
-
-            .current {
+            .hamburger {
+                display: none;
+                background: none;
+                border: none;
                 color: $text-inverse;
+                font-size: 1.5rem;
+                cursor: pointer;
+
+                @media (max-width: 576px) {
+                    display: block;
+                    margin-right: 1rem;
+                }
+            }
+
+            .header-title-group {
+                h1 {
+                    font-size: $font-size-lg;
+                    font-weight: 600;
+                    color: $text-inverse;
+                    margin-bottom: 0.2rem;
+                }
+
+                .breadcrumbs {
+                    font-size: $font-size-xs;
+                    color: $text-muted;
+
+                    span {
+                        margin: 0 0.4rem;
+                        color: $border-subtle;
+                    }
+
+                    .current {
+                        color: $primary-light;
+                        font-weight: 500;
+                    }
+                }
             }
         }
 
-        .user-profile {
-            width: 32px;
-            height: 32px;
-            border-radius: 50%;
-            background: $primary;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: $font-size-sm;
-            color: $text-inverse;
-            font-weight: 600;
+        .header-right {
+            .export-btn {
+                display: flex;
+                align-items: center;
+                gap: 0.5rem;
+                background: $bg-surface-elevated;
+                border: 1px solid $border-subtle;
+                color: $text-inverse;
+                padding: 0.5rem 1rem;
+                border-radius: $radius-sm;
+                font-size: $font-size-sm;
+                font-weight: 500;
+                cursor: pointer;
+                transition: all $transition-base;
+
+                i {
+                    color: $primary-light;
+                }
+
+                &:hover {
+                    border-color: $border-hover;
+                    background: rgba(255, 255, 255, 0.05);
+                    transform: translateY(-1px);
+                }
+            }
         }
     }
 
@@ -243,13 +130,6 @@
         max-width: 1400px;
         margin: 0 auto;
         width: 100%;
-
-        .page-title {
-            font-size: $font-size-xl;
-            font-weight: 600;
-            margin-bottom: 2rem;
-            color: $text-inverse;
-        }
     }
 }
 
@@ -258,19 +138,36 @@
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
     gap: 1.5rem;
-    margin-bottom: 2rem;
+    margin-bottom: 2.5rem;
 
     .stat-card {
         @include glass-panel;
-        padding: 1.5rem;
+        padding: 1.25rem 1.5rem;
         display: flex;
         flex-direction: column;
+        position: relative;
+        overflow: hidden;
+
+        &::before {
+            content: '';
+            position: absolute;
+            top: -20px;
+            right: -20px;
+            width: 100px;
+            height: 100px;
+            background: radial-gradient(circle, $primary-glow 0%, transparent 70%);
+            border-radius: 50%;
+            z-index: 0;
+            pointer-events: none;
+        }
 
         .stat-header {
             display: flex;
             justify-content: space-between;
-            align-items: center;
+            align-items: flex-start;
             margin-bottom: 1rem;
+            position: relative;
+            z-index: 1;
 
             h4 {
                 font-size: $font-size-sm;
@@ -278,23 +175,64 @@
                 font-weight: 500;
             }
 
-            i {
+            .icon-wrapper {
+                width: 32px;
+                height: 32px;
+                border-radius: 8px;
+                background: rgba(255, 255, 255, 0.03);
+                border: 1px solid $border-subtle;
+                display: flex;
+                align-items: center;
+                justify-content: center;
                 color: $primary-light;
-                font-size: 1.2rem;
-                opacity: 0.8;
+                font-size: 1rem;
             }
         }
 
-        .stat-value {
-            font-size: $font-size-xl;
-            font-weight: 600;
-            color: $text-inverse;
-            margin-bottom: 0.5rem;
+        .stat-body {
+            position: relative;
+            z-index: 1;
+            display: flex;
+            align-items: flex-end;
+            justify-content: space-between;
+
+            .stat-value {
+                font-size: 1.8rem;
+                font-weight: 700;
+                color: $text-inverse;
+                letter-spacing: -0.02em;
+                line-height: 1;
+            }
+
+            .stat-trend {
+                font-size: $font-size-xs;
+                font-weight: 500;
+                display: flex;
+                align-items: center;
+                gap: 0.2rem;
+                padding: 0.2rem 0.5rem;
+                border-radius: 99px;
+
+                &.positive {
+                    background: rgba(16, 185, 129, 0.1);
+                    color: #10b981;
+                }
+
+                &.negative {
+                    background: rgba(239, 68, 68, 0.1);
+                    color: #ef4444;
+                }
+
+                &.neutral {
+                    background: rgba(255, 255, 255, 0.05);
+                    color: $text-muted;
+                }
+            }
         }
     }
 }
 
-// Charts Section
+// Charts Section 
 .charts-grid {
     display: grid;
     grid-template-columns: 1fr 1fr;
@@ -321,15 +259,17 @@
         justify-content: space-between;
         align-items: center;
         margin-bottom: 1.5rem;
+        padding-bottom: 1rem;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.03);
 
         h3 {
-            font-size: $font-size-sm;
+            font-size: $font-size-base;
             color: $text-inverse;
-            font-weight: 500;
+            font-weight: 600;
         }
 
         select {
-            background: $bg-dark;
+            background: rgba(0, 0, 0, 0.3);
             border: 1px solid $border-subtle;
             color: $text-muted;
             font-size: $font-size-xs;
@@ -337,16 +277,19 @@
             border-radius: $radius-sm;
             outline: none;
             cursor: pointer;
+            transition: all $transition-base;
 
+            &:hover,
             &:focus {
-                border-color: $primary;
+                border-color: $border-hover;
+                color: $text-inverse;
             }
         }
     }
 
     .chart-container {
         position: relative;
-        height: 250px;
+        height: 260px;
         width: 100%;
         display: flex;
         justify-content: center;
