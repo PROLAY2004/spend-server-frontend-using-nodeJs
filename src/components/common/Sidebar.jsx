@@ -1,4 +1,4 @@
-import { Link } from 'react-router-dom';
+import { NavLink, useLocation } from 'react-router-dom';
 import { useState, useEffect } from 'react';
 import { toast } from 'react-toastify';
 
@@ -6,6 +6,8 @@ import logout from '../../utils/logout.js';
 import '../../styles/common/sidebar.scss';
 
 function Sidebar({ isMobileOpen, sidebarRef }) {
+    const location = useLocation();
+    
     return (
         <>
             <div className={`sidebar-overlay d-block d-sm-none top-0 start-0 end-0 bottom-0 position-fixed ${isMobileOpen ? 'active' : ''}`} onClick={() => setIsMobileOpen(false)}></div>
@@ -29,26 +31,30 @@ function Sidebar({ isMobileOpen, sidebarRef }) {
 
                 {/* Middle Section - Scrollable */}
                 <nav className="nav-links-scrollable flex-grow-1 overflow-auto overflow-x-hidden p-3 d-flex flex-column gap-2">
-                    <Link to="/dashboard" className="active">
+                    <div className={`side-links ${location.pathname === '/dashboard' ? 'active' : ''}`}>
                         <i className="bi bi-grid-1x2-fill"></i>
-                        <span>Dashboard</span>
-                    </Link>
-                    <Link to="/ledger">
+                        <NavLink to="/dashboard">Dashboard</NavLink>
+                    </div>
+
+                    <div className={`side-links ${location.pathname === '/ledger' ? 'active' : ''}`}>
                         <i className="bi bi-journal-richtext"></i>
-                        <span>Ledger</span>
-                    </Link>
-                    <Link to="/manage-records">
-                        <i className="bi bi-folder2-open"></i>
-                        <span>Manage Records</span>
-                    </Link>
-                    <Link to="/invoices">
+                        <NavLink to="/ledger">Ledger</NavLink>
+                    </div>
+
+                    <div className={`side-links ${location.pathname === '/payers' ? 'active' : ''}`}>
+                        <i className="bi bi-people"></i>
+                        <NavLink to="/payers">Manage Payers</NavLink>
+                    </div>
+
+                    <div className={`side-links ${location.pathname === '/invoices' ? 'active' : ''}`}>
                         <i className="bi bi-receipt"></i>
-                        <span>Invoices</span>
-                    </Link>
-                    <Link to="/documents">
+                        <NavLink to="/invoices">Invoices</NavLink>
+                    </div>
+
+                    <div className={`side-links ${location.pathname === '/documents' ? 'active' : ''}`}>
                         <i className="bi bi-file-earmark-text"></i>
-                        <span>Documents</span>
-                    </Link>
+                        <NavLink to="/documents">Documents</NavLink>
+                    </div>
                 </nav>
 
                 {/* Bottom Section - Fixed */}

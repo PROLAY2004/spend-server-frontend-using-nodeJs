@@ -1,0 +1,446 @@
+@import './mixins/root';
+
+.payers-body {
+    max-width: 1200px;
+}
+
+// --- Sexy Premium Form Controls ---
+.custom-input,
+.custom-select {
+    background-color: rgba(255, 255, 255, 0.03) !important;
+    border: 1px solid rgba(255, 255, 255, 0.08) !important;
+    color: $text-inverse !important;
+    font-size: $font-size-sm;
+    border-radius: $radius-sm;
+    transition: all $transition-smooth;
+    backdrop-filter: blur(4px);
+
+    &::placeholder {
+        color: rgba(255, 255, 255, 0.3);
+    }
+
+    &:hover {
+        background-color: rgba(255, 255, 255, 0.05) !important;
+        border-color: rgba(255, 255, 255, 0.15) !important;
+    }
+
+    &:focus {
+        background-color: rgba(0, 0, 0, 0.4) !important;
+        border-color: $primary-light !important;
+        box-shadow: 0 0 0 3px rgba(139, 92, 246, 0.15) !important;
+    }
+
+    option {
+        background-color: #111;
+        color: $text-inverse;
+        padding: 10px;
+    }
+}
+
+.custom-select {
+    cursor: pointer;
+    padding-right: 2.5rem;
+    background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3e%3cpath fill='none' stroke='%23888888' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='m2 5 6 6 6-6'/%3e%3c/svg%3e") !important;
+}
+
+// --- Typography adjustments ---
+.contact-text {
+    color: #a1a1aa;
+}
+
+// --- Accordion Card ---
+.payer-card {
+    @include glass-panel;
+    background: rgba(10, 10, 10, 0.6);
+    transition: all $transition-smooth;
+    border: 1px solid rgba(255, 255, 255, 0.06);
+
+    &:hover {
+        border-color: rgba(255, 255, 255, 0.15);
+    }
+
+    .payer-header {
+        padding: 1.25rem 1.5rem;
+        user-select: none;
+
+        .avatar-placeholder {
+            width: 40px;
+            height: 40px;
+            background: linear-gradient(135deg, rgba(124, 58, 237, 0.2), transparent);
+            color: $primary-light;
+            font-size: 1rem;
+            font-weight: 600;
+            border: 1px solid $border-primary;
+        }
+
+        .toggle-icon {
+            color: $text-muted;
+            transition: transform $transition-smooth;
+            font-size: 1.1rem;
+
+            &.rotated {
+                transform: rotate(180deg);
+            }
+        }
+    }
+
+    .payer-body {
+        display: grid;
+        grid-template-rows: 0fr;
+        transition: grid-template-rows $transition-smooth;
+
+        .payer-body-inner {
+            overflow: hidden;
+            padding: 0 1.5rem;
+            opacity: 0;
+            transition: opacity $transition-base, padding $transition-base;
+        }
+    }
+
+    &.expanded {
+        border-color: $border-primary;
+        background: rgba(15, 15, 15, 0.95);
+        box-shadow: 0 8px 30px rgba(0, 0, 0, 0.5);
+
+        .payer-body {
+            grid-template-rows: 1fr;
+
+            .payer-body-inner {
+                padding: 0 1.5rem 1.5rem 1.5rem;
+                opacity: 1;
+                border-top: 1px solid rgba(255, 255, 255, 0.03);
+                margin-top: 0.5rem;
+                padding-top: 1.5rem;
+            }
+        }
+    }
+}
+
+// --- Sexy Add Ledger Button ---
+.btn-add-ledger {
+    background: linear-gradient(135deg, $primary 0%, $primary-light 100%);
+    color: #ffffff;
+    border: none;
+    box-shadow: 0 4px 12px rgba(124, 58, 237, 0.2);
+    transition: all $transition-smooth;
+    position: relative;
+    overflow: hidden;
+
+    &::after {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: -100%;
+        width: 50%;
+        height: 100%;
+        background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+        transition: all 0.5s ease;
+    }
+
+    &:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 6px 16px rgba(124, 58, 237, 0.4);
+
+        &::after {
+            left: 100%;
+        }
+    }
+
+    &:active {
+        transform: translateY(1px);
+        box-shadow: 0 2px 8px rgba(124, 58, 237, 0.3);
+    }
+}
+
+// --- Custom Checkbox ---
+.checkbox-cell {
+    width: 40px;
+    padding-right: 0 !important;
+}
+
+.custom-checkbox {
+    display: block;
+    position: relative;
+    cursor: pointer;
+    width: 18px;
+    height: 18px;
+    user-select: none;
+
+    input {
+        position: absolute;
+        opacity: 0;
+        cursor: pointer;
+        height: 0;
+        width: 0;
+
+        &:checked~.checkmark {
+            background-color: $primary;
+            border-color: $primary;
+        }
+
+        &:checked~.checkmark:after {
+            display: block;
+        }
+
+        &:indeterminate~.checkmark {
+            background-color: $primary;
+            border-color: $primary;
+
+            &:after {
+                display: block;
+                left: 3px;
+                top: 7px;
+                width: 10px;
+                height: 2px;
+                border: none;
+                background: white;
+                transform: none;
+            }
+        }
+    }
+
+    .checkmark {
+        position: absolute;
+        top: 0;
+        left: 0;
+        height: 18px;
+        width: 18px;
+        background-color: rgba(255, 255, 255, 0.05);
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        border-radius: 4px;
+        transition: all 0.2s ease;
+
+        &:after {
+            content: "";
+            position: absolute;
+            display: none;
+            left: 5px;
+            top: 2px;
+            width: 5px;
+            height: 10px;
+            border: solid white;
+            border-width: 0 2px 2px 0;
+            transform: rotate(45deg);
+        }
+    }
+
+    &:hover input~.checkmark {
+        border-color: $primary-light;
+    }
+}
+
+// --- Ledger Table ---
+.ledger-table-wrapper {
+    border-color: rgba(255, 255, 255, 0.08) !important;
+    background: rgba(0, 0, 0, 0.3);
+}
+
+.ledger-table {
+    border-collapse: collapse;
+    font-size: $font-size-xs;
+
+    th {
+        color: #71717a;
+        font-weight: 500;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+        padding: 0.875rem 1.25rem;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+        background: rgba(255, 255, 255, 0.02);
+    }
+
+    td {
+        padding: 0.875rem 1.25rem;
+        color: #e4e4e7;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.03);
+        vertical-align: middle;
+        transition: background $transition-base;
+    }
+
+    tr:last-child td {
+        border-bottom: none;
+    }
+
+    tr:hover td {
+        background: rgba(255, 255, 255, 0.02);
+    }
+
+    tr.selected-row td {
+        background: rgba(124, 58, 237, 0.05);
+    }
+}
+
+// --- Status Badges ---
+.badge-custom {
+    padding: 0.25rem 0.75rem;
+    border-radius: 20px;
+    font-size: $font-size-xs;
+    font-weight: 500;
+    border: 1px solid transparent;
+
+    &.success {
+        color: #10b981;
+        background: rgba(16, 185, 129, 0.1);
+        border-color: rgba(16, 185, 129, 0.2);
+    }
+
+    &.danger {
+        color: #ef4444;
+        background: rgba(239, 68, 68, 0.1);
+        border-color: rgba(239, 68, 68, 0.2);
+    }
+}
+
+.static-status {
+    font-weight: 500;
+    font-size: 0.7rem;
+    padding: 0.2rem 0.5rem;
+    border-radius: 4px;
+    text-transform: uppercase;
+    letter-spacing: 0.02em;
+
+    &.status-paid {
+        color: #10b981;
+        background: rgba(16, 185, 129, 0.1);
+    }
+
+    &.status-unpaid {
+        color: #ef4444;
+        background: rgba(239, 68, 68, 0.1);
+    }
+}
+
+// --- Action Icons ---
+.action-buttons .btn-action {
+    background: transparent;
+    border: none;
+    color: $text-muted;
+    width: 28px;
+    height: 28px;
+    border-radius: $radius-sm;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all $transition-base;
+    cursor: pointer;
+
+    &:hover {
+        background: rgba(255, 255, 255, 0.08);
+        color: $text-inverse;
+    }
+
+    &.delete:hover {
+        background: rgba(239, 68, 68, 0.15);
+        color: #ef4444;
+    }
+
+    &.edit:hover {
+        background: rgba(124, 58, 237, 0.15);
+        color: $primary-light;
+    }
+}
+
+// --- Pagination ---
+.pagination-wrapper {
+    .page-btn {
+        background: rgba(255, 255, 255, 0.03);
+        border: 1px solid rgba(255, 255, 255, 0.08);
+        color: $text-muted;
+        min-width: 32px;
+        height: 32px;
+        border-radius: $radius-sm;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: $font-size-sm;
+        font-weight: 500;
+        transition: all $transition-base;
+        cursor: pointer;
+
+        &:hover:not(:disabled) {
+            background: rgba(255, 255, 255, 0.08);
+            color: $text-inverse;
+        }
+
+        &.active {
+            background: $primary;
+            color: #fff;
+            border-color: $primary;
+            box-shadow: 0 2px 8px rgba(124, 58, 237, 0.3);
+        }
+
+        &:disabled {
+            opacity: 0.4;
+            cursor: not-allowed;
+        }
+    }
+}
+
+// --- Action Icons Shared Styles (Used by Payer actions & Ledger actions) ---
+.payer-actions,
+.action-buttons {
+    .btn-action {
+        background: transparent;
+        border: none;
+        color: $text-muted;
+        width: 28px;
+        height: 28px;
+        border-radius: $radius-sm;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: all $transition-base;
+        cursor: pointer;
+
+        &:hover {
+            background: rgba(255, 255, 255, 0.08);
+            color: $text-inverse;
+        }
+
+        &.delete:hover {
+            background: rgba(239, 68, 68, 0.15);
+            color: #ef4444;
+        }
+
+        &.edit:hover {
+            background: rgba(124, 58, 237, 0.15);
+            color: $primary-light;
+        }
+    }
+}
+
+// Ensure the border color matches the theme
+.border-subtle {
+    border-color: rgba(255, 255, 255, 0.08) !important;
+}
+
+// --- Mini Pagination for Inner Ledger Tables ---
+.ledger-pagination {
+    border-top: 1px solid rgba(255, 255, 255, 0.03);
+
+    .btn-mini-page {
+        background: rgba(255, 255, 255, 0.03);
+        border: 1px solid rgba(255, 255, 255, 0.08);
+        color: $text-muted;
+        width: 24px;
+        height: 24px;
+        border-radius: 4px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 0.75rem;
+        transition: all $transition-base;
+        cursor: pointer;
+
+        &:hover:not(:disabled) {
+            background: rgba(255, 255, 255, 0.08);
+            color: $text-inverse;
+            border-color: rgba(255, 255, 255, 0.15);
+        }
+
+        &:disabled {
+            opacity: 0.3;
+            cursor: not-allowed;
+        }
+    }
+}

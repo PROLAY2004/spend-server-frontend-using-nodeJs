@@ -58,7 +58,13 @@ export default function Dashboard() {
     const [barFilter, setBarFilter] = useState('thisMonth');
     const sidebarRef = useRef(null);
 
+    const handleBtnClick = () => {
+        console.log("Btn Clicked");
+    }
+
     useEffect(() => {
+        window.scrollTo(0, 0);
+        
         const handleClickOutside = (event) => {
             if (isMobileOpen && sidebarRef.current && !sidebarRef.current.contains(event.target)) {
                 setIsMobileOpen(false);
@@ -109,11 +115,16 @@ export default function Dashboard() {
     };
 
     return (
-        <div className="dashboard-wrapper d-flex h-100 overflow-hidden position relative">
+        <div className="dashboard-wrapper d-flex h-100 overflow-hidden position-relative">
             <Sidebar isMobileOpen={isMobileOpen} sidebarRef={sidebarRef}/>
 
             <main className="main-content d-flex flex-column h-100 flex-grow-1 overflow-auto overflow-x-hidden">
-                <Header/>
+                <Header setIsMobileOpen={setIsMobileOpen} pageName={"Dashboard"} breadCrumb={"Overview"} btnIcon={
+                    <>
+                        <i className="bi bi-cloud-download"></i>
+                        <span>Export</span>
+                    </>
+                } btnFunc={handleBtnClick} />
 
                 <div className="dashboard-body w-100 my-0 mx-auto p-3 p-md-4">
                     <div className="stats-grid d-grid gap-3 mb-4">

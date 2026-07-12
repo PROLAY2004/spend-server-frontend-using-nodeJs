@@ -36,6 +36,7 @@
 
 .chart-card {
     @include glass-panel;
+    min-width: 0;
 
     &.full-width {
         grid-column: 1 / -1;
@@ -69,6 +70,9 @@
 
     .chart-container {
         height: 260px;
+        min-width: 0;
+            width: 100%;
+        overflow: hidden;
 
         &.tall {
             height: 350px;
