@@ -1,14 +1,13 @@
-import configaruration from '../../config/config.js';
-import Api from '../../api/Api.js';
+import apiInterceptor from '../../api/interceptor.js';
 
-const api = new Api();
-
-export default async function login(toast, loginData) {
+export default async function insertPayer(navigate, toast, formData) {
 	try {
-		const response = await api.postApi(
-			`${configaruration.BASE_URL}/user/auth/login`,
-			null,
-			loginData,
+		const response = await apiInterceptor(
+			navigate,
+			toast,
+			'POST',
+			'/user/dashboard/add-payer',
+			formData,
 		);
 		const result = await response.json();
 
@@ -18,9 +17,6 @@ export default async function login(toast, loginData) {
 				autoClose: 5000,
 				theme: 'dark',
 			});
-
-			localStorage.setItem('access_token', result.data.access_token);
-			localStorage.setItem('refresh_token', result.data.refresh_token);
 
 			return true;
 		} else {

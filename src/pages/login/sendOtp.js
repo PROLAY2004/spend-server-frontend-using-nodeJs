@@ -13,7 +13,7 @@ export default async function sendOtp(toast, email = xjhs) {
 
 		if (result.success) {
 			toast.success(result.message, {
-				position: 'bottom-right',
+				position: 'top-right',
 				autoClose: 5000,
 				theme: 'dark',
 			});
@@ -21,7 +21,7 @@ export default async function sendOtp(toast, email = xjhs) {
 			return true;
 		} else {
 			toast.error(result.message, {
-				position: 'bottom-right',
+				position: 'top-right',
 				autoClose: 5000,
 				theme: 'dark',
 			});
@@ -30,7 +30,7 @@ export default async function sendOtp(toast, email = xjhs) {
 		}
 	} catch (err) {
 		toast.error(err.message, {
-			position: 'bottom-right',
+			position: 'top-right',
 			autoClose: 5000,
 			theme: 'dark',
 		});

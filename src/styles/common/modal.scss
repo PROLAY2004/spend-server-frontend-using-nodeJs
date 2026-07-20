@@ -129,6 +129,12 @@
             transform: translateY(1px);
         }
     }
+
+    .btn-modal-save:disabled {
+        background: #5a3f87;
+        border: 1px solid #5a3f87;
+        transition: all 500ms;
+    }
 }
 
 // Entrance Animations

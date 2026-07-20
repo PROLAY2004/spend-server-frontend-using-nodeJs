@@ -35,7 +35,6 @@ function Contact() {
                 message: "",
             });
         }
-
     };
 
     return (

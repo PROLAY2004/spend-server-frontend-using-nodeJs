@@ -14,7 +14,7 @@ export default async function sendResponse(toast, contactDetails) {
 
 		if (result.success) {
 			toast.success(result.message, {
-				position: 'bottom-right',
+				position: 'top-right',
 				autoClose: 5000,
 				theme: 'dark',
 			});
@@ -22,7 +22,7 @@ export default async function sendResponse(toast, contactDetails) {
 			return true;
 		} else {
 			toast.error(result.message, {
-				position: 'bottom-right',
+				position: 'top-right',
 				autoClose: 5000,
 				theme: 'dark',
 			});
@@ -31,7 +31,7 @@ export default async function sendResponse(toast, contactDetails) {
 		}
 	} catch (err) {
 		toast.error(err.message, {
-			position: 'bottom-right',
+			position: 'top-right',
 			autoClose: 5000,
 			theme: 'dark',
 		});

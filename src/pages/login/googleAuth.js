@@ -13,7 +13,7 @@ const googleResponse = async (authResult, toast) => {
 
 		if (result.success) {
 			toast.success(result.message, {
-				position: 'bottom-right',
+				position: 'top-right',
 				autoClose: 5000,
 				theme: 'dark',
 			});
@@ -24,7 +24,7 @@ const googleResponse = async (authResult, toast) => {
 			return true;
 		} else {
 			toast.error(result.message, {
-				position: 'bottom-right',
+				position: 'top-right',
 				autoClose: 5000,
 				theme: 'dark',
 			});
@@ -33,7 +33,7 @@ const googleResponse = async (authResult, toast) => {
 		}
 	} catch (err) {
 		toast.error(err.message, {
-			position: 'bottom-right',
+			position: 'top-right',
 			autoClose: 5000,
 			theme: 'dark',
 		});

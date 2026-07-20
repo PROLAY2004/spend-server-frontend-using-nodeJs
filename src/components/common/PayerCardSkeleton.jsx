@@ -4,8 +4,8 @@ import '../../styles/common/loader.scss';
 const PayerCardSkeleton = () => {
     return (
         <div className="payers-list d-flex flex-column gap-2 flex-grow-1">
-            {Array.from({ length: 3 }).map((_, index) => (
-                <div className="payer-card skeleton-card overflow-hidden mb-2">
+            {Array.from({ length: 5 }).map((_, index) => (
+                <div className="payer-card skeleton-card overflow-hidden mb-2" key={index}>
                     <div className="payer-header d-flex p-3 flex-column align-items-start border-0 pointer-events-none">
 
                         {/* Top Row: Identity & Desktop Actions */}

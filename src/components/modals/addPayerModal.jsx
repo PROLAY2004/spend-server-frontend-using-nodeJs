@@ -1,23 +1,48 @@
-import React, { useState, useEffect } from 'react';
+import { useState } from 'react';
+import { toast } from 'react-toastify';
+import { useNavigate } from 'react-router-dom';
+
 import '../../styles/common/modal.scss';
+import insertPayer from '../../pages/payers/addPayer.js';
 
 const AddPayerModal = ({ isOpen, onClose }) => {
-    const [name, setName] = useState('');
-    const [mobile, setMobile] = useState('');
-
-    useEffect(() => {
-        if (isOpen) {
-            setName('');
-            setMobile('');
-        }
-    }, [isOpen]);
+    const navigate = useNavigate();
+    const [loading, setLoading] = useState(false);
+    const [formData, setFormData] = useState({
+        name: '',
+        mobile: '',
+    });
 
     if (!isOpen) return null;
 
-    const handleSubmit = (e) => {
+    const handleChange = (e) => {
+        const { name, value } = e.target;
+
+        setFormData((prev) => ({
+            ...prev,
+            [name]: value,
+        }));
+    };
+
+    const resetForm = () => {
+        setFormData({
+            name: "",
+            mobile: "",
+        });
+    }
+
+    const handleSubmit = async (e) => {
         e.preventDefault();
-        console.log("Saving Payer:", { name, mobile });
-        onClose();
+        setLoading(true);
+
+        const isSuccess = await insertPayer(navigate, toast, formData);
+
+        setLoading(false);
+
+        if (isSuccess) {
+            onClose();
+            resetForm();            
+        }
     };
 
     return (
@@ -34,7 +59,15 @@ const AddPayerModal = ({ isOpen, onClose }) => {
                         </div>
                         Add New Payer
                     </h3>
-                    <button className="btn-close-custom d-flex align-items-center justify-content-center bg-transparent border-0 fs-6" onClick={onClose} type="button" title="Close">
+                    <button
+                        className="btn-close-custom d-flex align-items-center justify-content-center bg-transparent border-0 fs-6"
+                        onClick={() => {
+                            if (loading) return;
+                            onClose();
+                            resetForm();
+                        }}
+                        type="button"
+                        title="Close">
                         <i className="bi bi-x-lg"></i>
                     </button>
                 </div>
@@ -50,9 +83,9 @@ const AddPayerModal = ({ isOpen, onClose }) => {
                                 type="text"
                                 className="custom-input form-control shadow-none ps-5"
                                 placeholder="e.g. Sarah Jenkins"
-                                value={name}
-                                onChange={(e) => setName(e.target.value)}
-                                required
+                                name='name'
+                                value={formData.name}
+                                onChange={handleChange}
                             />
                         </div>
                     </div>
@@ -65,24 +98,38 @@ const AddPayerModal = ({ isOpen, onClose }) => {
                             <i className="bi bi-telephone position-absolute top-50 start-0 translate-middle-y ms-3 "></i>
                             <input
                                 type="tel"
+                                name='mobile'
                                 className="custom-input form-control shadow-none ps-5"
-                                placeholder="e.g. +91 98765 43210"
-                                value={mobile}
-                                onChange={(e) => setMobile(e.target.value)}
-                                required
+                                placeholder="e.g. 98765 43210"
+                                value={formData.mobile}
+                                onChange={handleChange}
                             />
                         </div>
                     </div>
 
                     <div className="modal-footer d-flex justify-content-end gap-2 mt-3 p-0 border-0">
-                        <button type="button" className="btn-modal-cancel" onClick={onClose}>
+                        <button type="button" className="btn-modal-cancel" onClick={() => {
+                            if (loading) return;
+                            onClose();
+                            resetForm();
+                        }}>
                             Cancel
                         </button>
-                        {/* Added icon to the primary action button */}
-                        <button type="submit" className="btn-modal-save d-flex align-items-center gap-2">
-                            <i className="bi bi-plus-lg" style={{ fontSize: '0.85rem' }}></i>
-                            Save Payer
-                        </button>
+
+                        <button disabled={loading} type="submit" className="btn-modal-save d-flex align-items-center justify-content-center gap-2">{loading ? (
+                            <>
+                                <div
+                                    className="spinner-border"
+                                    role="status"
+                                    style={{ width: '20px', height: '20px' }}></div>
+                                Saving...
+                            </>
+                        ) : (
+                            <>
+                                <i className="bi bi-plus-circle" style={{ fontSize: '0.85rem' }}></i>
+                                Save Payer
+                            </>
+                        )}</button>
                     </div>
                 </form>
             </div>

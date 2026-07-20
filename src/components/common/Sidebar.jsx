@@ -5,7 +5,7 @@ import { toast } from 'react-toastify';
 import logout from '../../utils/logout.js';
 import '../../styles/common/sidebar.scss';
 
-function Sidebar({ isMobileOpen, sidebarRef }) {
+function Sidebar({ isMobileOpen, sidebarRef, setIsMobileOpen }) {
     const location = useLocation();
     
     return (
