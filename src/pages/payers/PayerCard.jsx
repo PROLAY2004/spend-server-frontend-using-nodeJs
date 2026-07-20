@@ -1,6 +1,6 @@
 import { useState } from "react";
 
-function PayerCard({ payerData }) {
+function PayerCard({ payerData, setEditPayerModal, setPayerData, setDeletePayerModal, setDeletePayerId }) {
     const [expandedPayerId, setExpandedPayerId] = useState(null);
 
     const toggleAccordion = (id) => {
@@ -49,13 +49,22 @@ function PayerCard({ payerData }) {
                             <button
                                 className="btn-action edit"
                                 title="Edit Payer"
-                                onClick={()=> console.log("edit btn clicked")}
+                                onClick={(e) => {
+                                    e.stopPropagation();
+                                    setPayerData(payerData);
+                                    setEditPayerModal(true);
+                                }}
                             >
                                 <i className="bi bi-pencil"></i>
                             </button>
                             <button
                                 className="btn-action delete"
                                 title="Delete Payer"
+                                onClick={(e)=>{
+                                    e.stopPropagation();
+                                    setPayerData(payerData);
+                                    setDeletePayerModal(true);
+                                }}
                             >
                                 <i className="bi bi-trash"></i>
                             </button>
@@ -156,44 +165,44 @@ function PayerCard({ payerData }) {
                             </thead>
                             <tbody>
 
-                                    <tr  className='selected-row'>
-                                        <td className="checkbox-cell">
-                                            <label className="custom-checkbox">
-                                                <input
-                                                    type="checkbox"
-                                                />
-                                                <span className="checkmark"></span>
-                                            </label>
-                                        </td>
-                                        <td>454545</td>
-                                        <td>dfsd</td>
-                                        <td>₹sdfgdr</td>
-                                        <td>₹sdef</td>
-                                        <td className='text-danger fw-medium'>
-                                            ₹325435
-                                        </td>
-                                        <td>
-                                            <span className='static-status text-uppercase status-unpaid'>
-                                                sdf
-                                            </span>
-                                        </td>
-                                        <td>
-                                            <div className="action-buttons d-flex justify-content-center gap-2">
-                                                <button className="btn-action edit" title="Edit">
-                                                    <i className="bi bi-journal-text"></i>
-                                                </button>
-                                                <button className="btn-action edit" title="Edit">
-                                                    <i className="bi bi-pencil"></i>
-                                                </button>
-                                                <button className="btn-action delete" title="Delete">
-                                                    <i className="bi bi-trash"></i>
-                                                </button>
-                                            </div>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td colSpan="8" className="text-center py-4 pagination-text">No records found for this filter.</td>
-                                    </tr>
+                                <tr className='selected-row'>
+                                    <td className="checkbox-cell">
+                                        <label className="custom-checkbox">
+                                            <input
+                                                type="checkbox"
+                                            />
+                                            <span className="checkmark"></span>
+                                        </label>
+                                    </td>
+                                    <td>454545</td>
+                                    <td>dfsd</td>
+                                    <td>₹sdfgdr</td>
+                                    <td>₹sdef</td>
+                                    <td className='text-danger fw-medium'>
+                                        ₹325435
+                                    </td>
+                                    <td>
+                                        <span className='static-status text-uppercase status-unpaid'>
+                                            sdf
+                                        </span>
+                                    </td>
+                                    <td>
+                                        <div className="action-buttons d-flex justify-content-center gap-2">
+                                            <button className="btn-action edit" title="Edit">
+                                                <i className="bi bi-journal-text"></i>
+                                            </button>
+                                            <button className="btn-action edit" title="Edit">
+                                                <i className="bi bi-pencil"></i>
+                                            </button>
+                                            <button className="btn-action delete" title="Delete">
+                                                <i className="bi bi-trash"></i>
+                                            </button>
+                                        </div>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td colSpan="8" className="text-center py-4 pagination-text">No records found for this filter.</td>
+                                </tr>
 
                             </tbody>
                         </table>

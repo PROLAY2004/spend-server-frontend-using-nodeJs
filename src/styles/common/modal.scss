@@ -159,3 +159,36 @@
         transform: translateY(0) scale(1);
     }
 }
+
+// Destructive Delete Button
+.btn-modal-delete {
+    background: rgba(239, 68, 68, 0.1);
+    border: 1px solid rgba(239, 68, 68, 0.2);
+    color: #ef4444; // Standard danger red
+    padding: 0.5rem 1.25rem;
+    border-radius: $radius-sm;
+    font-size: $font-size-sm;
+    font-weight: 500;
+    transition: all $transition-base;
+    cursor: pointer;
+
+    i {
+        transition: transform $transition-base;
+    }
+
+    &:hover {
+        background: #ef4444;
+        border-color: #ef4444;
+        color: #ffffff;
+        transform: translateY(-1px);
+        box-shadow: 0 6px 16px rgba(239, 68, 68, 0.25);
+        
+        i {
+            transform: scale(1.1) rotate(-5deg); // Slight aggressive tilt on hover
+        }
+    }
+
+    &:active {
+        transform: translateY(1px);
+    }
+}

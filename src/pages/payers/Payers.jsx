@@ -2,26 +2,36 @@ import { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 
+import PayerCardSkeleton from '../../components/common/PayerCardSkeleton.jsx';
 import Sidebar from '../../components/common/Sidebar.jsx';
 import Header from '../../components/common/Header.jsx';
-import PayerCard from './PayerCard.jsx';
-import PayerCardSkeleton from '../../components/common/PayerCardSkeleton.jsx';
-import AddPayerModal from '../../components/modals/addPayerModal.jsx';
-import displayPayer from './fetchPayer.js';
+
 import EmptyCard from '../../components/common/EmptyCard.jsx';
+import PayerCard from './PayerCard.jsx';
+
+import AddPayerModal from '../../components/modals/AddPayerModal.jsx';
+import EditPayerModal from '../../components/modals/EditPayerModal.jsx';
+import DeleteModal from '../../components/modals/DeleteModal.jsx';
+
+import displayPayer from './fetchPayer.js';
 
 import '../../styles/payers.scss';
 
 export default function Payers() {
     const navigate = useNavigate();
     const sidebarRef = useRef(null);
-    
-    const [pageRefresh, setPageRefresh] = useState(0);
-    const [isMobileOpen, setIsMobileOpen] = useState(false);
-    const [addPayerModal, setAddPayerModal] = useState(false);
+
     const [pageLoader, setPageLoader] = useState(false);
-    const [payerDetails, setPayerDetails] = useState([]);
     const [emptyState, setEmptyState] = useState(false);
+    const [pageRefresh, setPageRefresh] = useState(0);
+
+    const [isMobileOpen, setIsMobileOpen] = useState(false);
+    const [payerDetails, setPayerDetails] = useState([]);
+    const [payerData, setPayerData] = useState({});
+
+    const [addPayerModal, setAddPayerModal] = useState(false);
+    const [editPayerModal, setEditPayerModal] = useState(false);
+    const [deletePayerModal, setDeletePayerModal] = useState(false);
 
     const handleDisplay = async () => {
         setPageLoader(true);
@@ -30,15 +40,16 @@ export default function Payers() {
 
         if (result.payerDetails.length) {
             setPayerDetails(result.payerDetails);
+            setEmptyState(false);
         }
-        else{
+        else {
             setEmptyState(true);
         }
 
         setPageLoader(false);
     }
 
-    useEffect(()=>{
+    useEffect(() => {
         handleDisplay();
     }, [pageRefresh])
 
@@ -97,10 +108,16 @@ export default function Payers() {
                     {/* Payers List */}
                     <div className="payers-list d-flex flex-column gap-2 mb-4 flex-grow-1">
                         <PayerCardSkeleton isLoading={pageLoader} />
-                        <EmptyCard isActive={emptyState}/>
+                        <EmptyCard isActive={emptyState} />
 
                         {payerDetails.map((payer) => (
-                            <PayerCard key={payer._id} payerData={payer}/>
+                            <PayerCard 
+                                key={payer._id} 
+                                payerData={payer} 
+                                setEditPayerModal={setEditPayerModal} 
+                                setPayerData={setPayerData} 
+                                setDeletePayerModal={setDeletePayerModal}
+                            />
                         ))}
                     </div>
 
@@ -138,7 +155,9 @@ export default function Payers() {
             </main>
         </div>
 
-        <AddPayerModal isOpen={addPayerModal} onClose={() => setAddPayerModal(false)} pageRefresh={setPageRefresh}/>
+        <AddPayerModal isOpen={addPayerModal} onClose={() => setAddPayerModal(false)} pageRefresh={setPageRefresh} />
+        <EditPayerModal isOpen={editPayerModal} onClose={() => setEditPayerModal(false)} pageRefresh={setPageRefresh} payerData={payerData} />
+        <DeleteModal isOpen={deletePayerModal} onClose={() => setDeletePayerModal(false)} pageRefresh={setPageRefresh} payerData={payerData} />
     </>
     );
 }
