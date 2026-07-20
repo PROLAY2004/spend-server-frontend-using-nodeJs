@@ -1,19 +1,46 @@
-import React, { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { toast } from 'react-toastify';
 
 import Sidebar from '../../components/common/Sidebar.jsx';
 import Header from '../../components/common/Header.jsx';
 import PayerCard from './PayerCard.jsx';
 import PayerCardSkeleton from '../../components/common/PayerCardSkeleton.jsx';
-import AddPayerModal from '../../components/modals/addPayerModal.jsx'
+import AddPayerModal from '../../components/modals/addPayerModal.jsx';
+import displayPayer from './fetchPayer.js';
+import EmptyCard from '../../components/common/EmptyCard.jsx';
 
 import '../../styles/payers.scss';
 
 export default function Payers() {
+    const navigate = useNavigate();
     const sidebarRef = useRef(null);
+    
+    const [pageRefresh, setPageRefresh] = useState(0);
     const [isMobileOpen, setIsMobileOpen] = useState(false);
     const [addPayerModal, setAddPayerModal] = useState(false);
-    
-    const [expandedPayerId, setExpandedPayerId] = useState(null);   
+    const [pageLoader, setPageLoader] = useState(false);
+    const [payerDetails, setPayerDetails] = useState([]);
+    const [emptyState, setEmptyState] = useState(false);
+
+    const handleDisplay = async () => {
+        setPageLoader(true);
+
+        const result = await displayPayer(navigate, toast);
+
+        if (result.payerDetails.length) {
+            setPayerDetails(result.payerDetails);
+        }
+        else{
+            setEmptyState(true);
+        }
+
+        setPageLoader(false);
+    }
+
+    useEffect(()=>{
+        handleDisplay();
+    }, [pageRefresh])
 
     return (<>
         <div className="dashboard-wrapper d-flex h-100 overflow-hidden position-relative">
@@ -58,6 +85,7 @@ export default function Payers() {
                             <select
                                 className="custom-select py-2 w-100 form-select shadow-none"
                             >
+                                <option value="Name A-Z">Newest First</option>
                                 <option value="Name A-Z">Name: A→Z</option>
                                 <option value="Name Z-A">Name: Z→A</option>
                                 <option value="Due: High to Low">Due: High to Low</option>
@@ -68,51 +96,12 @@ export default function Payers() {
 
                     {/* Payers List */}
                     <div className="payers-list d-flex flex-column gap-2 mb-4 flex-grow-1">
-                        <PayerCardSkeleton />
+                        <PayerCardSkeleton isLoading={pageLoader} />
+                        <EmptyCard isActive={emptyState}/>
 
-                        <PayerCard />
-                        <PayerCard  />
-
-                        {/* {paginatedData.length > 0 ? paginatedData.map((payer) => {
-
-                            // Ledger Pagination & Filtering Logic
-                            const innerSearch = (ledgerSearch[payer.id] || '').toLowerCase();
-                            const currentLedgerFilter = ledgerFilters[payer.id] || 'All';
-
-                            const filteredLedgers = payer.ledgers.filter(ledger => {
-                                const matchesFilter = currentLedgerFilter === 'All' ? true : ledger.status === currentLedgerFilter;
-                                const matchesSearch = ledger.category.toLowerCase().includes(innerSearch) ||
-                                    ledger.date.includes(innerSearch);
-                                return matchesFilter && matchesSearch;
-                            });
-
-                            const ledgerCurrentPage = ledgerPages[payer.id] || 1;
-                            const totalLedgerPages = Math.ceil(filteredLedgers.length / ledgersPerPage);
-                            const paginatedLedgers = filteredLedgers.slice((ledgerCurrentPage - 1) * ledgersPerPage, ledgerCurrentPage * ledgersPerPage);
-
-                            const selectedForPayer = selectedLedgers[payer.id] || [];
-                            const isAllSelected = paginatedLedgers.length > 0 && selectedForPayer.length === paginatedLedgers.length;
-                            const isIndeterminate = selectedForPayer.length > 0 && selectedForPayer.length < paginatedLedgers.length;
-
-                            return (
-                                
-                            );
-                        }) : (
-                            <div className="payer-card empty-state-card d-flex flex-column align-items-center justify-content-center text-center p-5 position-relative">
-                                <div className="empty-icon position-relative mb-3">
-                                    <i
-                                        className="bi bi-search"
-                                        style={{ fontSize: '2.5rem', opacity: '0.6' }}
-                                    ></i>
-                                </div>
-
-                                <h4 className="text-white fw-medium fs-5 position-relative">No Payers Found</h4>
-
-                                <p className="pagination-text mb-0 position-relative" style={{ fontSize: '0.85rem', maxWidth: '400px' }}>
-                                    We couldn't find any records matching your search or filter criteria. Try adjusting your filters or add new one.
-                                </p>
-                            </div>
-                        )} */}
+                        {payerDetails.map((payer) => (
+                            <PayerCard key={payer._id} payerData={payer}/>
+                        ))}
                     </div>
 
                     {/* {totalPages > 1 && (
@@ -149,7 +138,7 @@ export default function Payers() {
             </main>
         </div>
 
-        <AddPayerModal isOpen={addPayerModal} onClose={() => setAddPayerModal(false)} />
+        <AddPayerModal isOpen={addPayerModal} onClose={() => setAddPayerModal(false)} pageRefresh={setPageRefresh}/>
     </>
     );
 }

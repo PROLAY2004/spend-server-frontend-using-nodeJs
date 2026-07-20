@@ -6,7 +6,7 @@ export default async function insertPayer(navigate, toast, formData) {
 			navigate,
 			toast,
 			'POST',
-			'/user/dashboard/add-payer',
+			'/user/dashboard/payer',
 			formData,
 		);
 		const result = await response.json();

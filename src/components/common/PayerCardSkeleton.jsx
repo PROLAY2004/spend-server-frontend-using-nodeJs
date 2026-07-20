@@ -1,9 +1,9 @@
 import React from 'react';
 import '../../styles/common/loader.scss';
 
-const PayerCardSkeleton = () => {
+const PayerCardSkeleton = ({isLoading}) => {
     return (
-        <div className="payers-list d-flex flex-column gap-2 flex-grow-1">
+        <div className={ isLoading ? "payers-list d-flex flex-column gap-2 flex-grow-1" : "d-none"}>
             {Array.from({ length: 5 }).map((_, index) => (
                 <div className="payer-card skeleton-card overflow-hidden mb-2" key={index}>
                     <div className="payer-header d-flex p-3 flex-column align-items-start border-0 pointer-events-none">

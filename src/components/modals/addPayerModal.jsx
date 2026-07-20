@@ -5,7 +5,7 @@ import { useNavigate } from 'react-router-dom';
 import '../../styles/common/modal.scss';
 import insertPayer from '../../pages/payers/addPayer.js';
 
-const AddPayerModal = ({ isOpen, onClose }) => {
+const AddPayerModal = ({ isOpen, onClose, pageRefresh }) => {
     const navigate = useNavigate();
     const [loading, setLoading] = useState(false);
     const [formData, setFormData] = useState({
@@ -41,7 +41,8 @@ const AddPayerModal = ({ isOpen, onClose }) => {
 
         if (isSuccess) {
             onClose();
-            resetForm();            
+            resetForm();   
+            pageRefresh((prev) => prev+1);         
         }
     };
 
