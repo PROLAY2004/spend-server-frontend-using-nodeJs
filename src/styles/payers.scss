@@ -4,30 +4,27 @@
     max-width: 1200px;
 }
 
-// --- Sexy Premium Form Controls ---
 .custom-input,
 .custom-select {
-    background-color: rgba(255, 255, 255, 0.03) !important;
+    background-color: rgba(255, 255, 255, 0.05) !important;
     border: 1px solid rgba(255, 255, 255, 0.08) !important;
     color: $text-inverse !important;
     font-size: $font-size-sm;
     border-radius: $radius-sm;
     transition: all $transition-smooth;
-    backdrop-filter: blur(4px);
 
     &::placeholder {
         color: rgba(255, 255, 255, 0.3);
     }
 
     &:hover {
-        background-color: rgba(255, 255, 255, 0.05) !important;
         border-color: rgba(255, 255, 255, 0.15) !important;
     }
 
     &:focus {
         background-color: rgba(0, 0, 0, 0.4) !important;
         border-color: $primary-light !important;
-        box-shadow: 0 0 0 3px rgba(139, 92, 246, 0.15) !important;
+        box-shadow: 0 0 0 0.5px rgba(139, 92, 246, 0.15) !important;
     }
 
     option {
@@ -39,59 +36,113 @@
 
 .custom-select {
     cursor: pointer;
-    padding-right: 2.5rem;
     background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3e%3cpath fill='none' stroke='%23888888' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='m2 5 6 6 6-6'/%3e%3c/svg%3e") !important;
 }
 
 // --- Typography adjustments ---
-.contact-text {
-    color: #a1a1aa;
+.contact-text, .pagination-text {
+    color: #767679 !important;
 }
 
 // --- Accordion Card ---
 .payer-card {
     @include glass-panel;
-    background: rgba(10, 10, 10, 0.6);
-    transition: all $transition-smooth;
+    background-color: rgba(255, 255, 255, 0.03) !important;
     border: 1px solid rgba(255, 255, 255, 0.06);
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 
     &:hover {
-        border-color: rgba(255, 255, 255, 0.15);
+        background-color: rgba(255, 255, 255, 0.05) !important;
+        border-color: rgba(255, 255, 255, 0.12);
+        transform: translateY(-1px);
     }
 
+    // --- Header Figma Layout ---
     .payer-header {
-        padding: 1.25rem 1.5rem;
+        cursor: pointer;
         user-select: none;
 
-        .avatar-placeholder {
-            width: 40px;
-            height: 40px;
-            background: linear-gradient(135deg, rgba(124, 58, 237, 0.2), transparent);
-            color: $primary-light;
-            font-size: 1rem;
-            font-weight: 600;
-            border: 1px solid $border-primary;
+        .col-identity {
+            min-width: 0; // CRITICAL: Allows text-truncate to work in flexbox
+
+            .avatar-placeholder {
+                width: 40px;
+                height: 40px;
+                background: linear-gradient(135deg, rgba(124, 58, 237, 0.15), rgba(124, 58, 237, 0.05));
+                border: 1px solid rgba(124, 58, 237, 0.3);
+                color: #c4b5fd;
+            }
+
+            .payer-details {
+                min-width: 0;
+
+                .payer-name {
+                    font-size: 1rem;
+                    font-weight: 600;
+                    color: #f4f4f5;
+                    margin-bottom: 0.1rem;
+                    letter-spacing: -0.01em;
+                }
+
+                .contact-text {
+                    font-size: 0.8rem;
+                    color: #8d8d91;
+                    font-weight: 400;
+                }
+            }
         }
 
-        .toggle-icon {
-            color: $text-muted;
-            transition: transform $transition-smooth;
-            font-size: 1.1rem;
-
-            &.rotated {
-                transform: rotate(180deg);
+        // Actions Styling
+        .col-actions {
+            .divider {
+                width: 1px;
+                height: 24px;
+                background-color: rgba(255, 255, 255, 0.08);
             }
+
+            .btn-action,
+            .btn-chevron {
+                background: transparent;
+                border: none;
+                padding: 0;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                color: #a1a1aa;
+                width: 28px;
+                height: 28px;
+                border-radius: 6px;
+                transition: all 0.2s ease;
+
+                &:hover {
+                    background: rgba(255, 255, 255, 0.08);
+                    color: #fff;
+                }
+            }
+
+            .btn-chevron .toggle-icon {
+                font-size: 1rem;
+                transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+
+                &.rotated {
+                    transform: rotate(180deg);
+                    color: #c4b5fd;
+                }
+            }
+        }
+
+        // Subtle divider for mobile stats
+        .col-stats-mobile {
+            border-color: rgba(255, 255, 255, 0.06) !important;
         }
     }
 
     .payer-body {
-        display: grid;
         grid-template-rows: 0fr;
         transition: grid-template-rows $transition-smooth;
 
         .payer-body-inner {
-            overflow: hidden;
-            padding: 0 1.5rem;
+            padding: 0;
             opacity: 0;
             transition: opacity $transition-base, padding $transition-base;
         }
@@ -106,55 +157,112 @@
             grid-template-rows: 1fr;
 
             .payer-body-inner {
-                padding: 0 1.5rem 1.5rem 1.5rem;
+                padding: 1rem;
                 opacity: 1;
                 border-top: 1px solid rgba(255, 255, 255, 0.03);
-                margin-top: 0.5rem;
-                padding-top: 1.5rem;
             }
         }
     }
 }
 
-// --- Sexy Add Ledger Button ---
-.btn-add-ledger {
-    background: linear-gradient(135deg, $primary 0%, $primary-light 100%);
-    color: #ffffff;
-    border: none;
-    box-shadow: 0 4px 12px rgba(124, 58, 237, 0.2);
-    transition: all $transition-smooth;
-    position: relative;
-    overflow: hidden;
+.stat-group {
+    min-width: 80px;
 
-    &::after {
-        content: '';
-        position: absolute;
-        top: 0;
-        left: -100%;
-        width: 50%;
-        height: 100%;
-        background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
-        transition: all 0.5s ease;
+    .stat-label {
+        font-size: 0.7rem;
+        letter-spacing: 0.05em;
+        color: #71717a;
     }
 
-    &:hover {
-        transform: translateY(-2px);
-        box-shadow: 0 6px 16px rgba(124, 58, 237, 0.4);
+}
 
-        &::after {
-            left: 100%;
+.stat-badge {
+    @media (min-width: 576px) {
+        width: 100px; // Fixed width on desktop aligns them vertically
+    }
+}
+
+// --- Status Badges ---
+.badge-custom {
+    padding: 0.25rem 0.75rem;
+    border-radius: 20px;
+    font-size: $font-size-xs;
+    font-weight: 500;
+    border: 1px solid transparent;
+
+    &.success {
+        color: #10b981;
+        background: rgba(16, 185, 129, 0.1);
+        border-color: rgba(16, 185, 129, 0.2);
+    }
+
+    &.danger {
+        color: #ef4444;
+        background: rgba(239, 68, 68, 0.1);
+        border-color: rgba(239, 68, 68, 0.2);
+    }
+}
+
+.action-group {
+    width: 100%;
+
+    .custom-select {
+        width: 100%;
+
+        @media (min-width : 576px) {
+            width: 130px;
         }
     }
 
-    &:active {
-        transform: translateY(1px);
-        box-shadow: 0 2px 8px rgba(124, 58, 237, 0.3);
+    .btn-add-ledger {
+        background: linear-gradient(135deg, $primary 0%, $primary-light 100%);
+        box-shadow: 0 4px 12px rgba(124, 58, 237, 0.2);
+        transition: all $transition-smooth;
+        font-size: 0.8rem;
+        white-space: nowrap; // Prevents text wrapping
+        width: 100%;
+        height: 100%;
+        padding: 0.5rem;
+        align-items: center;
+
+        &::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 50%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+            transition: all 0.5s ease;
+        }
+
+        &:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 6px 16px rgba(124, 58, 237, 0.4);
+
+            &::after {
+                left: 100%;
+            }
+        }
+
+        &:active {
+            transform: translateY(1px);
+            box-shadow: 0 2px 8px rgba(124, 58, 237, 0.3);
+        }
+
+        @media (min-width : 576px) {
+            width: 130px;
+        }
+    }
+
+    @media (min-width : 576px) {
+        width: auto;
     }
 }
 
 // --- Custom Checkbox ---
 .checkbox-cell {
-    width: 40px;
+    width: 40px !important;
     padding-right: 0 !important;
 }
 
@@ -257,6 +365,19 @@
         transition: background $transition-base;
     }
 
+    .checkbox-cell {
+        max-width: 40px !important;
+    }
+
+    td:not(:first-child) {
+        min-width: 105px;
+    }
+
+    td:nth-child(7){
+        width: 130px;
+        min-width: 120px;
+    }
+
     tr:last-child td {
         border-bottom: none;
     }
@@ -270,33 +391,11 @@
     }
 }
 
-// --- Status Badges ---
-.badge-custom {
-    padding: 0.25rem 0.75rem;
-    border-radius: 20px;
-    font-size: $font-size-xs;
-    font-weight: 500;
-    border: 1px solid transparent;
-
-    &.success {
-        color: #10b981;
-        background: rgba(16, 185, 129, 0.1);
-        border-color: rgba(16, 185, 129, 0.2);
-    }
-
-    &.danger {
-        color: #ef4444;
-        background: rgba(239, 68, 68, 0.1);
-        border-color: rgba(239, 68, 68, 0.2);
-    }
-}
 
 .static-status {
-    font-weight: 500;
     font-size: 0.7rem;
     padding: 0.2rem 0.5rem;
     border-radius: 4px;
-    text-transform: uppercase;
     letter-spacing: 0.02em;
 
     &.status-paid {
@@ -421,7 +520,7 @@
     .btn-mini-page {
         background: rgba(255, 255, 255, 0.03);
         border: 1px solid rgba(255, 255, 255, 0.08);
-        color: $text-muted;
+        color: #71717a;
         width: 24px;
         height: 24px;
         border-radius: 4px;
@@ -442,5 +541,90 @@
             opacity: 0.3;
             cursor: not-allowed;
         }
+    }
+}
+
+// --- Bulk Operations Bar ---
+.bulk-operations {
+    background: linear-gradient(90deg, rgba(109, 107, 107, 0.12) 0%, rgba(15, 15, 15, 0.6) 100%);
+    border: 1px solid rgba(84, 83, 84, 0.3);
+    border-radius: 8px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.25);
+    animation: slideInDown 0.3s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+    backdrop-filter: blur(8px);
+
+    // Glowing number badge
+    .selection-badge {
+        width: 24px;
+        height: 24px;
+        background-color: #7c3aed; // Primary purple
+        font-size: 0.75rem;
+        box-shadow: 0 0 12px rgba(124, 58, 237, 0.5);
+    }
+
+    .selection-text {
+        letter-spacing: 0.01em;
+        color: #e4e4e7 !important;
+    }
+
+    // Bulk Action Buttons
+    .btn-bulk {
+        background: rgba(255, 255, 255, 0.03);
+        border: 1px solid rgba(255, 255, 255, 0.08);
+        color: #a1a1aa;
+        padding: 0.35rem 0.85rem;
+        border-radius: 6px;
+        font-size: 0.8rem;
+        font-weight: 500;
+        transition: all 0.2s ease;
+        white-space: nowrap;
+
+        i {
+            font-size: 0.85rem;
+            transition: color 0.2s ease;
+        }
+
+        &:hover {
+            color: #fff;
+            transform: translateY(-1px);
+        }
+
+        &:active {
+            transform: translateY(1px);
+        }
+
+        // Purple hover for Status
+        &.btn-status:hover {
+            background: rgba(124, 58, 237, 0.15);
+            border-color: rgba(124, 58, 237, 0.4);
+
+            i {
+                color: #c4b5fd;
+            }
+        }
+
+        // Red hover for Delete
+        &.btn-delete:hover {
+            background: rgba(239, 68, 68, 0.15);
+            border-color: rgba(239, 68, 68, 0.4);
+            color: #f87171;
+
+            i {
+                color: #fca5a5;
+            }
+        }
+    }
+}
+
+// Smooth entry animation for when the bar appears
+@keyframes slideInDown {
+    from {
+        opacity: 0;
+        transform: translateY(-8px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
     }
 }
