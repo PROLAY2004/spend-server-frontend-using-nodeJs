@@ -1,0 +1,155 @@
+@import '../mixins/root';
+
+.modal-overlay {
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background: rgba(0, 0, 0, 0.6);
+    backdrop-filter: blur(2px);
+    z-index: 1050; // Ensures it floats above your sidebar
+    animation: fadeIn $transition-base forwards;
+}
+
+.modal-container {
+    @include glass-panel;
+    max-width: 400px; // Minimalist footprint
+    margin: 0 1rem;
+    padding: 1.5rem;
+    background: $bg-surface-elevated;
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    box-shadow: 0 24px 48px rgba(0, 0, 0, 0.5), inset 0 1px 0 rgba(255, 255, 255, 0.05);
+    animation: slideUpFade 0.3s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+
+    // Ambient top-right glow matching stat-card aesthetics
+    .modal-glow {
+        top: -50px;
+        right: -50px;
+        width: 150px;
+        height: 150px;
+        background: radial-gradient(circle, $primary-glow 0%, transparent 70%);
+        z-index: 0;
+        pointer-events: none;
+    }
+
+    >* {
+        position: relative;
+        z-index: 1;
+    }
+}
+
+.modal-title {
+    font-size: 1.1rem;
+    color: $text-inverse;
+    letter-spacing: -0.02em;
+}
+
+.btn-close-custom {
+    color: $text-muted;
+    border-radius: $radius-sm;
+    transition: all $transition-base;
+    cursor: pointer;
+
+    &:hover {
+        background: rgba(255, 255, 255, 0.08);
+        color: $text-inverse;
+    }
+}
+
+.modal-body {
+    .form-label {
+        font-size: 0.7rem;
+        letter-spacing: 0.05em;
+        color: #71717a !important;
+    }
+
+    .custom-input {
+        background-color: rgba(0, 0, 0, 0.25) !important; // Deeper inset look
+        border: 1px solid rgba(255, 255, 255, 0.08) !important;
+        color: $text-inverse !important;
+        border-radius: $radius-sm;
+        transition: all $transition-smooth;
+        height: 42px;
+        font-size: $font-size-sm;
+
+        &:hover {
+            border-color: rgba(255, 255, 255, 0.15) !important;
+        }
+
+        &:focus {
+            background-color: rgba(0, 0, 0, 0.4) !important;
+            border-color: $primary-light !important;
+            box-shadow: 0 0 0 2px rgba(124, 58, 237, 0.15) !important;
+        }
+
+        &::placeholder {
+            color: rgba(255, 255, 255, 0.25);
+        }
+    }
+}
+
+.modal-footer {
+    .btn-modal-cancel {
+        background: transparent;
+        border: 1px solid rgba(255, 255, 255, 0.08);
+        color: $text-inverse;
+        padding: 0.5rem 1rem;
+        border-radius: $radius-sm;
+        font-size: $font-size-sm;
+        font-weight: 500;
+        transition: all $transition-base;
+        cursor: pointer;
+
+        &:hover {
+            background: rgba(255, 255, 255, 0.05);
+            border-color: rgba(255, 255, 255, 0.15);
+        }
+    }
+
+    .btn-modal-save {
+        background: $primary;
+        border: 1px solid $primary;
+        color: #fff;
+        padding: 0.5rem 1.25rem;
+        border-radius: $radius-sm;
+        font-size: $font-size-sm;
+        font-weight: 500;
+        transition: all $transition-base;
+        box-shadow: 0 4px 12px rgba(124, 58, 237, 0.2);
+        cursor: pointer;
+
+        &:hover {
+            background: $primary-light;
+            border-color: $primary-light;
+            transform: translateY(-1px);
+            box-shadow: 0 6px 16px rgba(91, 43, 175, 0.3);
+        }
+
+        &:active {
+            transform: translateY(1px);
+        }
+    }
+}
+
+// Entrance Animations
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+
+    to {
+        opacity: 1;
+    }
+}
+
+@keyframes slideUpFade {
+    from {
+        opacity: 0;
+        transform: translateY(15px) scale(0.97);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
+}

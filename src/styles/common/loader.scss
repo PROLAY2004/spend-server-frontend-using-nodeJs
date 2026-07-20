@@ -1,0 +1,80 @@
+@import '../mixins/root';
+
+// Shimmer Keyframes
+@keyframes shimmer {
+    0% {
+        background-position: -200% 0;
+    }
+
+    100% {
+        background-position: 200% 0;
+    }
+}
+
+.skeleton-card {
+    pointer-events: none;
+    box-shadow: none !important;
+    background-color: rgba(255, 255, 255, 0.02) !important;
+
+    // Ensure the structure holds its shape without content
+    .payer-header {
+        cursor: default;
+    }
+}
+
+// Base Skeleton Block
+.skeleton-box {
+    background: linear-gradient(90deg,
+            rgba(255, 255, 255, 0.03) 25%,
+            rgba(255, 255, 255, 0.08) 50%,
+            rgba(255, 255, 255, 0.03) 75%);
+    background-size: 200% 100%;
+    animation: shimmer 1.8s infinite linear;
+    border-radius: $radius-sm;
+}
+
+// Specific Component Dimensions matching your SCSS
+.skeleton-avatar {
+    width: 40px;
+    height: 40px;
+}
+
+.skeleton-text {
+    border-radius: 4px;
+}
+
+.skeleton-name {
+    width: 140px;
+    height: 16px;
+
+    @media (max-width: 576px) {
+        width: 110px;
+    }
+}
+
+.skeleton-contact {
+    width: 90px;
+    height: 12px;
+}
+
+.skeleton-label {
+    width: 28px;
+    height: 10px;
+}
+
+.skeleton-value {
+    width: 55px;
+    height: 18px;
+}
+
+.skeleton-badge {
+    width: 75px;
+    height: 22px;
+    border-radius: 20px;
+}
+
+.skeleton-btn {
+    width: 28px;
+    height: 28px;
+    border-radius: $radius-sm;
+}
