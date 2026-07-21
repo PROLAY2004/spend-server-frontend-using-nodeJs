@@ -1,11 +1,54 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { toast } from "react-toastify";
+import { useNavigate } from "react-router-dom";
 
-function PayerCard({ payerData, setEditPayerModal, setPayerData, setDeletePayerModal, setDeletePayerId, setAddLedgerModal }) {
+import LedgerRows from "../../components/dashboard/LedgerRow.jsx";
+import LedgerRowSkeleton from '../../components/common/LedgerRowSkeleton.jsx';
+import getLedgers from "./fetchLedgers.js";
+
+function PayerCard({
+    payerData,
+    setEditPayerModal,
+    pageRefresh,
+    setPayerData,
+    setDeletePayerModal,
+    setDeletePayerId,
+    setAddLedgerModal,
+    setEditLedgerModal,
+    setDetailsModal,
+    setRecordData
+}) {
+    const navigate = useNavigate();
     const [expandedPayerId, setExpandedPayerId] = useState(null);
+    const [ledgers, setLedgers] = useState([]);
+
+    const [emptyState, setEmptyState] = useState(false);
+    const [loading, setLoading] = useState(false);
+
+    const fetchLedgers = async () => {
+        setLoading(true);
+        const data = await getLedgers(navigate, toast, payerData._id);
+
+        if (data.recordData.length) {
+            setEmptyState(false);
+            setLedgers(data.recordData);
+        }
+        else {
+            setEmptyState(true);
+        }
+
+        setLoading(false);
+    };
 
     const toggleAccordion = (id) => {
         setExpandedPayerId(expandedPayerId === id ? null : id);
     };
+
+    useEffect(() => {
+        if (expandedPayerId !== payerData._id) return;
+
+        fetchLedgers();
+    }, [expandedPayerId, payerData._id, pageRefresh]);
 
     return (
         <div className={`payer-card overflow-hidden ${expandedPayerId === payerData._id ? 'expanded' : ''}`}>
@@ -82,8 +125,8 @@ function PayerCard({ payerData, setEditPayerModal, setPayerData, setDeletePayerM
                 <div className="col-stats-mobile d-flex d-sm-none w-100 mt-3 pt-3 justify-content-between align-items-center border-top">
                     <div className="stat-group d-flex flex-column align-items-start">
                         <span className="stat-label">Due</span>
-                        <span className="stat-value text-danger">
-                            ₹2354
+                        <span className={`stat-value fw-medium fs-6 lh-1 ${payerData.totalDue > 0 ? 'text-danger' : 'text-success'}`}>
+                            ₹{payerData.totalDue}
                         </span>
                     </div>
                     <div className="stat-badge d-flex justify-content-center">
@@ -122,7 +165,7 @@ function PayerCard({ payerData, setEditPayerModal, setPayerData, setDeletePayerM
 
                             <button className="btn btn-add-ledger fw-medium d-flex align-items-center justify-content-center gap-2 position-relative overflow-hidden border-0 text-light"
                                 onClick={() => {
-                                    setAddLedgerModal(true); 
+                                    setAddLedgerModal(true);
                                     setPayerData(payerData);
                                 }}
                             >
@@ -130,9 +173,8 @@ function PayerCard({ payerData, setEditPayerModal, setPayerData, setDeletePayerM
                             </button>
                         </div>
                     </div>
-
-                    <div className="bulk-operations d-flex d-none align-items-center justify-content-between gap-2 py-2 px-2 mb-3">
-                        {/* Left Side: Selection Count */}
+                    {/* 
+                    <div className="bulk-operations d-flex align-items-center justify-content-between gap-2 py-2 px-2 mb-3">
                         <div className="d-flex align-items-center gap-2">
                             <span className="selection-badge d-flex align-items-center justify-content-center text-white fw-bold rounded-circle">
                                 2
@@ -145,7 +187,7 @@ function PayerCard({ payerData, setEditPayerModal, setPayerData, setDeletePayerM
                         <button className="btn-bulk btn-status d-flex align-items-center gap-2">
                             <i className="bi bi-list-task"></i>
                         </button>
-                    </div>
+                    </div> */}
 
                     <div className="ledger-table-wrapper rounded-3 border overflow-auto">
                         <table className="w-100 ledger-table">
@@ -169,51 +211,21 @@ function PayerCard({ payerData, setEditPayerModal, setPayerData, setDeletePayerM
                                 </tr>
                             </thead>
                             <tbody>
+                                <LedgerRowSkeleton loading={loading} />
 
-                                <tr className='selected-row'>
-                                    <td className="checkbox-cell">
-                                        <label className="custom-checkbox">
-                                            <input
-                                                type="checkbox"
-                                            />
-                                            <span className="checkmark"></span>
-                                        </label>
-                                    </td>
-                                    <td>454545</td>
-                                    <td>dfsd</td>
-                                    <td>₹sdfgdr</td>
-                                    <td>₹sdef</td>
-                                    <td className='text-danger fw-medium'>
-                                        ₹325435
-                                    </td>
-                                    <td>
-                                        <span className='static-status text-uppercase status-unpaid'>
-                                            sdf
-                                        </span>
-                                    </td>
-                                    <td>
-                                        <div className="action-buttons d-flex justify-content-center gap-2">
-                                            <button className="btn-action edit" title="Edit">
-                                                <i className="bi bi-journal-text"></i>
-                                            </button>
-                                            <button className="btn-action edit" title="Edit">
-                                                <i className="bi bi-pencil"></i>
-                                            </button>
-                                            <button className="btn-action delete" title="Delete">
-                                                <i className="bi bi-trash"></i>
-                                            </button>
-                                        </div>
-                                    </td>
-                                </tr>
-                                <tr>
+                                {
+                                    ledgers.map((record) => (
+                                        <LedgerRows key={record._id} record={record} setDetailsModal={setDetailsModal} setEditLedgerModal={setEditLedgerModal} setRecordData={setRecordData}/>
+                                    ))
+                                }
+
+                                <tr className={emptyState ? '' : 'd-none'}>
                                     <td colSpan="8" className="text-center py-4 pagination-text">No records found for this filter.</td>
                                 </tr>
-
                             </tbody>
                         </table>
                     </div>
 
-                    {/* Ledger Pagination (Inner Accordion) */}
                     {/* {totalLedgerPages > 1 && (
                         <div className="ledger-pagination d-flex flex-column flex-sm-row gap-2 justify-content-between align-items-center mt-3 pt-3">
                             <span className="pagination-text text-start fs-xs">

@@ -13,6 +13,8 @@ import AddPayerModal from '../../components/modals/AddPayerModal.jsx';
 import EditPayerModal from '../../components/modals/EditPayerModal.jsx';
 import DeletePayerModal from '../../components/modals/DeletePayerModal.jsx';
 import AddPayerLedgerModal from '../../components/modals/AddPayerLedgerModal.jsx';
+import EditPayerLedgerModal from '../../components/modals/EditPayerLedgerModal.jsx';
+import DescriptionModal from '../../components/modals/DescriptionModal.jsx';
 
 import displayPayer from './fetchPayer.js';
 import '../../styles/payers.scss';
@@ -28,11 +30,14 @@ export default function Payers() {
     const [isMobileOpen, setIsMobileOpen] = useState(false);
     const [payerDetails, setPayerDetails] = useState([]);
     const [payerData, setPayerData] = useState({});
+    const [recordData, setRecordData] = useState({});
 
     const [addPayerModal, setAddPayerModal] = useState(false);
     const [editPayerModal, setEditPayerModal] = useState(false);
     const [deletePayerModal, setDeletePayerModal] = useState(false);
     const [addLedgerModal, setAddLedgerModal] = useState(false);
+    const [editLedgerModal, setEditLedgerModal] = useState(false);
+    const [detailsModal, setDetailsModal] = useState(false);
 
     const handleDisplay = async () => {
         setPageLoader(true);
@@ -115,10 +120,14 @@ export default function Payers() {
                             <PayerCard
                                 key={payer._id}
                                 payerData={payer}
+                                pageRefresh={pageRefresh}
                                 setEditPayerModal={setEditPayerModal}
                                 setPayerData={setPayerData}
                                 setDeletePayerModal={setDeletePayerModal}
                                 setAddLedgerModal={setAddLedgerModal}
+                                setEditLedgerModal={setEditLedgerModal}
+                                setDetailsModal={setDetailsModal}
+                                setRecordData={setRecordData}
                             />
                         ))}
                     </div>
@@ -182,6 +191,19 @@ export default function Payers() {
             onClose={() => setAddLedgerModal(false)}
             pageRefresh={setPageRefresh}
             payerData={payerData}
+        />
+
+        <DescriptionModal 
+            isOpen={detailsModal}
+            onClose={() => setDetailsModal(false)}
+            recordData={recordData}
+        />
+
+        <EditPayerLedgerModal 
+            isOpen={editLedgerModal}
+            onClose={() => setEditLedgerModal(false)}
+            pageRefresh={setPageRefresh}
+            recordData={recordData}
         />
     </>
     );

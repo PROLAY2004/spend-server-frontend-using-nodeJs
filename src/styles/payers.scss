@@ -41,7 +41,8 @@
 }
 
 // --- Typography adjustments ---
-.contact-text, .pagination-text {
+.contact-text,
+.pagination-text {
     color: #767679 !important;
 }
 
@@ -342,6 +343,16 @@
 .ledger-table-wrapper {
     border-color: rgba(255, 255, 255, 0.08) !important;
     background: rgba(0, 0, 0, 0.3);
+
+    &::-webkit-scrollbar {
+        height: 2px;
+        width: 2px;
+    }
+
+    &::-webkit-scrollbar-thumb {
+        background: rgba(255, 255, 255, 0.15);
+        border-radius: 100px;
+    }
 }
 
 .ledger-table {
@@ -374,7 +385,7 @@
         min-width: 105px;
     }
 
-    td:nth-child(7){
+    td:nth-child(7) {
         width: 130px;
         min-width: 120px;
     }

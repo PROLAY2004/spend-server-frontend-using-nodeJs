@@ -1,25 +1,18 @@
 import apiInterceptor from '../../api/interceptor.js';
 
-export default async function addRecord(navigate, toast, formData) {
+export default async function getLedgers(navigate, toast, payerId) {
 	try {
 		const response = await apiInterceptor(
 			navigate,
 			toast,
 			'POST',
-			'/user/dashboard/records',
-			formData,
+			`/user/dashboard/fetch-payer-ledger/${payerId}`,
+			{},
 		);
-		
 		const result = await response.json();
 
 		if (result.success) {
-			toast.success(result.message, {
-				position: 'top-right',
-				autoClose: 5000,
-				theme: 'dark',
-			});
-
-			return true;
+			return result.data;
 		} else {
 			toast.error(result.message, {
 				position: 'top-right',

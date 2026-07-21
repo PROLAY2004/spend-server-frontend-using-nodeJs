@@ -78,3 +78,33 @@
     height: 28px;
     border-radius: $radius-sm;
 }
+
+.skeleton-row {
+    pointer-events: none;
+
+    td {
+        // Keeps the border consistent with your ledger-table td styles
+        border-bottom: 1px solid rgba(255, 255, 255, 0.03);
+        vertical-align: middle;
+    }
+}
+
+// Matches your custom-checkbox dimensions (18x18)
+.skeleton-checkbox {
+    width: 18px;
+    height: 18px;
+    border-radius: 4px;
+}
+
+// Generic text line for table cells
+.skeleton-table-text {
+    height: 14px;
+    border-radius: 4px;
+}
+
+// Matches your .static-status badge dimensions
+.skeleton-table-badge {
+    width: 65px;
+    height: 22px;
+    border-radius: 4px;
+}

@@ -1,15 +1,14 @@
 import apiInterceptor from '../../api/interceptor.js';
 
-export default async function addRecord(navigate, toast, formData) {
+export default async function updateRecord(navigate, toast, recordId, formData) {
 	try {
 		const response = await apiInterceptor(
 			navigate,
 			toast,
-			'POST',
-			'/user/dashboard/records',
+			'PUT',
+			`/user/dashboard/records/${recordId}`,
 			formData,
 		);
-		
 		const result = await response.json();
 
 		if (result.success) {
