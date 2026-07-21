@@ -11,10 +11,10 @@ import PayerCard from './PayerCard.jsx';
 
 import AddPayerModal from '../../components/modals/AddPayerModal.jsx';
 import EditPayerModal from '../../components/modals/EditPayerModal.jsx';
-import DeleteModal from '../../components/modals/DeleteModal.jsx';
+import DeletePayerModal from '../../components/modals/DeletePayerModal.jsx';
+import AddPayerLedgerModal from '../../components/modals/AddPayerLedgerModal.jsx';
 
 import displayPayer from './fetchPayer.js';
-
 import '../../styles/payers.scss';
 
 export default function Payers() {
@@ -111,11 +111,11 @@ export default function Payers() {
                         <EmptyCard isActive={emptyState} />
 
                         {payerDetails.map((payer) => (
-                            <PayerCard 
-                                key={payer._id} 
-                                payerData={payer} 
-                                setEditPayerModal={setEditPayerModal} 
-                                setPayerData={setPayerData} 
+                            <PayerCard
+                                key={payer._id}
+                                payerData={payer}
+                                setEditPayerModal={setEditPayerModal}
+                                setPayerData={setPayerData}
                                 setDeletePayerModal={setDeletePayerModal}
                             />
                         ))}
@@ -155,9 +155,29 @@ export default function Payers() {
             </main>
         </div>
 
-        <AddPayerModal isOpen={addPayerModal} onClose={() => setAddPayerModal(false)} pageRefresh={setPageRefresh} />
-        <EditPayerModal isOpen={editPayerModal} onClose={() => setEditPayerModal(false)} pageRefresh={setPageRefresh} payerData={payerData} />
-        <DeleteModal isOpen={deletePayerModal} onClose={() => setDeletePayerModal(false)} pageRefresh={setPageRefresh} payerData={payerData} />
+        <AddPayerModal
+            isOpen={addPayerModal}
+            onClose={() => setAddPayerModal(false)}
+            pageRefresh={setPageRefresh}
+        />
+
+        <EditPayerModal
+            isOpen={editPayerModal}
+            onClose={() => setEditPayerModal(false)}
+            pageRefresh={setPageRefresh}
+            payerData={payerData}
+        />
+
+        <DeletePayerModal
+            isOpen={deletePayerModal}
+            onClose={() => setDeletePayerModal(false)}
+            pageRefresh={setPageRefresh}
+            payerData={payerData}
+        />
+
+        <AddPayerLedgerModal 
+            isOpen={true}
+        />
     </>
     );
 }

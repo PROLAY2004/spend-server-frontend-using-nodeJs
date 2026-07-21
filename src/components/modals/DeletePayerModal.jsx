@@ -5,7 +5,7 @@ import delPayer from '../../pages/payers/deletePayer.js';
 import "../../styles/common/modal.scss";
 
 
-const DeleteModal = ({
+const DeletePayerModal = ({
     isOpen,
     onClose,
     pageRefresh,
@@ -108,4 +108,4 @@ const DeleteModal = ({
     );
 };
 
-export default DeleteModal;
+export default DeletePayerModal;
