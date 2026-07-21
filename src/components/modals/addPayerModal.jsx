@@ -13,8 +13,8 @@ const AddPayerModal = ({ isOpen, onClose, pageRefresh }) => {
         mobile: '',
     });
 
-    if (!isOpen) return null;
-
+    if (!isOpen) return;
+    
     const handleChange = (e) => {
         const { name, value } = e.target;
 

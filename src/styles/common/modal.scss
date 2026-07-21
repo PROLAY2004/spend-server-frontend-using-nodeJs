@@ -131,8 +131,10 @@
 
     // Fix icon alignment for native date inputs
     input[type="date"].custom-input {
+        color-scheme: dark;
+        
         &::-webkit-calendar-picker-indicator {
-            filter: invert(1);
+            filter: none;
             opacity: 0.5;
             cursor: pointer;
 

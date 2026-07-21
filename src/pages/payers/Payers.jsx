@@ -32,6 +32,7 @@ export default function Payers() {
     const [addPayerModal, setAddPayerModal] = useState(false);
     const [editPayerModal, setEditPayerModal] = useState(false);
     const [deletePayerModal, setDeletePayerModal] = useState(false);
+    const [addLedgerModal, setAddLedgerModal] = useState(false);
 
     const handleDisplay = async () => {
         setPageLoader(true);
@@ -117,6 +118,7 @@ export default function Payers() {
                                 setEditPayerModal={setEditPayerModal}
                                 setPayerData={setPayerData}
                                 setDeletePayerModal={setDeletePayerModal}
+                                setAddLedgerModal={setAddLedgerModal}
                             />
                         ))}
                     </div>
@@ -176,7 +178,10 @@ export default function Payers() {
         />
 
         <AddPayerLedgerModal 
-            isOpen={true}
+            isOpen={addLedgerModal}
+            onClose={() => setAddLedgerModal(false)}
+            pageRefresh={setPageRefresh}
+            payerData={payerData}
         />
     </>
     );

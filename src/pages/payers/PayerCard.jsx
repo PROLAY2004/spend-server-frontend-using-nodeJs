@@ -1,6 +1,6 @@
 import { useState } from "react";
 
-function PayerCard({ payerData, setEditPayerModal, setPayerData, setDeletePayerModal, setDeletePayerId }) {
+function PayerCard({ payerData, setEditPayerModal, setPayerData, setDeletePayerModal, setDeletePayerId, setAddLedgerModal }) {
     const [expandedPayerId, setExpandedPayerId] = useState(null);
 
     const toggleAccordion = (id) => {
@@ -60,7 +60,7 @@ function PayerCard({ payerData, setEditPayerModal, setPayerData, setDeletePayerM
                             <button
                                 className="btn-action delete"
                                 title="Delete Payer"
-                                onClick={(e)=>{
+                                onClick={(e) => {
                                     e.stopPropagation();
                                     setPayerData(payerData);
                                     setDeletePayerModal(true);
@@ -120,7 +120,12 @@ function PayerCard({ payerData, setEditPayerModal, setPayerData, setDeletePayerM
                                 <option value="Non-Paid">Non-Paid Only</option>
                             </select>
 
-                            <button className="btn btn-add-ledger fw-medium d-flex align-items-center justify-content-center gap-2 position-relative overflow-hidden border-0 text-light">
+                            <button className="btn btn-add-ledger fw-medium d-flex align-items-center justify-content-center gap-2 position-relative overflow-hidden border-0 text-light"
+                                onClick={() => {
+                                    setAddLedgerModal(true); 
+                                    setPayerData(payerData);
+                                }}
+                            >
                                 <i className="bi bi-plus-circle"></i> Add Ledger
                             </button>
                         </div>
