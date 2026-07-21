@@ -23,9 +23,15 @@ export default function Payers() {
     const navigate = useNavigate();
     const sidebarRef = useRef(null);
 
-    const [pageLoader, setPageLoader] = useState(false);
+    const [pageLoader, setPageLoader] = useState(true);
     const [emptyState, setEmptyState] = useState(false);
     const [pageRefresh, setPageRefresh] = useState(0);
+
+    const [currentPage, setCurrentPage] = useState(1);
+    const [totalPages, setTotalPages] = useState(1);
+    const [searchQuery, setSearchQuery] = useState('');
+    const [filterOption, setFilterOption] = useState('All');
+    const [sortOption, setSortOption] = useState('Newest First');
 
     const [isMobileOpen, setIsMobileOpen] = useState(false);
     const [payerDetails, setPayerDetails] = useState([]);
@@ -42,13 +48,23 @@ export default function Payers() {
     const handleDisplay = async () => {
         setPageLoader(true);
 
-        const result = await displayPayer(navigate, toast);
+        const payload = {
+            page: currentPage,
+            limit: 5,
+            search: searchQuery,
+            filter: filterOption,
+            sort: sortOption
+        };
 
-        if (result.payerDetails.length) {
+        const result = await displayPayer(navigate, toast, payload);
+
+        if (result && result.payerDetails.length) {
             setPayerDetails(result.payerDetails);
+            setTotalPages(result.totalPages);
             setEmptyState(false);
-        }
-        else {
+        } else {
+            setPayerDetails([]);
+            setTotalPages(1);
             setEmptyState(true);
         }
 
@@ -56,8 +72,13 @@ export default function Payers() {
     }
 
     useEffect(() => {
-        handleDisplay();
-    }, [pageRefresh])
+        // Implement debouncing for the search functionality
+        const delayDebounceFn = setTimeout(() => {
+            handleDisplay();
+        }, 300);
+
+        return () => clearTimeout(delayDebounceFn);
+    }, [pageRefresh, currentPage, searchQuery, filterOption, sortOption]);
 
     return (<>
         <div className="dashboard-wrapper d-flex h-100 overflow-hidden position-relative">
@@ -79,7 +100,6 @@ export default function Payers() {
 
                 <div className="payers-body w-100 my-0 mx-auto p-3 p-md-4 d-flex flex-column h-100">
 
-                    {/* Top Controls Bar */}
                     <div className="controls-bar d-flex flex-column flex-md-row justify-content-between gap-2 mb-4 w-100">
                         <div className="search-wrapper position-relative flex-grow-1">
                             <i className="bi bi-search position-absolute top-50 start-0 translate-middle-y ms-3 text-lighter"></i>
@@ -87,12 +107,22 @@ export default function Payers() {
                                 type="text"
                                 className="custom-input form-control shadow-none ps-5 py-2 pe-3"
                                 placeholder="Search by name or contact..."
+                                value={searchQuery}
+                                onChange={(e) => {
+                                    setSearchQuery(e.target.value);
+                                    setCurrentPage(1); // Reset to page 1 on new search
+                                }}
                             />
                         </div>
 
                         <div className="filters-wrapper d-flex gap-2">
                             <select
                                 className="custom-select py-2 w-100 form-select shadow-none"
+                                value={filterOption}
+                                onChange={(e) => {
+                                    setFilterOption(e.target.value);
+                                    setCurrentPage(1); // Reset to page 1 on filter change
+                                }}
                             >
                                 <option value="All">All Payers</option>
                                 <option value="Paid">All Paid</option>
@@ -101,8 +131,13 @@ export default function Payers() {
 
                             <select
                                 className="custom-select py-2 w-100 form-select shadow-none"
+                                value={sortOption}
+                                onChange={(e) => {
+                                    setSortOption(e.target.value);
+                                    setCurrentPage(1); // Reset to page 1 on sort change
+                                }}
                             >
-                                <option value="Name A-Z">Newest First</option>
+                                <option value="Newest First">Newest First</option>
                                 <option value="Name A-Z">Name: A→Z</option>
                                 <option value="Name Z-A">Name: Z→A</option>
                                 <option value="Due: High to Low">Due: High to Low</option>
@@ -132,7 +167,7 @@ export default function Payers() {
                         ))}
                     </div>
 
-                    {/* {totalPages > 1 && (
+                    {payerDetails.length > 0 && (
                         <div className="pagination-wrapper d-flex justify-content-center align-items-center gap-2 mt-auto pt-3 pb-2">
                             <button
                                 className="page-btn"
@@ -160,7 +195,7 @@ export default function Payers() {
                                 <i className="bi bi-chevron-right"></i>
                             </button>
                         </div>
-                    )} */}
+                    )}
 
                 </div>
             </main>

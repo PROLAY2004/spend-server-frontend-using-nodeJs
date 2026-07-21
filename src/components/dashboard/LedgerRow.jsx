@@ -17,10 +17,10 @@ function LedgerRows({ record, setDetailsModal, setEditLedgerModal, setRecordData
             </td>
             <td>{formatDate(record.date)}</td>
             <td>{record.category}</td>
-            <td>₹{record.originalAmount}</td>
-            <td>₹{record.spendAmount}</td>
+            <td>₹{record.originalAmount.toFixed(2)}</td>
+            <td>₹{record.spendAmount.toFixed(2)}</td>
             <td className='text-danger fw-medium'>
-                ₹{record.dueAmount}
+                ₹{record.dueAmount.toFixed(2)}
             </td>
             <td>
                 <span className={`static-status text-uppercase ${record.status === 'paid' ? 'status-paid' : 'status-unpaid'}`}>

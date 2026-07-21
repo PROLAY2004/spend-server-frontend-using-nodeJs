@@ -22,6 +22,30 @@ const EditPayerLedgerModal = ({ isOpen, onClose, pageRefresh, recordData }) => {
 
     const [formData, setFormData] = useState(recordDetails);
 
+    useEffect(() => {
+        if (recordData) {
+            const date = new Date(recordData.date);
+
+            const formattedDate =
+                date.getFullYear() +
+                "-" +
+                String(date.getMonth() + 1).padStart(2, "0") +
+                "-" +
+                String(date.getDate()).padStart(2, "0");
+
+            setFormData({
+                date: formattedDate || new Date().toISOString().split('T')[0],
+                category: recordData.category || '',
+                payerId: recordData.payerId || '',
+                originalAmount: recordData.originalAmount || '',
+                spendAmount: recordData.spendAmount || '',
+                dueAmount: recordData.dueAmount || '',
+                status: recordData.status || '',
+                description: recordData.description || '',
+            });
+        }
+    }, [recordData, isOpen]);
+
     if (!isOpen) return null;
 
     const handleChange = (e) => {
@@ -88,7 +112,7 @@ const EditPayerLedgerModal = ({ isOpen, onClose, pageRefresh, recordData }) => {
                         <div className="col-12 form-group">
                             <label className="form-label fs-xs fw-medium mb-1 text-uppercase">Date</label>
                             <div className="input-wrapper position-relative">
-                                <i className="bi bi-calendar3 position-absolute top-50 start-0 translate-middle-y ms-3"></i>
+                                <i className="bi bi-calendar3 position-absolute top-50 start-0 translate-middle-y ms-3 icon-text"></i>
                                 <input
                                     type="date"
                                     name="date"
@@ -102,7 +126,7 @@ const EditPayerLedgerModal = ({ isOpen, onClose, pageRefresh, recordData }) => {
                         <div className="col-12 form-group">
                             <label className="form-label  fs-xs fw-medium mb-1 text-uppercase">Category</label>
                             <div className="input-wrapper position-relative">
-                                <i className="bi bi-tags position-absolute top-50 start-0 translate-middle-y ms-3 "></i>
+                                <i className="bi bi-tags position-absolute top-50 start-0 translate-middle-y ms-3 icon-text"></i>
                                 <select
                                     className="custom-input form-select shadow-none ps-5"
                                     value={formData.category}
@@ -129,7 +153,7 @@ const EditPayerLedgerModal = ({ isOpen, onClose, pageRefresh, recordData }) => {
                         <div className="col-12 col-sm-6 form-group">
                             <label className="form-label  fs-xs fw-medium mb-1 text-uppercase">Spend Amt</label>
                             <div className="input-wrapper position-relative">
-                                <i className="bi bi-currency-rupee position-absolute top-50 start-0 translate-middle-y ms-3 "></i>
+                                <i className="bi bi-currency-rupee position-absolute top-50 start-0 translate-middle-y ms-3 icon-text"></i>
                                 <input
                                     type="text"
                                     className="custom-input form-control shadow-none ps-5"
@@ -144,7 +168,7 @@ const EditPayerLedgerModal = ({ isOpen, onClose, pageRefresh, recordData }) => {
                         <div className="col-12 col-sm-6 form-group">
                             <label className="form-label  fs-xs fw-medium mb-1 text-uppercase">Original Amt</label>
                             <div className="input-wrapper position-relative">
-                                <i className="bi bi-currency-rupee position-absolute top-50 start-0 translate-middle-y ms-3 "></i>
+                                <i className="bi bi-currency-rupee position-absolute top-50 start-0 translate-middle-y ms-3 icon-text"></i>
                                 <input
                                     type="text"
                                     className="custom-input form-control shadow-none ps-5"
@@ -160,7 +184,7 @@ const EditPayerLedgerModal = ({ isOpen, onClose, pageRefresh, recordData }) => {
                         <div className="col-12 col-sm-6 form-group">
                             <label className="form-label  fs-xs fw-medium mb-1 text-uppercase">Due Amt</label>
                             <div className="input-wrapper position-relative">
-                                <i className="bi bi-currency-rupee position-absolute top-50 start-0 translate-middle-y ms-3 "></i>
+                                <i className="bi bi-currency-rupee position-absolute top-50 start-0 translate-middle-y ms-3 icon-text"></i>
                                 <input
                                     type="text"
                                     className="custom-input form-control shadow-none ps-5"
@@ -175,7 +199,7 @@ const EditPayerLedgerModal = ({ isOpen, onClose, pageRefresh, recordData }) => {
                         <div className="col-12 col-sm-6 form-group">
                             <label className="form-label  fs-xs fw-medium mb-1 text-uppercase">Status</label>
                             <div className="input-wrapper position-relative">
-                                <i className="bi bi-check2-circle position-absolute top-50 start-0 translate-middle-y ms-3 "></i>
+                                <i className="bi bi-check2-circle position-absolute top-50 start-0 translate-middle-y ms-3 icon-text"></i>
                                 <select
                                     className="custom-input form-select shadow-none ps-5"
                                     name='status'
@@ -193,7 +217,7 @@ const EditPayerLedgerModal = ({ isOpen, onClose, pageRefresh, recordData }) => {
                         <div className="col-12 form-group">
                             <label className="form-label  fs-xs fw-medium mb-1 text-uppercase">Description</label>
                             <div className="input-wrapper position-relative">
-                                <i className="bi bi-text-paragraph position-absolute top-0 start-0 ms-3 mt-3 "></i>
+                                <i className="bi bi-list-columns-reverse position-absolute top-0 start-0 ms-3 mt-3 icon-text"></i>
                                 <textarea
                                     className="custom-input form-control shadow-none ps-5 pt-3"
                                     placeholder="Enter ledger details or notes..."
