@@ -23,10 +23,11 @@ function PayerCard({
     setDeleteLedgerModal,
     setbulkActionModal,
     setSelectedLedgersList,
-    resetSelection
+    resetSelection,
+    expandedPayerId,
+    setExpandedPayerId
 }) {
     const navigate = useNavigate();
-    const [expandedPayerId, setExpandedPayerId] = useState(null);
     const [ledgers, setLedgers] = useState([]);
 
     const [emptyState, setEmptyState] = useState(false);
@@ -38,7 +39,7 @@ function PayerCard({
     const [totalLedgersCount, setTotalLedgersCount] = useState(0);
     const [ledgerSearch, setLedgerSearch] = useState('');
     const [ledgerFilter, setLedgerFilter] = useState('All');
-    const [paginetionLimit, setPaginationLimit] = useState(2)
+    const [paginetionLimit, setPaginationLimit] = useState(10)
 
     // Selection State
     const [selectedLedgers, setSelectedLedgers] = useState([]);

@@ -39,7 +39,7 @@ const EditPayerLedgerModal = ({ isOpen, onClose, pageRefresh, recordData }) => {
                 payerId: recordData.payerId || '',
                 originalAmount: recordData.originalAmount || '',
                 spendAmount: recordData.spendAmount || '',
-                dueAmount: recordData.dueAmount || '',
+                dueAmount: recordData.dueAmount ?? '',
                 status: recordData.status || '',
                 description: recordData.description || '',
             });

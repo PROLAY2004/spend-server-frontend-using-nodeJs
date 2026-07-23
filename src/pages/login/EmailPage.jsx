@@ -50,7 +50,7 @@ function EmailPage({ display, setDisplay, email, setEmail }) {
 
             <form className="auth-htmlForm w-100 d-flex flex-column position-relative z-1 gap-4" onSubmit={handleSubmit}>
                 <div className="htmlForm-group d-flex flex-column gap-2">
-                    <label htmlFor="email" className='fw-semibold'>Email Address</label>
+                    <label className='fw-semibold'>Email Address</label>
                     <div className="input-group position-relative d-flex align-items-center">
                         <i className="bi bi-envelope position-absolute"></i>
                         {loading ? (

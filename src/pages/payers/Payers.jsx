@@ -42,6 +42,7 @@ export default function Payers() {
     const [payerData, setPayerData] = useState({});
     const [recordData, setRecordData] = useState({});
     const [selectedLedgersList, setSelectedLedgersList] = useState([]);
+    const [expandedPayerId, setExpandedPayerId] = useState(null);
 
     const [addPayerModal, setAddPayerModal] = useState(false);
     const [editPayerModal, setEditPayerModal] = useState(false);
@@ -117,7 +118,7 @@ export default function Payers() {
                     />
 
                     {/* Payers List */}
-                    <div className="payers-list d-flex flex-column gap-2 mb-4 flex-grow-1">
+                    <div className="payers-list position-relative d-flex flex-column gap-2 mb-4 flex-grow-1">
                         <PayerCardSkeleton isLoading={pageLoader} />
                         <EmptyCard isActive={!pageLoader && emptyState} />
 
@@ -138,6 +139,8 @@ export default function Payers() {
                                 setbulkActionModal={setbulkActionModal}
                                 setSelectedLedgersList={setSelectedLedgersList}
                                 resetSelection={resetSelection}
+                                expandedPayerId={expandedPayerId}
+                                setExpandedPayerId={setExpandedPayerId}
                             />
                         ))}
                     </div>

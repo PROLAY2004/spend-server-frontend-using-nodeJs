@@ -77,7 +77,7 @@ function OtpPage({ display, setDisplay, email }) {
 
             <form className="auth-htmlForm w-100 d-flex flex-column position-relative z-1 gap-4" onSubmit={handleSubmit}>
                 <div className="htmlForm-group d-flex flex-column gap-2">
-                    <label htmlFor="otp" className='fw-semibold'>Enter 6 Digit Code</label>
+                    <label className='fw-semibold'>Enter 6 Digit Code</label>
                     <div className="input-group position-relative d-flex align-items-center">
                         <i className="bi bi-key position-absolute"></i>
                         {loading ? (

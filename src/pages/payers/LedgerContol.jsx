@@ -4,6 +4,7 @@ function LedgerControl({
     setLedgerSearch,
     setLedgerCurrentPage,
     ledgerFilter,
+    setLedgerFilter,
     setAddLedgerModal,
     setPayerData
 }) {

@@ -1,4 +1,4 @@
-import { NavLink, useLocation } from 'react-router-dom';
+import { NavLink, replace, useLocation, useNavigate } from 'react-router-dom';
 import { useState, useEffect } from 'react';
 import { toast } from 'react-toastify';
 
@@ -6,6 +6,7 @@ import logout from '../../utils/logout.js';
 import '../../styles/common/sidebar.scss';
 
 function Sidebar({ isMobileOpen, sidebarRef, setIsMobileOpen }) {
+    const navigate = useNavigate();
     const location = useLocation();
     
     return (
@@ -23,8 +24,8 @@ function Sidebar({ isMobileOpen, sidebarRef, setIsMobileOpen }) {
                             <i className="bi bi-person"></i>
                         </div>
                         <div className="user-info overflow-hidden">
-                            <div className="name fw-semibold">John Doe</div>
-                            <div className="email">johndoe@example.com</div>
+                            <div className="name fw-semibold">{localStorage.getItem('userName') || 'Guest User'}</div>
+                            <div className="email">{localStorage.getItem('email')}</div>
                         </div>
                     </div>
                 </div>
@@ -59,7 +60,13 @@ function Sidebar({ isMobileOpen, sidebarRef, setIsMobileOpen }) {
 
                 {/* Bottom Section - Fixed */}
                 <div className="sidebar-bottom-fixed flex-shrink-0 pt-3 pb-3 px-2">
-                    <button className="logout-btn w-100 d-flex align-items-center gap-1 bg-transparent border-0 fw-semibold cursur-pointer text-nowrap">
+                    <button 
+                        className="logout-btn w-100 d-flex align-items-center gap-1 bg-transparent border-0 fw-semibold cursur-pointer text-nowrap" 
+                        onClick={() =>{ 
+                            logout(toast);
+                            navigate('/login', {replace : true})
+                        }}
+                    >
                         <i className="bi bi-box-arrow-right d-flex justify-content-center"></i>
                         <span>Logout</span>
                     </button>

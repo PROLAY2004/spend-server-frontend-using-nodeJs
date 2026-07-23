@@ -12,6 +12,9 @@ export default async function displayPayer(navigate, toast, payload) {
 		const result = await response.json();
 
 		if (result.success) {
+			localStorage.setItem('userName', result.data.user.name);
+			localStorage.setItem('email', result.data.user.email);
+
 			return result.data;
 		} else {
 			toast.error(result.message, {
