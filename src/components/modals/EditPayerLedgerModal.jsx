@@ -151,21 +151,6 @@ const EditPayerLedgerModal = ({ isOpen, onClose, pageRefresh, recordData }) => {
                         </div>
 
                         <div className="col-12 col-sm-6 form-group">
-                            <label className="form-label  fs-xs fw-medium mb-1 text-uppercase">Spend Amt</label>
-                            <div className="input-wrapper position-relative">
-                                <i className="bi bi-currency-rupee position-absolute top-50 start-0 translate-middle-y ms-3 icon-text"></i>
-                                <input
-                                    type="text"
-                                    className="custom-input form-control shadow-none ps-5"
-                                    placeholder="0.00"
-                                    name='spendAmount'
-                                    value={formData.spendAmount}
-                                    onChange={handleChange}
-                                />
-                            </div>
-                        </div>
-
-                        <div className="col-12 col-sm-6 form-group">
                             <label className="form-label  fs-xs fw-medium mb-1 text-uppercase">Original Amt</label>
                             <div className="input-wrapper position-relative">
                                 <i className="bi bi-currency-rupee position-absolute top-50 start-0 translate-middle-y ms-3 icon-text"></i>
@@ -175,6 +160,21 @@ const EditPayerLedgerModal = ({ isOpen, onClose, pageRefresh, recordData }) => {
                                     placeholder="0.00"
                                     name='originalAmount'
                                     value={formData.originalAmount}
+                                    onChange={handleChange}
+                                />
+                            </div>
+                        </div>
+
+                        <div className="col-12 col-sm-6 form-group">
+                            <label className="form-label  fs-xs fw-medium mb-1 text-uppercase">Spend Amt</label>
+                            <div className="input-wrapper position-relative">
+                                <i className="bi bi-currency-rupee position-absolute top-50 start-0 translate-middle-y ms-3 icon-text"></i>
+                                <input
+                                    type="text"
+                                    className="custom-input form-control shadow-none ps-5"
+                                    placeholder="0.00"
+                                    name='spendAmount'
+                                    value={formData.spendAmount}
                                     onChange={handleChange}
                                 />
                             </div>

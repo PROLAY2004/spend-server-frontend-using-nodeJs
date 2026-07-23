@@ -1,25 +1,19 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { Link } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
+import { toast } from 'react-toastify';
 import {
-    Chart as ChartJS,
-    CategoryScale,
-    LinearScale,
-    PointElement,
-    LineElement,
-    BarElement,
-    ArcElement,
-    Title,
-    Tooltip,
-    Legend,
-    Filler
+    Chart as ChartJS, CategoryScale, LinearScale, PointElement,
+    LineElement, BarElement, ArcElement, Title, Tooltip, Legend, Filler
 } from 'chart.js';
 import { Doughnut, Line, Bar } from 'react-chartjs-2';
 
 import Sidebar from '../../components/common/Sidebar.jsx';
 import Header from '../../components/common/Header.jsx';
 import Cards from '../../components/dashboard/Cards.jsx';
+import fetchDashboardOverview from './fetchData.js';
 
 import '../../styles/dashboard.scss';
+import handleBtnClick from './exportData.js';
 
 ChartJS.register(CategoryScale, LinearScale, PointElement, LineElement, BarElement, ArcElement, Title, Tooltip, Legend, Filler);
 ChartJS.defaults.color = '#888888';
@@ -32,18 +26,14 @@ const centerTextPlugin = {
         if (chart.config.options.elements.center) {
             const ctx = chart.ctx;
             const centerConfig = chart.config.options.elements.center;
-
             ctx.save();
             const centerX = (chart.chartArea.left + chart.chartArea.right) / 2;
             const centerY = (chart.chartArea.top + chart.chartArea.bottom) / 2;
-
             ctx.textAlign = 'center';
             ctx.textBaseline = 'middle';
-
             ctx.font = '700 24px Inter';
             ctx.fillStyle = '#ffffff';
             ctx.fillText(centerConfig.value, centerX, centerY - 12);
-
             ctx.font = '500 12px Inter';
             ctx.fillStyle = '#888888';
             ctx.fillText(centerConfig.text, centerX, centerY + 16);
@@ -53,18 +43,47 @@ const centerTextPlugin = {
 };
 
 export default function Dashboard() {
+    const navigate = useNavigate();
     const [isMobileOpen, setIsMobileOpen] = useState(false);
-    const [lineFilter, setLineFilter] = useState('thisWeek');
-    const [barFilter, setBarFilter] = useState('thisMonth');
+    const [loading, setLoading] = useState(true);
     const sidebarRef = useRef(null);
 
-    const handleBtnClick = () => {
-        console.log("Btn Clicked");
-    }
+    const [lineFilter, setLineFilter] = useState('thisWeek');
+    const [barFilter, setBarFilter] = useState('thisMonth');
+
+    const [dashboardData, setDashboardData] = useState({
+        cards: {
+            totalSavings: 0, savingsTrend: 0,
+            unpaidCategories: 0, categoriesTrend: 0,
+            totalDue: 0, dueTrend: 0
+        },
+        doughnut1: [0, 0],
+        doughnut2: [0, 0],
+        doughnutTotalSpend: 0,
+        doughnutTotalRecords: 0,
+        // Line chart now expects an object to handle dynamic X-axis labels
+        lineChart: { labels: [], data: [] },
+        barChart: { labels: [], data: [] }
+    });
+
+    const loadDashboardData = async () => {
+        setLoading(true);
+        const payload = { lineFilter, barFilter };
+        const data = await fetchDashboardOverview(navigate, toast, payload);
+
+        if (data) {
+            setDashboardData(data);
+        }
+        setLoading(false);
+    };
+
+    useEffect(() => {
+        loadDashboardData();
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [lineFilter, barFilter]);
 
     useEffect(() => {
         window.scrollTo(0, 0);
-        
         const handleClickOutside = (event) => {
             if (isMobileOpen && sidebarRef.current && !sidebarRef.current.contains(event.target)) {
                 setIsMobileOpen(false);
@@ -74,7 +93,6 @@ export default function Dashboard() {
         return () => document.removeEventListener('mousedown', handleClickOutside);
     }, [isMobileOpen]);
 
-    // --- DUMMY DATA ---
     const doughnutOptions = {
         cutout: '78%',
         responsive: true,
@@ -85,14 +103,12 @@ export default function Dashboard() {
         }
     };
 
-    const doughnut1Data = { labels: ['Due Amount', 'Collected Amount'], datasets: [{ data: [12500, 34000], backgroundColor: ['#f43f5e', '#10b981'], borderWidth: 0, hoverOffset: 4 }] };
-    const doughnut2Data = { labels: ['Paid Records', 'Non-paid Records'], datasets: [{ data: [142, 38], backgroundColor: ['#7c3aed', '#f59e0b'], borderWidth: 0, hoverOffset: 4 }] };
+    const doughnut1Data = { labels: ['Due Amount', 'Collected Amount'], datasets: [{ data: dashboardData.doughnut1, backgroundColor: ['#f43f5e', '#10b981'], borderWidth: 0, hoverOffset: 4 }] };
+    const doughnut2Data = { labels: ['Paid Records', 'Non-paid Records'], datasets: [{ data: dashboardData.doughnut2, backgroundColor: ['#7c3aed', '#f59e0b'], borderWidth: 0, hoverOffset: 4 }] };
 
     const lineData = {
-        labels: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
-        datasets: [{
-            label: 'Spend', data: [120, 300, 150, 400, 200, 600, 250], borderColor: '#7c3aed', backgroundColor: 'rgba(124, 58, 237, 0.1)', borderWidth: 2, tension: 0.4, fill: true, pointBackgroundColor: '#111111', pointBorderColor: '#7c3aed', pointBorderWidth: 2, pointRadius: 4, pointHoverRadius: 6,
-        }]
+        labels: dashboardData.lineChart.labels,
+        datasets: [{ label: 'Spend', data: dashboardData.lineChart.data, borderColor: '#7c3aed', backgroundColor: 'rgba(124, 58, 237, 0.1)', borderWidth: 2, tension: 0.4, fill: true, pointBackgroundColor: '#111111', pointBorderColor: '#7c3aed', pointBorderWidth: 2, pointRadius: 4, pointHoverRadius: 6 }]
     };
     const lineOptions = {
         responsive: true, maintainAspectRatio: false,
@@ -101,12 +117,8 @@ export default function Dashboard() {
     };
 
     const barData = {
-        labels: ['Healthcare', 'Food', 'Income', 'Travel', 'Fuel', 'Transfer', 'Shopping', 'Bills', 'Grocery', 'Entertainment', 'Investment', 'Others'],
-        datasets: [{
-            label: 'Amount spent', data: [400, 800, -200, 350, 200, 150, 600, 450, 500, 250, 1000, 100],
-            backgroundColor: ['#ef4444', '#f97316', '#10b981', '#3b82f6', '#8b5cf6', '#6366f1', '#ec4899', '#f59e0b', '#84cc16', '#06b6d4', '#a855f7', '#64748b'],
-            borderRadius: 6, borderWidth: 0,
-        }]
+        labels: dashboardData.barChart.labels,
+        datasets: [{ label: 'Amount spent', data: dashboardData.barChart.data, backgroundColor: ['#ef4444', '#f97316', '#10b981', '#3b82f6', '#8b5cf6', '#6366f1', '#ec4899', '#f59e0b', '#84cc16', '#06b6d4', '#a855f7', '#64748b'], borderRadius: 6, borderWidth: 0 }]
     };
     const barOptions = {
         responsive: true, maintainAspectRatio: false,
@@ -116,21 +128,34 @@ export default function Dashboard() {
 
     return (
         <div className="dashboard-wrapper d-flex h-100 overflow-hidden position-relative">
-            <Sidebar isMobileOpen={isMobileOpen} sidebarRef={sidebarRef}/>
+            <Sidebar isMobileOpen={isMobileOpen} sidebarRef={sidebarRef} />
 
             <main className="main-content d-flex flex-column h-100 flex-grow-1 overflow-auto overflow-x-hidden">
-                <Header setIsMobileOpen={setIsMobileOpen} pageName={"Dashboard"} breadCrumb={"Overview"} btnIcon={
-                    <>
-                        <i className="bi bi-cloud-download"></i>
-                        <span>Export</span>
-                    </>
-                } btnFunc={handleBtnClick} />
+                <Header setIsMobileOpen={setIsMobileOpen} pageName={"Dashboard"} breadCrumb={"Overview"} btnIcon={<><i className="bi bi-cloud-download"></i><span>Export</span></>} btnFunc={() => handleBtnClick(navigate, toast)} />
 
-                <div className="dashboard-body w-100 my-0 mx-auto p-3 p-md-4">
+                <div className={`dashboard-body w-100 my-0 mx-auto p-3 p-md-4 `}>
                     <div className="stats-grid d-grid gap-3 mb-4">
-                        <Cards cardNumber={1} cardTitle={'Total Savings'} />
-                        <Cards cardNumber={2} cardTitle={'Unpaid Categories'} />
-                        <Cards cardNumber={3} cardTitle={'Total Due Amount'} />
+                        <Cards
+                            cardNumber={1}
+                            cardTitle={'Total Savings'}
+                            value={dashboardData.cards.totalSavings}
+                            trend={dashboardData.cards.savingsTrend}
+                        />
+                        <Cards
+                            cardNumber={2}
+                            cardTitle={'Unpaid Records'}
+                            value={dashboardData.cards.unpaidCategories}
+                            trend={dashboardData.cards.categoriesTrend}
+                            isCurrency={false}
+                            inverseTrend={true} // High unpaid records turns the UI badge Red
+                        />
+                        <Cards
+                            cardNumber={3}
+                            cardTitle={'Total Due Amount'}
+                            value={dashboardData.cards.totalDue}
+                            trend={dashboardData.cards.dueTrend}
+                            inverseTrend={true} // High due amount turns the UI badge Red
+                        />
                     </div>
 
                     <div className="charts-grid d-grid gap-3 mb-4">
@@ -139,7 +164,7 @@ export default function Dashboard() {
                                 <h3 className="fw-semibold">Amount Overview</h3>
                             </div>
                             <div className="chart-container">
-                                <Doughnut data={doughnut1Data} options={{ ...doughnutOptions, elements: { center: { text: 'Total Spend', value: '₹46,500' } } }} plugins={[centerTextPlugin]} />
+                                <Doughnut data={doughnut1Data} options={{ ...doughnutOptions, elements: { center: { text: 'Total Handled', value: `₹${dashboardData.doughnutTotalSpend.toLocaleString()}` } } }} plugins={[centerTextPlugin]} />
                             </div>
                         </div>
 
@@ -148,7 +173,7 @@ export default function Dashboard() {
                                 <h3 className="fw-semibold">Records Overview</h3>
                             </div>
                             <div className="chart-container">
-                                <Doughnut data={doughnut2Data} options={{ ...doughnutOptions, elements: { center: { text: 'Total Records', value: '180' } } }} plugins={[centerTextPlugin]} />
+                                <Doughnut data={doughnut2Data} options={{ ...doughnutOptions, elements: { center: { text: 'Total Records', value: dashboardData.doughnutTotalRecords } } }} plugins={[centerTextPlugin]} />
                             </div>
                         </div>
 
@@ -156,6 +181,7 @@ export default function Dashboard() {
                             <div className="chart-header d-flex justify-content-between align-items-center mb-4 pb-3">
                                 <h3 className="fw-semibold">Spend Activity</h3>
                                 <select className='py-2 px-3' value={lineFilter} onChange={(e) => setLineFilter(e.target.value)}>
+                                    <option value="today">Today</option>
                                     <option value="thisWeek">This Week</option>
                                     <option value="thisMonth">This Month</option>
                                     <option value="thisYear">This Year</option>
