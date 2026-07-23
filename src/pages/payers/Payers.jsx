@@ -15,6 +15,8 @@ import DeletePayerModal from '../../components/modals/DeletePayerModal.jsx';
 import AddPayerLedgerModal from '../../components/modals/AddPayerLedgerModal.jsx';
 import EditPayerLedgerModal from '../../components/modals/EditPayerLedgerModal.jsx';
 import DescriptionModal from '../../components/modals/DescriptionModal.jsx';
+import DeleteLedgerModal from '../../components/modals/DeleteLedgerModal.jsx';
+import BulkActionPayerModal from '../../components/modals/BulkActionPayerModal.jsx';
 
 import displayPayer from './fetchPayer.js';
 import '../../styles/payers.scss';
@@ -26,6 +28,7 @@ export default function Payers() {
     const [pageLoader, setPageLoader] = useState(true);
     const [emptyState, setEmptyState] = useState(false);
     const [pageRefresh, setPageRefresh] = useState(0);
+    const [resetSelection, setResetSelection] = useState(0);
 
     const [currentPage, setCurrentPage] = useState(1);
     const [totalPages, setTotalPages] = useState(1);
@@ -37,6 +40,7 @@ export default function Payers() {
     const [payerDetails, setPayerDetails] = useState([]);
     const [payerData, setPayerData] = useState({});
     const [recordData, setRecordData] = useState({});
+    const [selectedLedgersList, setSelectedLedgersList] = useState([]);
 
     const [addPayerModal, setAddPayerModal] = useState(false);
     const [editPayerModal, setEditPayerModal] = useState(false);
@@ -44,6 +48,8 @@ export default function Payers() {
     const [addLedgerModal, setAddLedgerModal] = useState(false);
     const [editLedgerModal, setEditLedgerModal] = useState(false);
     const [detailsModal, setDetailsModal] = useState(false);
+    const [deleteLedgerModal, setDeleteLedgerModal] = useState(false);
+    const [bulkActionModal, setbulkActionModal] = useState(false);
 
     const handleDisplay = async () => {
         setPageLoader(true);
@@ -72,7 +78,6 @@ export default function Payers() {
     }
 
     useEffect(() => {
-        // Implement debouncing for the search functionality
         const delayDebounceFn = setTimeout(() => {
             handleDisplay();
         }, 300);
@@ -149,11 +154,12 @@ export default function Payers() {
                     {/* Payers List */}
                     <div className="payers-list d-flex flex-column gap-2 mb-4 flex-grow-1">
                         <PayerCardSkeleton isLoading={pageLoader} />
-                        <EmptyCard isActive={emptyState} />
+                        <EmptyCard isActive={!pageLoader && emptyState} />
 
                         {payerDetails.map((payer) => (
                             <PayerCard
                                 key={payer._id}
+                                isVisible={!pageLoader}
                                 payerData={payer}
                                 pageRefresh={pageRefresh}
                                 setEditPayerModal={setEditPayerModal}
@@ -163,6 +169,10 @@ export default function Payers() {
                                 setEditLedgerModal={setEditLedgerModal}
                                 setDetailsModal={setDetailsModal}
                                 setRecordData={setRecordData}
+                                setDeleteLedgerModal={setDeleteLedgerModal}
+                                setbulkActionModal={setbulkActionModal}
+                                setSelectedLedgersList={setSelectedLedgersList}
+                                resetSelection={resetSelection}
                             />
                         ))}
                     </div>
@@ -239,6 +249,23 @@ export default function Payers() {
             onClose={() => setEditLedgerModal(false)}
             pageRefresh={setPageRefresh}
             recordData={recordData}
+        />
+
+        <DeleteLedgerModal 
+            isOpen={deleteLedgerModal}
+            onClose={() => setDeleteLedgerModal(false)}
+            pageRefresh={setPageRefresh}
+            payerData={payerData}
+            ledgerData={recordData}
+        />
+
+        <BulkActionPayerModal
+            isOpen={bulkActionModal}
+            onClose={()=> setbulkActionModal(false)}
+            pageRefresh={setPageRefresh}
+            selectedLedgersList={selectedLedgersList}
+            setSelectedLedgersList={setSelectedLedgersList}
+            setResetSelection={setResetSelection}
         />
     </>
     );

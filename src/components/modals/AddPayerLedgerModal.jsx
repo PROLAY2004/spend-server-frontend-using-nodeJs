@@ -89,7 +89,7 @@ const AddPayerLedgerModal = ({ isOpen, onClose, pageRefresh, payerData }) => {
                         <div className="col-12 form-group">
                             <label className="form-label fs-xs fw-medium mb-1 text-uppercase">Date</label>
                             <div className="input-wrapper position-relative">
-                                <i className="bi bi-calendar3 position-absolute top-50 start-0 translate-middle-y ms-3"></i>
+                                <i className="bi bi-calendar3 position-absolute top-50 start-0 translate-middle-y ms-3 icon-text"></i>
                                 <input
                                     type="date"
                                     name="date"
@@ -103,7 +103,7 @@ const AddPayerLedgerModal = ({ isOpen, onClose, pageRefresh, payerData }) => {
                         <div className="col-12 form-group">
                             <label className="form-label  fs-xs fw-medium mb-1 text-uppercase">Category</label>
                             <div className="input-wrapper position-relative">
-                                <i className="bi bi-tags position-absolute top-50 start-0 translate-middle-y ms-3 "></i>
+                                <i className="bi bi-tags position-absolute top-50 start-0 translate-middle-y ms-3 icon-text"></i>
                                 <select
                                     className="custom-input form-select shadow-none ps-5"
                                     value={formData.category}
@@ -130,7 +130,7 @@ const AddPayerLedgerModal = ({ isOpen, onClose, pageRefresh, payerData }) => {
                         <div className="col-12 col-sm-6 form-group">
                             <label className="form-label  fs-xs fw-medium mb-1 text-uppercase">Spend Amt</label>
                             <div className="input-wrapper position-relative">
-                                <i className="bi bi-currency-rupee position-absolute top-50 start-0 translate-middle-y ms-3 "></i>
+                                <i className="bi bi-currency-rupee position-absolute top-50 start-0 translate-middle-y ms-3 icon-text"></i>
                                 <input
                                     type="text"
                                     className="custom-input form-control shadow-none ps-5"
@@ -145,7 +145,7 @@ const AddPayerLedgerModal = ({ isOpen, onClose, pageRefresh, payerData }) => {
                         <div className="col-12 col-sm-6 form-group">
                             <label className="form-label  fs-xs fw-medium mb-1 text-uppercase">Original Amt</label>
                             <div className="input-wrapper position-relative">
-                                <i className="bi bi-currency-rupee position-absolute top-50 start-0 translate-middle-y ms-3 "></i>
+                                <i className="bi bi-currency-rupee position-absolute top-50 start-0 translate-middle-y ms-3 icon-text"></i>
                                 <input
                                     type="text"
                                     className="custom-input form-control shadow-none ps-5"
@@ -161,7 +161,7 @@ const AddPayerLedgerModal = ({ isOpen, onClose, pageRefresh, payerData }) => {
                         <div className="col-12 col-sm-6 form-group">
                             <label className="form-label  fs-xs fw-medium mb-1 text-uppercase">Due Amt</label>
                             <div className="input-wrapper position-relative">
-                                <i className="bi bi-currency-rupee position-absolute top-50 start-0 translate-middle-y ms-3 "></i>
+                                <i className="bi bi-currency-rupee position-absolute top-50 start-0 translate-middle-y ms-3 icon-text"></i>
                                 <input
                                     type="text"
                                     className="custom-input form-control shadow-none ps-5"
@@ -176,7 +176,7 @@ const AddPayerLedgerModal = ({ isOpen, onClose, pageRefresh, payerData }) => {
                         <div className="col-12 col-sm-6 form-group">
                             <label className="form-label  fs-xs fw-medium mb-1 text-uppercase">Status</label>
                             <div className="input-wrapper position-relative">
-                                <i className="bi bi-check2-circle position-absolute top-50 start-0 translate-middle-y ms-3 "></i>
+                                <i className="bi bi-check2-circle position-absolute top-50 start-0 translate-middle-y ms-3 icon-text"></i>
                                 <select
                                     className="custom-input form-select shadow-none ps-5"
                                     name='status'
@@ -194,7 +194,7 @@ const AddPayerLedgerModal = ({ isOpen, onClose, pageRefresh, payerData }) => {
                         <div className="col-12 form-group">
                             <label className="form-label  fs-xs fw-medium mb-1 text-uppercase">Description</label>
                             <div className="input-wrapper position-relative">
-                                <i className="bi bi-text-paragraph position-absolute top-0 start-0 ms-3 mt-3 "></i>
+                                <i className="bi bi-text-paragraph position-absolute top-0 start-0 ms-3 mt-3 icon-text"></i>
                                 <textarea
                                     className="custom-input form-control shadow-none ps-5 pt-3"
                                     placeholder="Enter ledger details or notes..."

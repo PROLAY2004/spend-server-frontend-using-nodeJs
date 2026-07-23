@@ -1,18 +1,24 @@
 import apiInterceptor from '../../api/interceptor.js';
 
-export default async function getLedgers(navigate, toast, payerId, payload) {
+export default async function delRecord(navigate, toast, recordData) {
 	try {
 		const response = await apiInterceptor(
 			navigate,
 			toast,
-			'POST',
-			`/user/dashboard/fetch-payer-ledger/${payerId}`,
-			payload,
+			'DELETE',
+			`/user/dashboard/records`,
+			recordData,
 		);
 		const result = await response.json();
 
 		if (result.success) {
-			return result.data;
+			toast.success(result.message, {
+				position: 'top-right',
+				autoClose: 5000,
+				theme: 'dark',
+			});
+
+			return true;
 		} else {
 			toast.error(result.message, {
 				position: 'top-right',

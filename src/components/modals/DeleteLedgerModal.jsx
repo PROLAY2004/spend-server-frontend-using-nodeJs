@@ -2,14 +2,15 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 
-import delPayer from '../../pages/payers/deletePayer.js';
+import delRecord from '../../pages/payers/deleteLedger.js';
 import "../../styles/common/modal.scss";
 
-const DeletePayerModal = ({
+const DeleteLedgerModal = ({
     isOpen,
     onClose,
     pageRefresh,
     payerData,
+    ledgerData,
 }) => {
     const navigate = useNavigate();
     const [loading, setLoading] = useState(false);
@@ -19,13 +20,16 @@ const DeletePayerModal = ({
     const handleDelete = async () => {
         setLoading(true);
 
-        const isDeleted = await delPayer(navigate, toast, payerData._id);
+        const isDeleted = await delRecord(navigate, toast, {
+            payerId: payerData._id,
+            recordId: ledgerData._id,
+        });
 
         setLoading(false);
 
-        if(isDeleted){
+        if (isDeleted) {
             onClose();
-            pageRefresh((prev) => prev+1);
+            pageRefresh((prev) => prev + 1);
         }
     };
 
@@ -108,4 +112,4 @@ const DeletePayerModal = ({
     );
 };
 
-export default DeletePayerModal;
+export default DeleteLedgerModal;

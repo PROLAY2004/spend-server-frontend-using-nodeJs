@@ -2,7 +2,7 @@ import '../../styles/common/loader.scss';
 
 export const LedgerRowSkeleton = ({ loading }) => {
     return (
-        Array.from({ length: loading ? 5 : 0 }).map((_, index) => (
+        Array.from({ length: loading ? 3 : 0 }).map((_, index) => (
             <tr className="skeleton-row" key={index}>
                 <td className="checkbox-cell">
                     <div className="skeleton-box skeleton-checkbox"></div>
