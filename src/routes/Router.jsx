@@ -7,6 +7,7 @@ import Home from '../pages/home/Home.jsx';
 import Login from '../pages/login/Login.jsx';
 import Dashboard from '../pages/dashboard/Dashboard.jsx';
 import Payers from '../pages/payers/Payers.jsx';
+import Invoices from '../pages/invoices/Invoices.jsx';
 
 const router = createBrowserRouter([
     {
@@ -36,6 +37,14 @@ const router = createBrowserRouter([
                 <Payers />
             </ProtectedRoute>
         ),
+    },
+    {
+        path: '/invoices',
+        element: (
+            <ProtectedRoute>
+                <Invoices/>
+            </ProtectedRoute>
+        )
     },
     {
         path: '*',
