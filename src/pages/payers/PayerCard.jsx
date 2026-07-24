@@ -167,6 +167,7 @@ function PayerCard({
                                 onClick={()=>{
                                     setbulkActionModal(true)
                                     setSelectedLedgersList(selectedLedgers)
+                                    setPayerData(payerData)
                                 }}
                             >
                                 <i className="bi bi-list-task"></i>

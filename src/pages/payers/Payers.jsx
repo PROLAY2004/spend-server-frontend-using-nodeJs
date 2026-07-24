@@ -234,6 +234,7 @@ export default function Payers() {
             selectedLedgersList={selectedLedgersList}
             setSelectedLedgersList={setSelectedLedgersList}
             setResetSelection={setResetSelection}
+            payerData={payerData}
         />
     </>
     );

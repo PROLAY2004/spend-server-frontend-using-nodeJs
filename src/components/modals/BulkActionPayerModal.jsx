@@ -4,6 +4,7 @@ import { useNavigate } from 'react-router-dom';
 
 import '../../styles/common/modal.scss';
 import handleBulkAction from '../../pages/payers/bulkOperations.js';
+import generateInvoice from '../../pages/invoices/createInvoice.js';
 
 const BulkActionPayerModal = ({
     isOpen,
@@ -11,7 +12,8 @@ const BulkActionPayerModal = ({
     pageRefresh,
     selectedLedgersList,
     setSelectedLedgersList,
-    setResetSelection
+    setResetSelection,
+    payerData
 }) => {
     const navigate = useNavigate();
     const [loading, setLoading] = useState(false);
@@ -35,10 +37,17 @@ const BulkActionPayerModal = ({
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-
         setLoading(true);
 
-        const isSuccess = await handleBulkAction(navigate, toast, { action, records : selectedLedgersList})
+        let isSuccess = false; 
+
+        if (action === 'invoice') {
+            const selectedLedgerIds = selectedLedgersList.map(record => record.id);
+            isSuccess = await generateInvoice(navigate, toast, { payerId: payerData._id, recordIds : selectedLedgerIds });
+        }
+        else {
+            isSuccess = await handleBulkAction(navigate, toast, { action, records: selectedLedgersList })
+        }
 
         if (isSuccess) {
             onClose();
