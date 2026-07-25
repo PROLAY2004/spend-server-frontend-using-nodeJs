@@ -1,13 +1,13 @@
 import apiInterceptor from '../../api/interceptor.js';
 
-export default async function getInvoices(navigate, toast) {
+export default async function getInvoices(navigate, toast, payload) {
 	try {
 		const response = await apiInterceptor(
 			navigate,
 			toast,
 			'POST',
 			`/user/dashboard/fetch-invoice`,
-			{},
+			payload,
 		);
 		const result = await response.json();
 

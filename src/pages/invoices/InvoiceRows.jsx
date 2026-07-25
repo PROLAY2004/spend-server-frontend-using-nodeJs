@@ -9,7 +9,7 @@ export default function InvoiceRows({ inv }) {
             <td>{inv.payerMobile}</td>
             <td>{formatDate(inv.createdAt)}</td>
             <td className="fw-medium text-white">₹{inv.dueAmount.toFixed(2)}</td>
-            <td>
+            <td className='px-2'>
                 <span className={`static-status text-uppercase status-${inv.status.toLowerCase().replace(/\s+/g, '-')}`}>
                     {inv.status}
                 </span>
@@ -23,7 +23,7 @@ export default function InvoiceRows({ inv }) {
                         <i className="bi bi-share"></i>
                     </button>
                     <button className="btn-action edit" title="Change Status" onClick={() => handleEdit(inv._id)}>
-                        <i className="bi bi-pencil"></i>
+                        <i className="bi bi-repeat"></i>
                     </button>
                     <button className="btn-action delete" title="Delete" onClick={() => handleDelete(inv._id)}>
                         <i className="bi bi-trash"></i>

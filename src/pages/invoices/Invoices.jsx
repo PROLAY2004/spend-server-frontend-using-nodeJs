@@ -4,15 +4,18 @@ import { toast } from 'react-toastify';
 
 import Sidebar from '../../components/common/Sidebar.jsx';
 import Header from '../../components/common/Header.jsx';
+import InvoicesControl from './InvoiceControl.jsx';
 import EmptyCard from '../../components/common/EmptyCard.jsx';
 import InvoiceSkeleton from '../../components/common/InvoiceSkeleton.jsx';
 import InvoiceRows from './InvoiceRows.jsx';
+
 import GenerateInvoiceModal1 from '../../components/modals/GenerateInvoiceModal1.jsx';
 import GenerateInvoiceModal2 from '../../components/modals/GenerateInvoiceModal2.jsx';
+import ViewInvoiceModal from '../../components/modals/ViewInvoiceModal.jsx';
 
 import getInvoices from './fetchInvoices.js';
 import getLedgers from '../ledger/fetchLedgers.js';
-import InvoicesControl from './InvoiceControl.jsx';
+
 
 import '../../styles/invoices.scss';
 
@@ -21,20 +24,22 @@ export default function Invoices() {
     const sidebarRef = useRef(null);
 
     const [isMobileOpen, setIsMobileOpen] = useState(false);
-    const [pageLoader, setPageLoader] = useState(false);
-    const [emptyState, setEmptyState] = useState(false);
-    const [loading, setLoading] = useState(false);
-    const [ledgerPage, setLedgerPage] = useState(1);
+    const [pageLoader, setPageLoader] = useState(0);
+    const [loading, setLoading] = useState(true); // Default to true for initial skeleton load
 
+    // Pagination & Filter States
     const [currentPage, setCurrentPage] = useState(1);
-    const [totalPages, setTotalPages] = useState(2);
+    const [totalPages, setTotalPages] = useState(1);
     const [searchQuery, setSearchQuery] = useState('');
     const [filterOption, setFilterOption] = useState('All');
     const [sortOption, setSortOption] = useState('Newest First');
+    const itemsPerPage = 5;
 
     const [invoices, setInvoices] = useState([]);
     const [payerList, setPayerList] = useState([]);
     const [ledgerData, setLedgerData] = useState({});
+
+    // Modal Form States
     const [form1Data, setForm1Data] = useState({
         selectedPayer: null,
         status: '',
@@ -53,34 +58,45 @@ export default function Invoices() {
 
         if (data) {
             setLedgerData(data);
-            setLedgerPage(page);
-
             return true;
         }
-
         return false;
     };
 
     const handleDisplay = async () => {
         setLoading(true);
 
-        const data = await getInvoices(navigate, toast);
+        const payload = {
+            page: currentPage,
+            limit: itemsPerPage,
+            search: searchQuery,
+            filter: filterOption,
+            sort: sortOption
+        };
 
-        if(data){
-            setInvoices(data.invoices)
-            setEmptyState(false)
-            setPayerList(data.payersList)
+        const data = await getInvoices(navigate, toast, payload);
+
+        if (data && data.invoices?.length > 0) {
+            setInvoices(data.invoices);
+            setTotalPages(data.totalPages || 1);
+            setPayerList(data.payersList || []);
+        } else {
+            setInvoices([]);
+            setTotalPages(1);
+            setPayerList(data?.payersList || []);
         }
-        else{
-            setEmptyState(true)
-        }
-        
+
         setLoading(false);
-    }
+    };
 
+    // Debounced fetch to handle search, filter, sort, and pagination changes dynamically
     useEffect(() => {
-        handleDisplay();
-    }, [pageLoader])
+        const delayDebounceFn = setTimeout(() => {
+            handleDisplay();
+        }, 300);
+
+        return () => clearTimeout(delayDebounceFn);
+    }, [pageLoader, currentPage, searchQuery, filterOption, sortOption]);
 
     return (
         <>
@@ -114,35 +130,43 @@ export default function Invoices() {
                         />
 
                         <div className="invoices-list-wrapper position-relative d-flex flex-column gap-2 mb-4 flex-grow-1">
-                            <EmptyCard isActive={emptyState} />
 
-                            <div className="invoice-table-wrapper rounded-3 border overflow-auto">
-                                <table className="w-100 invoice-table">
-                                    <thead style={{}}>
-                                        <tr>
-                                            <th>Invoice #</th>
-                                            <th>Payer Name</th>
-                                            <th>Payer Mobile</th>
-                                            <th>Issue Date</th>
-                                            <th>Amount</th>
-                                            <th>Status</th>
-                                            <th className="text-center">Actions</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        <InvoiceSkeleton isActive={loading} />
+                            {/* Empty Card specifically waits for loading to be false */}
+                            <EmptyCard isActive={!loading && invoices.length === 0} />
 
-                                        {!loading && invoices.map((inv) => (
-                                            <InvoiceRows key={inv._id} inv={inv} />
-                                        ))}
-                                    </tbody>
-                                </table>
-                            </div>
+                            {/* Show the table structure if we are loading OR if there is data */}
+                            {(loading || invoices.length > 0) && (
+                                <div className="invoice-table-wrapper rounded-3 border overflow-auto">
+                                    <table className="w-100 invoice-table">
+                                        <thead>
+                                            <tr>
+                                                <th>Invoice #</th>
+                                                <th>Payer Name</th>
+                                                <th>Payer Mobile</th>
+                                                <th>Issue Date</th>
+                                                <th>Amount</th>
+                                                <th className='px-2'>Status</th>
+                                                <th className="text-center">Actions</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            {/* Render Skeleton if Loading, otherwise render data rows */}
+                                            {loading ? (
+                                                <InvoiceSkeleton isActive={true} />
+                                            ) : (
+                                                invoices.map((inv) => (
+                                                    <InvoiceRows key={inv._id} inv={inv} />
+                                                ))
+                                            )}
+                                        </tbody>
+                                    </table>
+                                </div>
+                            )}
 
                         </div>
 
-                        {/* Pagination matching Payers UI */}
-                        {invoices.length > 0 && (
+                        {/* Hide pagination if loading or no data exists */}
+                        {!loading && invoices.length > 0 && (
                             <div className="pagination-wrapper d-flex justify-content-center align-items-center gap-2 mt-auto pt-3 pb-2">
                                 <button
                                     className="page-btn"
@@ -188,12 +212,15 @@ export default function Invoices() {
 
             <GenerateInvoiceModal2
                 isOpen={generateModal2}
-                onClose={()=> setGenerateModal2(false)}
+                onClose={() => setGenerateModal2(false)}
                 pageRefresh={setPageLoader}
                 payerInfo={form1Data.selectedPayer}
                 ledgerData={ledgerData}
                 onPageChange={fetchLedgerPage}
                 setGenerateModal1={setGenerateModal1}
+            />
+
+            <ViewInvoiceModal 
             />
         </>
     );

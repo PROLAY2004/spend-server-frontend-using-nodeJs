@@ -6,7 +6,7 @@ function InvoicesControl({ searchQuery, setSearchQuery, setCurrentPage, filterOp
                 <input
                     type="text"
                     className="custom-input form-control shadow-none ps-5 py-2 pe-3"
-                    placeholder="Search by invoice number or payer name..."
+                    placeholder="Search by Payer Name or Payer Mobile ..."
                     value={searchQuery}
                     onChange={(e) => {
                         setSearchQuery(e.target.value);
