@@ -78,7 +78,11 @@
         border-bottom: 1px solid rgba(255, 255, 255, 0.03);
         vertical-align: middle;
         transition: background $transition-base;
-        min-width: 120px;
+        min-width: 130px;
+    }
+
+    td:first-child{
+        max-width: 165px;
     }
 
     tr:last-child td {
@@ -107,7 +111,7 @@
         background: rgba(245, 158, 11, 0.1);
     }
 
-    &.status-pending {
+    &.status-non-paid {
         color: #ef4444;
         background: rgba(239, 68, 68, 0.1);
     }

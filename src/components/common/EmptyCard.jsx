@@ -8,7 +8,7 @@ function EmptyCard({ isActive }) {
                 ></i>
             </div>
 
-            <h4 className="text-white fw-medium fs-5 position-relative">No Payers Found</h4>
+            <h4 className="text-white fw-medium fs-5 position-relative">No Results Found</h4>
 
             <p className="pagination-text mb-0 position-relative" style={{ fontSize: '0.85rem', maxWidth: '400px' }}>
                 We couldn't find any records matching your search or filter criteria. Try adjusting your filters or add new one.
