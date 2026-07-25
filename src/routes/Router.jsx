@@ -8,6 +8,7 @@ import Login from '../pages/login/Login.jsx';
 import Dashboard from '../pages/dashboard/Dashboard.jsx';
 import Payers from '../pages/payers/Payers.jsx';
 import Invoices from '../pages/invoices/Invoices.jsx';
+import Ledgers from '../pages/ledger/Ledgers.jsx';
 
 const router = createBrowserRouter([
     {
@@ -43,6 +44,14 @@ const router = createBrowserRouter([
         element: (
             <ProtectedRoute>
                 <Invoices/>
+            </ProtectedRoute>
+        )
+    },
+    {
+        path: '/ledgers',
+        element: (
+            <ProtectedRoute>
+                <Ledgers />
             </ProtectedRoute>
         )
     },

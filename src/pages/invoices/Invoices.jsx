@@ -8,61 +8,12 @@ import EmptyCard from '../../components/common/EmptyCard.jsx';
 import InvoiceSkeleton from '../../components/common/InvoiceSkeleton.jsx';
 import InvoiceRows from './InvoiceRows.jsx';
 import GenerateInvoiceModal1 from '../../components/modals/GenerateInvoiceModal1.jsx';
+import GenerateInvoiceModal2 from '../../components/modals/GenerateInvoiceModal2.jsx';
 
 import getInvoices from './fetchInvoices.js';
+import InvoicesControl from './InvoiceControl.jsx';
 
 import '../../styles/invoices.scss';
-
-
-function InvoicesControl({ searchQuery, setSearchQuery, setCurrentPage, filterOption, setFilterOption, sortOption, setSortOption }) {
-    return (
-        <div className="controls-bar d-flex flex-column flex-md-row justify-content-between gap-2 mb-4 w-100">
-            <div className="search-wrapper position-relative flex-grow-1">
-                <i className="bi bi-search position-absolute top-50 start-0 translate-middle-y ms-3 text-lighter"></i>
-                <input
-                    type="text"
-                    className="custom-input form-control shadow-none ps-5 py-2 pe-3"
-                    placeholder="Search by invoice number or payer name..."
-                    value={searchQuery}
-                    onChange={(e) => {
-                        setSearchQuery(e.target.value);
-                        setCurrentPage(1);
-                    }}
-                />
-            </div>
-
-            <div className="filters-wrapper d-flex gap-2">
-                <select
-                    className="custom-select py-2 w-100 form-select shadow-none"
-                    value={filterOption}
-                    onChange={(e) => {
-                        setFilterOption(e.target.value);
-                        setCurrentPage(1);
-                    }}
-                >
-                    <option value="All">All Invoices</option>
-                    <option value="Paid">All Paid</option>
-                    <option value="Partially Paid">Partially Paid</option>
-                    <option value="Pending">Due Pending</option>
-                </select>
-
-                <select
-                    className="custom-select py-2 w-100 form-select shadow-none"
-                    value={sortOption}
-                    onChange={(e) => {
-                        setSortOption(e.target.value);
-                        setCurrentPage(1);
-                    }}
-                >
-                    <option value="Newest First">Newest First</option>
-                    <option value="Oldest First">Oldest First</option>
-                    <option value="Amount: High to Low">Amount: High to Low</option>
-                    <option value="Amount: Low to High">Amount: Low to High</option>
-                </select>
-            </div>
-        </div>
-    );
-}
 
 export default function Invoices() {
     const navigate = useNavigate();
@@ -80,9 +31,14 @@ export default function Invoices() {
     const [sortOption, setSortOption] = useState('Newest First');
 
     const [invoices, setInvoices] = useState([]);
+    const [payerList, setPayerList] = useState([]);
+    const [selectedPayer, setSelectedPayer] = useState(null);
+    const [ledgerData, setLedgerData] = useState({});
+
+    const [generateModal1, setGenerateModal1] = useState(false);
+    const [generateModal2, setGenerateModal2] = useState(false);
 
     // Handlers
-    const handleGenerateInvoice = () => toast.success("Opening Generate Invoice modal...");
     const handleView = (id) => toast.info(`Viewing details for invoice ${id}`);
     const handleShare = (id) => toast.info(`Opening share options for invoice ${id}`);
     const handleEdit = (id) => toast.warning(`Editing invoice ${id}`);
@@ -93,9 +49,19 @@ export default function Invoices() {
 
         const data = await getInvoices(navigate, toast);
 
-        setInvoices(data.invoices)
+        if(data){
+            setInvoices(data.invoices)
+            setEmptyState(false)
+            setPayerList(data.payersList)
+        }
+        else{
+            setEmptyState(true)
+        }
+        
         setLoading(false);
     }
+
+    console.log(ledgerData)
 
     useEffect(() => {
         handleDisplay();
@@ -117,7 +83,7 @@ export default function Invoices() {
                                 <span>Generate Invoice</span>
                             </>
                         }
-                        btnFunc={handleGenerateInvoice}
+                        btnFunc={() => setGenerateModal1(true)}
                     />
 
                     <div className="invoices-body w-100 my-0 mx-auto p-3 p-md-4 d-flex flex-column h-100">
@@ -195,7 +161,22 @@ export default function Invoices() {
                 </main>
             </div>
 
-            <GenerateInvoiceModal1/>
+            <GenerateInvoiceModal1 
+                isOpen={generateModal1}
+                onClose={() => setGenerateModal1(false)}
+                payersList={payerList}
+                openModal={() => setGenerateModal2(true)}
+                setLedgerData={setLedgerData}
+                selectedPayer={selectedPayer}
+                setSelectedPayer={setSelectedPayer}
+            />
+
+            <GenerateInvoiceModal2
+                isOpen={generateModal2}
+                onClose={()=> setGenerateModal2(false)}
+                payerInfo={selectedPayer}
+                ledgerData={ledgerData}
+            />
         </>
     );
 }

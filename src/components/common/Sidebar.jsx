@@ -37,9 +37,9 @@ function Sidebar({ isMobileOpen, sidebarRef, setIsMobileOpen }) {
                         <NavLink to="/dashboard">Dashboard</NavLink>
                     </div>
 
-                    <div className={`side-links ${location.pathname === '/ledger' ? 'active' : ''}`}>
+                    <div className={`side-links ${location.pathname === '/ledgers' ? 'active' : ''}`}>
                         <i className="bi bi-journal-richtext"></i>
-                        <NavLink to="/ledger">Ledger</NavLink>
+                        <NavLink to="/ledgers">Ledgers</NavLink>
                     </div>
 
                     <div className={`side-links ${location.pathname === '/payers' ? 'active' : ''}`}>

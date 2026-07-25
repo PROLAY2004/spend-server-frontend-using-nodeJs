@@ -35,8 +35,8 @@ function LedgerControl({
                     }}
                 >
                     <option value="All">All Records</option>
-                    <option value="Paid">Paid Only</option>
-                    <option value="Non-Paid">Non-Paid Only</option>
+                    <option value="paid">Paid Only</option>
+                    <option value="non-paid">Non-Paid Only</option>
                 </select>
 
                 <button className="btn btn-add-ledger fw-medium d-flex align-items-center justify-content-center gap-2 position-relative overflow-hidden border-0 text-light"

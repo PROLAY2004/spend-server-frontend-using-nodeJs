@@ -1,16 +1,18 @@
 import { useState, useEffect, useRef } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { toast } from 'react-toastify';
+
+import getLedgers from '../../pages/ledger/fetchLedgers.js';
 import '../../styles/common/modal.scss';
 
-const GenerateInvoiceModal1 = ({ isOpen, onClose, payersList = [], onShowLedgers }) => {
+const GenerateInvoiceModal1 = ({ isOpen, onClose, payersList, openModal, setLedgerData, selectedPayer, setSelectedPayer }) => {
+    const navigate = useNavigate();
+    const dropdownRef = useRef(null);
     const [loading, setLoading] = useState(false);
 
-    // Form State
     const [searchTerm, setSearchTerm] = useState('');
-    const [selectedPayer, setSelectedPayer] = useState(null);
     const [status, setStatus] = useState('');
     const [isDropdownOpen, setIsDropdownOpen] = useState(false);
-
-    const dropdownRef = useRef(null);
 
     // Reset state when modal opens/closes
     useEffect(() => {
@@ -29,30 +31,47 @@ const GenerateInvoiceModal1 = ({ isOpen, onClose, payersList = [], onShowLedgers
                 setIsDropdownOpen(false);
             }
         };
+
         document.addEventListener('mousedown', handleClickOutside);
         return () => document.removeEventListener('mousedown', handleClickOutside);
     }, []);
 
     if (!isOpen) return null;
 
-    // Filter payers based on search input
     const filteredPayers = payersList.filter(payer =>
         payer.name.toLowerCase().includes(searchTerm.toLowerCase())
     );
 
     const handleSearchChange = (e) => {
         setSearchTerm(e.target.value);
-        setSelectedPayer(null); // Reset selection if user types something new
+        setSelectedPayer(null);
         setIsDropdownOpen(true);
     };
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        if (!selectedPayer || !status) return;
-
         setLoading(true);
-        // Execute the parent function to fetch/show ledgers
-        await onShowLedgers({ payerId: selectedPayer._id, status });
+
+        if (!selectedPayer || !status) {
+            toast.error('Payer or Status are Missing', {
+                position: 'top-right',
+                autoClose: 5000,
+                theme: 'dark',
+            });
+
+            setLoading(false);
+            return;
+        }
+
+
+
+        const data = await getLedgers(navigate, toast, { payerId: selectedPayer._id, filter : status });
+
+        if (data) {
+            openModal();
+            setLedgerData(data)
+        }
+
         setLoading(false);
     };
 
@@ -97,37 +116,24 @@ const GenerateInvoiceModal1 = ({ isOpen, onClose, payersList = [], onShowLedgers
                                 value={searchTerm}
                                 onChange={handleSearchChange}
                                 onFocus={() => setIsDropdownOpen(true)}
-                                required
                             />
 
                             {/* Custom Dropdown Menu */}
                             {isDropdownOpen && (
-                                <div
-                                    className="position-absolute w-100 mt-1 rounded-2 shadow-lg overflow-hidden"
-                                    style={{
-                                        background: '#111',
-                                        border: '1px solid rgba(255,255,255,0.08)',
-                                        maxHeight: '180px',
-                                        overflowY: 'auto',
-                                        zIndex: 1060
-                                    }}
-                                >
+                                <div className="search-dropdown position-absolute w-100 mt-1 rounded-2 shadow-lg">
                                     {filteredPayers.length > 0 ? (
                                         filteredPayers.map(payer => (
                                             <div
                                                 key={payer._id}
-                                                className="px-3 py-2 text-white"
-                                                style={{ cursor: 'pointer', transition: 'background 0.2s', fontSize: '0.85rem' }}
+                                                className="dropdown-payer-info px-3 py-2 text-white"
                                                 onMouseDown={() => {
                                                     setSelectedPayer(payer);
                                                     setSearchTerm(payer.name);
                                                     setIsDropdownOpen(false);
                                                 }}
-                                                onMouseEnter={(e) => e.target.style.background = 'rgba(255,255,255,0.08)'}
-                                                onMouseLeave={(e) => e.target.style.background = 'transparent'}
                                             >
                                                 {payer.name}
-                                                <small className="d-block text-muted" style={{ fontSize: '0.75rem' }}>{payer.mobile}</small>
+                                                <small className="d-block icon-text" style={{ fontSize: '0.75rem' }}>{payer.mobile}</small>
                                             </div>
                                         ))
                                     ) : (
@@ -151,7 +157,6 @@ const GenerateInvoiceModal1 = ({ isOpen, onClose, payersList = [], onShowLedgers
                                 className="custom-input form-control shadow-none w-100 px-3 py-2 ps-5"
                                 value={status}
                                 onChange={(e) => setStatus(e.target.value)}
-                                required
                             >
                                 <option value="" disabled>Choose status...</option>
                                 <option value="paid">Paid</option>
@@ -169,7 +174,7 @@ const GenerateInvoiceModal1 = ({ isOpen, onClose, payersList = [], onShowLedgers
                         </button>
 
                         <button
-                            disabled={loading || !selectedPayer || !status}
+                            disabled={loading}
                             type="submit"
                             className="btn-modal-save d-flex align-items-center justify-content-center gap-2"
                         >

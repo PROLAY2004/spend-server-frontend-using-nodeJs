@@ -7,7 +7,7 @@ import LedgerRowSkeleton from '../../components/common/LedgerRowSkeleton.jsx';
 import LedgerControl from "./LedgerContol.jsx";
 import CardHeader from './CardHeader.jsx';
 
-import getLedgers from "./fetchLedgers.js";
+import getLedgers from "../ledger/fetchLedgers.js";
 
 function PayerCard({
     payerData,
@@ -51,10 +51,11 @@ function PayerCard({
             page: ledgerCurrentPage,
             limit: paginetionLimit,
             search: ledgerSearch,
-            filter: ledgerFilter
+            filter: ledgerFilter,
+            payerId: payerData._id,
         };
 
-        const data = await getLedgers(navigate, toast, payerData._id, payload);
+        const data = await getLedgers(navigate, toast, payload);
 
         if (data && data.recordData.length) {
             setEmptyState(false);

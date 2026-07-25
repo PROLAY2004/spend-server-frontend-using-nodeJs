@@ -40,14 +40,14 @@
         z-index: 1;
     }
 
-        &::-webkit-scrollbar {
-            width: 2px;
-        }
-    
-        &::-webkit-scrollbar-thumb {
-            background: rgba(255, 255, 255, 0.15);
-            border-radius: 100px;
-        }
+    &::-webkit-scrollbar {
+        width: 2px;
+    }
+
+    &::-webkit-scrollbar-thumb {
+        background: rgba(255, 255, 255, 0.15);
+        border-radius: 100px;
+    }
 }
 
 .modal-title {
@@ -132,7 +132,7 @@
     // Fix icon alignment for native date inputs
     input[type="date"].custom-input {
         color-scheme: dark;
-        
+
         &::-webkit-calendar-picker-indicator {
             filter: none;
             opacity: 0.5;
@@ -247,5 +247,32 @@
 
     &:active {
         transform: translateY(1px);
+    }
+}
+
+.search-dropdown {
+    background: #111;
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    max-height: 180px;
+    overflow-Y: auto !important;
+    z-index: 1500;
+
+    &::-webkit-scrollbar {
+        width: 2px;
+    }
+
+    &::-webkit-scrollbar-thumb {
+        background: rgba(255, 255, 255, 0.15);
+        border-radius: 100px;
+    }
+
+    .dropdown-payer-info {
+        cursor: pointer;
+        transition: background 0.2s;
+        font-size: 0.85rem;
+
+        &:hover{
+            background-color: rgba(255, 255, 255, 0.08);
+        }
     }
 }
