@@ -22,7 +22,7 @@ export default function InvoiceRows({ inv }) {
                     <button className="btn-action share" title="Share" onClick={() => handleShare(inv._id)}>
                         <i className="bi bi-share"></i>
                     </button>
-                    <button className="btn-action edit" title="Edit" onClick={() => handleEdit(inv._id)}>
+                    <button className="btn-action edit" title="Change Status" onClick={() => handleEdit(inv._id)}>
                         <i className="bi bi-pencil"></i>
                     </button>
                     <button className="btn-action delete" title="Delete" onClick={() => handleDelete(inv._id)}>

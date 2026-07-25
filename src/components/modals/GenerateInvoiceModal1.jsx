@@ -1,6 +1,7 @@
 import { useState, useEffect, useRef } from 'react';
 
 import ModalHeader from './common/ModalHeader';
+import ModalFooter from './common/ModalFooter';
 import '../../styles/common/modal.scss';
 
 const GenerateInvoiceModal1 = ({
@@ -63,7 +64,7 @@ const GenerateInvoiceModal1 = ({
 
         const isSuccess = await fetchLedgerPage(1);
 
-        if(isSuccess){
+        if (isSuccess) {
             setGenerateModal2(true);
         }
 
@@ -75,7 +76,7 @@ const GenerateInvoiceModal1 = ({
             <div className="modal-container w-100 position-relative overflow-hidden" style={{ overflow: 'visible' }}>
                 <div className="modal-glow position-absolute rounded-circle"></div>
 
-                <ModalHeader 
+                <ModalHeader
                     modalIcon={<i className="bi bi-receipt"></i>}
                     modalName={'Generate Invoice'}
                     loading={loading}
@@ -160,32 +161,17 @@ const GenerateInvoiceModal1 = ({
                         </div>
                     </div>
 
-                    <div className="modal-footer d-flex justify-content-end gap-2 mt-3 p-0 border-0">
-                        <button type="button" className="btn-modal-cancel" onClick={() => {
+                    <ModalFooter
+                        onClose={() => {
                             if (loading) return;
                             onClose();
-                        }}>
-                            Cancel
-                        </button>
-
-                        <button
-                            disabled={loading || !status || !selectedPayer}
-                            type="submit"
-                            className="btn-modal-save d-flex align-items-center justify-content-center gap-2"
-                        >
-                            {loading ? (
-                                <>
-                                    <div className="spinner-border" role="status" style={{ width: '20px', height: '20px' }}></div>
-                                    Loading...
-                                </>
-                            ) : (
-                                <>
-                                    <i className="bi bi-journal-text" style={{ fontSize: '0.85rem' }}></i>
-                                    Show Ledgers
-                                </>
-                            )}
-                        </button>
-                    </div>
+                        }}
+                        isDisabled={loading || !status || !selectedPayer}
+                        iconText={'journal-text'}
+                        btnName={'Show Ledgers'}
+                        loading={loading}
+                        loadingName={'Loading'}
+                    />
                 </form>
             </div>
         </div>

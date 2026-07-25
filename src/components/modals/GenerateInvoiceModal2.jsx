@@ -1,25 +1,34 @@
 import { useState, useEffect } from 'react';
-import formatDate from '../../utils/dateFormater.js';
+import { useNavigate } from 'react-router-dom';
+import { toast } from 'react-toastify';
+
 import LedgerRowSkeleton from '../common/LedgerRowSkeleton.jsx';
+import ModalHeader from './common/ModalHeader.jsx';
+
+import formatDate from '../../utils/dateFormater.js';
+import generateInvoice from '../../pages/invoices/createInvoice.js';
+
 import '../../styles/common/modal.scss';
 
 const GenerateInvoiceModal2 = ({
     isOpen,
     onClose,
+    pageRefresh,
     payerInfo,
     ledgerData,
     totalLedgersCount,
-    onPageChange
+    onPageChange,
+    setGenerateModal1
 }) => {
+    const navigate = useNavigate();
     const [selectedLedgerIds, setSelectedLedgerIds] = useState([]);
-    const [isGenerating, setIsGenerating] = useState(false);
     const [loading, setLoading] = useState(false);
+    const [isGenerating, setIsGenerating] = useState(false);
 
-    // Reset selection when modal opens or payer changes
     useEffect(() => {
         if (isOpen) {
             setSelectedLedgerIds([]);
-            setIsGenerating(false);
+            setLoading(false);
         }
     }, [isOpen, payerInfo]);
 
@@ -33,7 +42,6 @@ const GenerateInvoiceModal2 = ({
                 return Array.from(newSelection);
             });
         } else {
-            // Deselect currently visible ledgers
             const visibleIds = ledgerData.recordData.map(l => l._id);
             setSelectedLedgerIds(prev => prev.filter(id => !visibleIds.includes(id)));
         }
@@ -46,13 +54,18 @@ const GenerateInvoiceModal2 = ({
     };
 
     const handleGenerate = async () => {
-        setIsGenerating(true);
-        console.log(selectedLedgerIds)
-        setIsGenerating(false);
-    };
+        setIsGenerating(true)
 
-    // Check if all CURRENTLY VISIBLE ledgers are selected
-    const isAllVisibleSelected = ledgerData.recordData.length > 0 && ledgerData.recordData.every(record => selectedLedgerIds.includes(record._id));
+        const isSuccess = await generateInvoice(navigate, toast, { payerId: payerInfo._id, recordIds: selectedLedgerIds });
+
+        if (isSuccess) {
+            setGenerateModal1(false)
+            onClose();
+            pageRefresh((prev) => prev + 1);
+        }
+
+        setIsGenerating(false)
+    };
 
     return (
         <div className="modal-overlay position-fixed d-flex justify-content-center align-items-center">
@@ -60,12 +73,12 @@ const GenerateInvoiceModal2 = ({
                 <ModalHeader
                     modalIcon={<i className="bi bi-ui-checks"></i>}
                     modalName={'Select Ledgers'}
-                    loading={loading}
+                    loading={isGenerating}
                     onClose={() => {
                         if (isGenerating) return;
                         onClose();
                     }}
-                />            
+                />
 
                 <div className="modal-body p-0 d-flex flex-column gap-3">
                     <div
@@ -108,7 +121,12 @@ const GenerateInvoiceModal2 = ({
                                             <input
                                                 type="checkbox"
                                                 onChange={handleSelectAll}
-                                                checked={isAllVisibleSelected}
+                                                checked={
+                                                    ledgerData.recordData.length > 0 &&
+                                                    ledgerData.recordData.every(record =>
+                                                        selectedLedgerIds.includes(record._id)
+                                                    )
+                                                }
                                             />
                                             <span className="checkmark"></span>
                                         </label>
@@ -121,7 +139,7 @@ const GenerateInvoiceModal2 = ({
                                 </tr>
                             </thead>
                             <tbody>
-                                <LedgerRowSkeleton loading={loading} rows={4} />
+                                <LedgerRowSkeleton loading={loading} rows={2} />
 
                                 {!loading && ledgerData.recordData.length > 0 && ledgerData.recordData.map((record) => {
                                     const isSelected = selectedLedgerIds.includes(record._id);
@@ -172,14 +190,22 @@ const GenerateInvoiceModal2 = ({
                                 <button
                                     className="btn-mini-page"
                                     disabled={ledgerData.currentPage === 1}
-                                    onClick={() => onPageChange(ledgerData.currentPage - 1)}
+                                    onClick={async () => {
+                                        setLoading(true);
+                                        await onPageChange(ledgerData.currentPage - 1);
+                                        setLoading(false);
+                                    }}
                                 >
                                     <i className="bi bi-chevron-left"></i>
                                 </button>
                                 <button
                                     className="btn-mini-page"
                                     disabled={ledgerData.currentPage === ledgerData.totalPages}
-                                    onClick={() => onPageChange(ledgerData.currentPage + 1)}
+                                    onClick={async () => {
+                                        setLoading(true);
+                                        await onPageChange(ledgerData.currentPage + 1);
+                                        setLoading(false);
+                                    }}
                                 >
                                     <i className="bi bi-chevron-right"></i>
                                 </button>

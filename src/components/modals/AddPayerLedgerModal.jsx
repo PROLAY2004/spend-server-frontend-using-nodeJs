@@ -4,6 +4,7 @@ import { useNavigate } from 'react-router-dom';
 
 import addRecord from '../../pages/payers/addPayerRecord.js';
 import ModalHeader from './common/ModalHeader.jsx';
+import ModalFooter from './common/ModalFooter.jsx';
 import '../../styles/common/modal.scss';
 
 const AddPayerLedgerModal = ({ isOpen, onClose, pageRefresh, payerData }) => {
@@ -194,39 +195,18 @@ const AddPayerLedgerModal = ({ isOpen, onClose, pageRefresh, payerData }) => {
                         </div>
                     </div>
 
-                    <div className="modal-footer d-flex justify-content-end gap-2 mt-4 p-0 border-0">
-                        <button
-                            type="button"
-                            className="btn-modal-cancel"
-                            onClick={() => {
-                                if (loading) return;
-                                onClose();
-                                setFormData(recordData);
-                            }}
-                        >
-                            Cancel
-                        </button>
-                        <button
-                            disabled={loading}
-                            type="submit"
-                            className="btn-modal-save d-flex align-items-center justify-content-center gap-2"
-                        >
-                            {loading ? (
-                                <>
-                                    <div
-                                        className="spinner-border"
-                                        role="status"
-                                        style={{ width: '20px', height: '20px' }}></div>
-                                    Saving...
-                                </>
-                            ) : (
-                                <>
-                                    <i className="bi bi-plus-circle" style={{ fontSize: '0.85rem' }}></i>
-                                    Save Ledger
-                                </>
-                            )}
-                        </button>
-                    </div>
+                    <ModalFooter
+                        onClose={() => {
+                            if (loading) return;
+                            onClose();
+                            setFormData(recordData);
+                        }}
+                        isDisabled={loading}
+                        iconText={'plus-circle'}
+                        btnName={'Save Ledger'}
+                        loading={loading}
+                        loadingName={'Saving'}
+                    />
                 </form>
             </div>
         </div>

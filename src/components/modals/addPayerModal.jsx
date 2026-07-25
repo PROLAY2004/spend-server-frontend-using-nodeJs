@@ -5,6 +5,7 @@ import { useNavigate } from 'react-router-dom';
 import '../../styles/common/modal.scss';
 import insertPayer from '../../pages/payers/addPayer.js';
 import ModalHeader from './common/ModalHeader.jsx';
+import ModalFooter from './common/ModalFooter.jsx';
 
 const AddPayerModal = ({ isOpen, onClose, pageRefresh }) => {
     const navigate = useNavigate();
@@ -95,30 +96,18 @@ const AddPayerModal = ({ isOpen, onClose, pageRefresh }) => {
                         </div>
                     </div>
 
-                    <div className="modal-footer d-flex justify-content-end gap-2 mt-3 p-0 border-0">
-                        <button type="button" className="btn-modal-cancel" onClick={() => {
+                    <ModalFooter
+                        onClose={() => {
                             if (loading) return;
                             onClose();
                             resetForm();
-                        }}>
-                            Cancel
-                        </button>
-
-                        <button disabled={loading} type="submit" className="btn-modal-save d-flex align-items-center justify-content-center gap-2">{loading ? (
-                            <>
-                                <div
-                                    className="spinner-border"
-                                    role="status"
-                                    style={{ width: '20px', height: '20px' }}></div>
-                                Saving...
-                            </>
-                        ) : (
-                            <>
-                                <i className="bi bi-plus-circle" style={{ fontSize: '0.85rem' }}></i>
-                                Save Payer
-                            </>
-                        )}</button>
-                    </div>
+                        }}
+                        isDisabled={loading}
+                        iconText={'plus-circle'}
+                        btnName={'Save Payer'}
+                        loading={loading}
+                        loadingName={'Saving'}
+                    />
                 </form>
             </div>
         </div>

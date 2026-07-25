@@ -5,6 +5,7 @@ import { useNavigate } from 'react-router-dom';
 import '../../styles/common/modal.scss';
 import updatePayer from '../../pages/payers/editPayer.js';
 import ModalHeader from './common/ModalHeader.jsx';
+import ModalFooter from './common/ModalFooter.jsx';
 
 const EditPayerModal = ({ isOpen, onClose, pageRefresh, payerData }) => {
     const navigate = useNavigate();
@@ -95,29 +96,17 @@ const EditPayerModal = ({ isOpen, onClose, pageRefresh, payerData }) => {
                         </div>
                     </div>
 
-                    <div className="modal-footer d-flex justify-content-end gap-2 mt-3 p-0 border-0">
-                        <button type="button" className="btn-modal-cancel" onClick={() => {
+                    <ModalFooter
+                        onClose={() => {
                             if (loading) return;
                             onClose();
-                        }}>
-                            Cancel
-                        </button>
-
-                        <button disabled={loading} type="submit" className="btn-modal-save d-flex align-items-center justify-content-center gap-2">{loading ? (
-                            <>
-                                <div
-                                    className="spinner-border"
-                                    role="status"
-                                    style={{ width: '20px', height: '20px' }}></div>
-                                Saving...
-                            </>
-                        ) : (
-                            <>
-                                <i className="bi bi-check-circle-fill" style={{ fontSize: '0.85rem' }}></i>
-                                Update Payer
-                            </>
-                        )}</button>
-                    </div>
+                        }}
+                        isDisabled={loading}
+                        iconText={'check-circle-fill'}
+                        btnName={'Update Payer'}
+                        loading={loading}
+                        loadingName={'Updating'}
+                    />
                 </form>
             </div>
         </div>

@@ -80,7 +80,7 @@ export default function Invoices() {
 
     useEffect(() => {
         handleDisplay();
-    }, [])
+    }, [pageLoader])
 
     return (
         <>
@@ -179,12 +179,9 @@ export default function Invoices() {
             <GenerateInvoiceModal1
                 isOpen={generateModal1}
                 onClose={() => setGenerateModal1(false)}
-
                 payersList={payerList}
-
                 form1Data={form1Data}
                 setForm1Data={setForm1Data}
-
                 fetchLedgerPage={fetchLedgerPage}
                 setGenerateModal2={setGenerateModal2}
             />
@@ -192,9 +189,11 @@ export default function Invoices() {
             <GenerateInvoiceModal2
                 isOpen={generateModal2}
                 onClose={()=> setGenerateModal2(false)}
+                pageRefresh={setPageLoader}
                 payerInfo={form1Data.selectedPayer}
                 ledgerData={ledgerData}
                 onPageChange={fetchLedgerPage}
+                setGenerateModal1={setGenerateModal1}
             />
         </>
     );
