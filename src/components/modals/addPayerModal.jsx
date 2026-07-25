@@ -4,6 +4,7 @@ import { useNavigate } from 'react-router-dom';
 
 import '../../styles/common/modal.scss';
 import insertPayer from '../../pages/payers/addPayer.js';
+import ModalHeader from './common/ModalHeader.jsx';
 
 const AddPayerModal = ({ isOpen, onClose, pageRefresh }) => {
     const navigate = useNavigate();
@@ -49,29 +50,15 @@ const AddPayerModal = ({ isOpen, onClose, pageRefresh }) => {
     return (
         <div className="modal-overlay position-fixed d-flex justify-content-center align-items-center">
             <div className="modal-container w-100 position-relative overflow-hidden">
-                {/* Ambient backdrop glow */}
-                <div className="modal-glow position-absolute rounded-circle"></div>
-
-                <div className="modal-header mb-3 d-flex justify-content-between align-items-center">
-                    <h3 className="modal-title m-0 fw-semibold d-flex align-items-center gap-2">
-                        {/* New subtle title icon */}
-                        <div className="title-icon-wrapper">
-                            <i className="bi bi-person-plus"></i>
-                        </div>
-                        Add New Payer
-                    </h3>
-                    <button
-                        className="btn-close-custom d-flex align-items-center justify-content-center bg-transparent border-0 fs-6"
-                        onClick={() => {
-                            if (loading) return;
-                            onClose();
-                            resetForm();
-                        }}
-                        type="button"
-                        title="Close">
-                        <i className="bi bi-x-lg"></i>
-                    </button>
-                </div>
+                <ModalHeader
+                    modalIcon={<i className="bi bi-person-plus"></i>}
+                    modalName={'Add New Payer'}
+                    onClose={() => {
+                        if (loading) return;
+                        onClose();
+                        resetForm();
+                    }}
+                />
 
                 <form onSubmit={handleSubmit} className="modal-body d-flex flex-column gap-3">
                     <div className="form-group">

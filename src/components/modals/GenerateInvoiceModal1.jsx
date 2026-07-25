@@ -1,25 +1,31 @@
 import { useState, useEffect, useRef } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { toast } from 'react-toastify';
 
-import getLedgers from '../../pages/ledger/fetchLedgers.js';
+import ModalHeader from './common/ModalHeader';
 import '../../styles/common/modal.scss';
 
-const GenerateInvoiceModal1 = ({ isOpen, onClose, payersList, openModal, setLedgerData, selectedPayer, setSelectedPayer }) => {
-    const navigate = useNavigate();
+const GenerateInvoiceModal1 = ({
+    isOpen,
+    onClose,
+    payersList,
+    form1Data,
+    setForm1Data,
+    fetchLedgerPage,
+    setGenerateModal2
+}) => {
+    const { selectedPayer, status } = form1Data;
+
     const dropdownRef = useRef(null);
     const [loading, setLoading] = useState(false);
-
     const [searchTerm, setSearchTerm] = useState('');
-    const [status, setStatus] = useState('');
     const [isDropdownOpen, setIsDropdownOpen] = useState(false);
 
-    // Reset state when modal opens/closes
     useEffect(() => {
         if (!isOpen) {
             setSearchTerm('');
-            setSelectedPayer(null);
-            setStatus('');
+            setForm1Data({
+                selectedPayer: null,
+                status: '',
+            });
             setIsDropdownOpen(false);
         }
     }, [isOpen]);
@@ -44,61 +50,40 @@ const GenerateInvoiceModal1 = ({ isOpen, onClose, payersList, openModal, setLedg
 
     const handleSearchChange = (e) => {
         setSearchTerm(e.target.value);
-        setSelectedPayer(null);
+        setForm1Data(prev => ({
+            ...prev,
+            selectedPayer: null,
+        }));
         setIsDropdownOpen(true);
     };
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        setLoading(true);
+        setLoading(true)
 
-        if (!selectedPayer || !status) {
-            toast.error('Payer or Status are Missing', {
-                position: 'top-right',
-                autoClose: 5000,
-                theme: 'dark',
-            });
+        const isSuccess = await fetchLedgerPage(1);
 
-            setLoading(false);
-            return;
-        }
-
-
-
-        const data = await getLedgers(navigate, toast, { payerId: selectedPayer._id, filter : status });
-
-        if (data) {
-            openModal();
-            setLedgerData(data)
+        if(isSuccess){
+            setGenerateModal2(true);
         }
 
         setLoading(false);
-    };
+    }
 
     return (
         <div className="modal-overlay position-fixed d-flex justify-content-center align-items-center">
             <div className="modal-container w-100 position-relative overflow-hidden" style={{ overflow: 'visible' }}>
-
                 <div className="modal-glow position-absolute rounded-circle"></div>
 
-                <div className="modal-header mb-3 d-flex justify-content-between align-items-center">
-                    <h3 className="modal-title m-0 fw-semibold d-flex align-items-center gap-2">
-                        <div className="title-icon-wrapper">
-                            <i className="bi bi-receipt"></i>
-                        </div>
-                        Generate Invoice
-                    </h3>
-                    <button
-                        className="btn-close-custom d-flex align-items-center justify-content-center bg-transparent border-0 fs-6"
-                        onClick={() => {
-                            if (loading) return;
-                            onClose();
-                        }}
-                        type="button"
-                        title="Close">
-                        <i className="bi bi-x-lg"></i>
-                    </button>
-                </div>
+                <ModalHeader 
+                    modalIcon={<i className="bi bi-receipt"></i>}
+                    modalName={'Generate Invoice'}
+                    loading={loading}
+                    onClose={() => {
+                        if (loading) return;
+                        onClose();
+                    }}
+                />
 
                 <form className="modal-body d-flex flex-column gap-3" onSubmit={handleSubmit}>
 
@@ -116,6 +101,7 @@ const GenerateInvoiceModal1 = ({ isOpen, onClose, payersList, openModal, setLedg
                                 value={searchTerm}
                                 onChange={handleSearchChange}
                                 onFocus={() => setIsDropdownOpen(true)}
+                                required
                             />
 
                             {/* Custom Dropdown Menu */}
@@ -127,7 +113,10 @@ const GenerateInvoiceModal1 = ({ isOpen, onClose, payersList, openModal, setLedg
                                                 key={payer._id}
                                                 className="dropdown-payer-info px-3 py-2 text-white"
                                                 onMouseDown={() => {
-                                                    setSelectedPayer(payer);
+                                                    setForm1Data(prev => ({
+                                                        ...prev,
+                                                        selectedPayer: payer,
+                                                    }));
                                                     setSearchTerm(payer.name);
                                                     setIsDropdownOpen(false);
                                                 }}
@@ -156,7 +145,13 @@ const GenerateInvoiceModal1 = ({ isOpen, onClose, payersList, openModal, setLedg
                             <select
                                 className="custom-input form-control shadow-none w-100 px-3 py-2 ps-5"
                                 value={status}
-                                onChange={(e) => setStatus(e.target.value)}
+                                onChange={(e) =>
+                                    setForm1Data(prev => ({
+                                        ...prev,
+                                        status: e.target.value,
+                                    }))
+                                }
+                                required
                             >
                                 <option value="" disabled>Choose status...</option>
                                 <option value="paid">Paid</option>
@@ -174,7 +169,7 @@ const GenerateInvoiceModal1 = ({ isOpen, onClose, payersList, openModal, setLedg
                         </button>
 
                         <button
-                            disabled={loading}
+                            disabled={loading || !status || !selectedPayer}
                             type="submit"
                             className="btn-modal-save d-flex align-items-center justify-content-center gap-2"
                         >

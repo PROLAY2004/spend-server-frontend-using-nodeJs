@@ -3,6 +3,7 @@ import { toast } from 'react-toastify';
 import { useNavigate } from 'react-router-dom';
 
 import addRecord from '../../pages/payers/addPayerRecord.js';
+import ModalHeader from './common/ModalHeader.jsx';
 import '../../styles/common/modal.scss';
 
 const AddPayerLedgerModal = ({ isOpen, onClose, pageRefresh, payerData }) => {
@@ -60,29 +61,15 @@ const AddPayerLedgerModal = ({ isOpen, onClose, pageRefresh, payerData }) => {
     return (
         <div className="modal-overlay position-fixed d-flex justify-content-center align-items-center">
             <div className="modal-container w-100 position-relative">
-
-                <div className="modal-glow position-absolute rounded-circle"></div>
-
-                <div className="modal-header mb-4 d-flex justify-content-between align-items-center">
-                    <h3 className="modal-title m-0 fw-semibold d-flex align-items-center gap-2">
-                        <div className="title-icon-wrapper">
-                            <i className="bi bi-journal-plus"></i>
-                        </div>
-                        Add Record
-                    </h3>
-                    <button
-                        className="btn-close-custom d-flex align-items-center justify-content-center bg-transparent border-0 fs-6"
-                        onClick={() => {
-                            if (loading) return;
-                            onClose();
-                            setFormData(recordData);
-                        }}
-                        type="button"
-                        title="Close"
-                    >
-                        <i className="bi bi-x-lg"></i>
-                    </button>
-                </div>
+                <ModalHeader 
+                    modalIcon={<i className="bi bi-journal-plus"></i>}
+                    modalName={'Add Record'}
+                    onClose={() => {
+                        if (loading) return;
+                        onClose();
+                        setFormData(recordData);
+                    }}
+                />
 
                 <form className="modal-body" onSubmit={handleSubmit}>
                     <div className="row g-2">

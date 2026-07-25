@@ -47,8 +47,7 @@ const GenerateInvoiceModal2 = ({
 
     const handleGenerate = async () => {
         setIsGenerating(true);
-        // Pass the selected IDs back to the parent to execute the generation API
-        await onGenerate(selectedLedgerIds);
+        console.log(selectedLedgerIds)
         setIsGenerating(false);
     };
 
@@ -57,34 +56,18 @@ const GenerateInvoiceModal2 = ({
 
     return (
         <div className="modal-overlay position-fixed d-flex justify-content-center align-items-center">
-
-            {/* Overriding the default 400px width to 800px to fit the table cleanly[cite: 7] */}
             <div className="modal-container position-relative" style={{ maxWidth: '800px', width: '100%' }}>
-
-                <div className="modal-glow position-absolute rounded-circle"></div>
-
-                <div className="modal-header mb-4 d-flex justify-content-between align-items-center">
-                    <h3 className="modal-title m-0 fw-semibold d-flex align-items-center gap-2">
-                        <div className="title-icon-wrapper">
-                            <i className="bi bi-ui-checks"></i>
-                        </div>
-                        Select Ledgers
-                    </h3>
-                    <button
-                        className="btn-close-custom d-flex align-items-center justify-content-center bg-transparent border-0 fs-6"
-                        onClick={() => {
-                            if (isGenerating) return;
-                            onClose();
-                        }}
-                        type="button"
-                        title="Close">
-                        <i className="bi bi-x-lg"></i>
-                    </button>
-                </div>
+                <ModalHeader
+                    modalIcon={<i className="bi bi-ui-checks"></i>}
+                    modalName={'Select Ledgers'}
+                    loading={loading}
+                    onClose={() => {
+                        if (isGenerating) return;
+                        onClose();
+                    }}
+                />            
 
                 <div className="modal-body p-0 d-flex flex-column gap-3">
-
-                    {/* Payer Info & Stats Banner */}
                     <div
                         className="payer-info-banner d-flex flex-column flex-sm-row justify-content-between align-items-sm-center p-3 rounded-3"
                         style={{ background: 'rgba(255, 255, 255, 0.03)', border: '1px solid rgba(255, 255, 255, 0.08)' }}
@@ -118,7 +101,7 @@ const GenerateInvoiceModal2 = ({
                     {/* Ledger Table[cite: 14] */}
                     <div className="ledger-table-wrapper rounded-3 border overflow-auto" style={{ maxHeight: '45vh' }}>
                         <table className="w-100 ledger-table m-0">
-                            <thead style={{ position: 'sticky', top: 0, zIndex: 10 }}>
+                            <thead style={{ position: 'static', top: 0, zIndex: 10 }}>
                                 <tr>
                                     <th className="checkbox-cell">
                                         <label className="custom-checkbox">

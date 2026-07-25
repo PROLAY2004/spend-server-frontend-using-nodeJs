@@ -5,6 +5,7 @@ import { useNavigate } from 'react-router-dom';
 import '../../styles/common/modal.scss';
 import handleBulkAction from '../../pages/payers/bulkOperations.js';
 import generateInvoice from '../../pages/invoices/createInvoice.js';
+import ModalHeader from './common/ModalHeader.jsx';
 
 const BulkActionPayerModal = ({
     isOpen,
@@ -62,29 +63,16 @@ const BulkActionPayerModal = ({
     return (
         <div className="modal-overlay position-fixed d-flex justify-content-center align-items-center">
             <div className="modal-container w-100 position-relative overflow-hidden">
-                <div className="modal-glow position-absolute rounded-circle"></div>
-
-                <div className="modal-header mb-3 d-flex justify-content-between align-items-center">
-                    <h3 className="modal-title m-0 fw-semibold d-flex align-items-center gap-2">
-                        <div className="title-icon-wrapper">
-                            <i className="bi bi-list-task"></i>
-                        </div>
-                        Bulk Actions
-                    </h3>
-                    <button
-                        className="btn-close-custom d-flex align-items-center justify-content-center bg-transparent border-0 fs-6"
-                        onClick={() => {
-                            if (loading) return;
-                            onClose();
-                        }}
-                        type="button"
-                        title="Close">
-                        <i className="bi bi-x-lg"></i>
-                    </button>
-                </div>
+                <ModalHeader
+                    modalIcon={<i className="bi bi-list-task"></i>}
+                    modalName={'Bulk Actions'}
+                    onClose={() => {
+                        if (loading) return;
+                        onClose();
+                    }}
+                />
 
                 <form className="modal-body d-flex flex-column gap-3" onSubmit={handleSubmit}>
-
                     <div className="mb-2">
                         <span className="badge-custom success py-1 px-2">
                             {selectedLedgersList.length} {selectedLedgersList.length === 1 ? 'Record' : 'Records'} Selected

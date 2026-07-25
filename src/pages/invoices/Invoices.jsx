@@ -11,6 +11,7 @@ import GenerateInvoiceModal1 from '../../components/modals/GenerateInvoiceModal1
 import GenerateInvoiceModal2 from '../../components/modals/GenerateInvoiceModal2.jsx';
 
 import getInvoices from './fetchInvoices.js';
+import getLedgers from '../ledger/fetchLedgers.js';
 import InvoicesControl from './InvoiceControl.jsx';
 
 import '../../styles/invoices.scss';
@@ -23,6 +24,7 @@ export default function Invoices() {
     const [pageLoader, setPageLoader] = useState(false);
     const [emptyState, setEmptyState] = useState(false);
     const [loading, setLoading] = useState(false);
+    const [ledgerPage, setLedgerPage] = useState(1);
 
     const [currentPage, setCurrentPage] = useState(1);
     const [totalPages, setTotalPages] = useState(2);
@@ -32,17 +34,32 @@ export default function Invoices() {
 
     const [invoices, setInvoices] = useState([]);
     const [payerList, setPayerList] = useState([]);
-    const [selectedPayer, setSelectedPayer] = useState(null);
     const [ledgerData, setLedgerData] = useState({});
+    const [form1Data, setForm1Data] = useState({
+        selectedPayer: null,
+        status: '',
+    });
 
     const [generateModal1, setGenerateModal1] = useState(false);
     const [generateModal2, setGenerateModal2] = useState(false);
 
-    // Handlers
-    const handleView = (id) => toast.info(`Viewing details for invoice ${id}`);
-    const handleShare = (id) => toast.info(`Opening share options for invoice ${id}`);
-    const handleEdit = (id) => toast.warning(`Editing invoice ${id}`);
-    const handleDelete = (id) => toast.error(`Deleted invoice ${id}`);
+    const fetchLedgerPage = async (page) => {
+        const data = await getLedgers(navigate, toast, {
+            page,
+            limit: 5,
+            filter: form1Data.status,
+            payerId: form1Data.selectedPayer?._id,
+        });
+
+        if (data) {
+            setLedgerData(data);
+            setLedgerPage(page);
+
+            return true;
+        }
+
+        return false;
+    };
 
     const handleDisplay = async () => {
         setLoading(true);
@@ -60,8 +77,6 @@ export default function Invoices() {
         
         setLoading(false);
     }
-
-    console.log(ledgerData)
 
     useEffect(() => {
         handleDisplay();
@@ -161,21 +176,25 @@ export default function Invoices() {
                 </main>
             </div>
 
-            <GenerateInvoiceModal1 
+            <GenerateInvoiceModal1
                 isOpen={generateModal1}
                 onClose={() => setGenerateModal1(false)}
+
                 payersList={payerList}
-                openModal={() => setGenerateModal2(true)}
-                setLedgerData={setLedgerData}
-                selectedPayer={selectedPayer}
-                setSelectedPayer={setSelectedPayer}
+
+                form1Data={form1Data}
+                setForm1Data={setForm1Data}
+
+                fetchLedgerPage={fetchLedgerPage}
+                setGenerateModal2={setGenerateModal2}
             />
 
             <GenerateInvoiceModal2
                 isOpen={generateModal2}
                 onClose={()=> setGenerateModal2(false)}
-                payerInfo={selectedPayer}
+                payerInfo={form1Data.selectedPayer}
                 ledgerData={ledgerData}
+                onPageChange={fetchLedgerPage}
             />
         </>
     );
