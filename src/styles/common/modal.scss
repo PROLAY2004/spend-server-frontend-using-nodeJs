@@ -298,6 +298,10 @@
     td{
         min-width: 130px;
     }
+
+    td:last-child {
+        min-width: 140px !important;
+    }
 }
 
 @media(min-width: 480px){
