@@ -1,6 +1,6 @@
 import '../../styles/common/loader.scss';
 
-export const LedgerRowSkeleton = ({ loading, rows }) => {
+export const LedgerRowSkeleton = ({ loading, rows = 0 }) => {
     return (
         Array.from({ length: loading ? 3 : 0 }).map((_, index) => (
             <tr className="skeleton-row" key={index}>

@@ -14,6 +14,7 @@ import GenerateInvoiceModal2 from '../../components/modals/GenerateInvoiceModal2
 import ViewInvoiceModal from '../../components/modals/ViewInvoiceModal.jsx';
 
 import getInvoices from './fetchInvoices.js';
+import getInvoiceDetails from '../../pages/invoices/viewInvoice.js';
 import getLedgers from '../ledger/fetchLedgers.js';
 
 
@@ -38,6 +39,8 @@ export default function Invoices() {
     const [invoices, setInvoices] = useState([]);
     const [payerList, setPayerList] = useState([]);
     const [ledgerData, setLedgerData] = useState({});
+    const [selectedInvoice, setSelectedInvoice] = useState(null);
+    const [viewLedgerData, setViewLedgerData] = useState({});
 
     // Modal Form States
     const [form1Data, setForm1Data] = useState({
@@ -47,6 +50,23 @@ export default function Invoices() {
 
     const [generateModal1, setGenerateModal1] = useState(false);
     const [generateModal2, setGenerateModal2] = useState(false);
+    const [viewModalOpen, setViewModalOpen] = useState(false);
+
+    const fetchViewLedgersPage = async (page, invoiceId = selectedInvoice?._id) => {
+        const data = await getInvoiceDetails(navigate, toast, {
+            invoiceId: invoiceId,
+            page: page,
+            limit: 5
+        });
+
+        if (data) {
+            setViewLedgerData(data);
+            setViewModalOpen(true);
+            return true;
+        }
+
+        return false;
+    };
 
     const fetchLedgerPage = async (page) => {
         const data = await getLedgers(navigate, toast, {
@@ -155,7 +175,12 @@ export default function Invoices() {
                                                 <InvoiceSkeleton isActive={true} />
                                             ) : (
                                                 invoices.map((inv) => (
-                                                    <InvoiceRows key={inv._id} inv={inv} />
+                                                    <InvoiceRows 
+                                                        key={inv._id} 
+                                                        inv={inv} 
+                                                        fetchViewLedgersPage={fetchViewLedgersPage}   
+                                                        setSelectedInvoice={setSelectedInvoice}
+                                                    />
                                                 ))
                                             )}
                                         </tbody>
@@ -220,7 +245,12 @@ export default function Invoices() {
                 setGenerateModal1={setGenerateModal1}
             />
 
-            <ViewInvoiceModal 
+            <ViewInvoiceModal
+                isOpen={viewModalOpen}
+                onClose={() => setViewModalOpen(false)}
+                invoiceData={selectedInvoice}
+                ledgerData={viewLedgerData}
+                onPageChange={fetchViewLedgersPage}
             />
         </>
     );

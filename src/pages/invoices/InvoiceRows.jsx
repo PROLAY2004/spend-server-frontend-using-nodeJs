@@ -1,6 +1,19 @@
+import { useState } from 'react';
 import formatDate from '../../utils/dateFormater.js';
 
-export default function InvoiceRows({ inv }) {
+export default function InvoiceRows({ inv, fetchViewLedgersPage, setSelectedInvoice }) {
+    const [loading, setLoading] = useState(false)
+    const handleView = async () => {
+        setLoading(true)
+        
+        const isSuccess = await fetchViewLedgersPage(1, inv._id);
+
+        if (isSuccess) {
+            setSelectedInvoice(inv);
+        }
+
+        setLoading(false)
+    };
 
     return (
         <tr>
@@ -16,8 +29,16 @@ export default function InvoiceRows({ inv }) {
             </td>
             <td>
                 <div className="action-buttons d-flex justify-content-center gap-2">
-                    <button className="btn-action view" title="View Invoice" onClick={() => handleView(inv._id)}>
-                        <i className="bi bi-file-earmark-text"></i>
+                    <button
+                        className="btn-action view"
+                        title="View Invoice"
+                        onClick={() => handleView()}
+                    >
+                        {loading ?
+                            <div className="spinner-border" role="status" style={{ width: '16px', height: '16px', borderWidth: '2px' }}></div>
+                         : 
+                            <i className="bi bi-file-earmark-text"></i>
+                         }
                     </button>
                     <button className="btn-action share" title="Share" onClick={() => handleShare(inv._id)}>
                         <i className="bi bi-share"></i>

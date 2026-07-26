@@ -214,7 +214,7 @@ const GenerateInvoiceModal2 = ({
                     )}
                 </div>
 
-                <div className="modal-footer d-flex justify-content-between gap-2 mt-4 p-0 border-0">
+                <div className="modal-footer d-flex justify-content-between mt-4 p-0 border-0">
                     <button
                         type="button"
                         className="btn-modal-cancel d-flex align-items-center gap-2"
