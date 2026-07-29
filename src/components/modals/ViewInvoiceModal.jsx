@@ -6,6 +6,8 @@ import ModalHeader from './common/ModalHeader.jsx';
 import ModalFooter from './common/ModalFooter.jsx';
 
 import formatDate from '../../utils/dateFormater.js';
+import downloadInvoice from '../../pages/invoices/downloadInvoice.js';
+import pdfDownloader from '../../utils/invoiceDownloader.js';
 import '../../styles/common/modal.scss';
 
 const ViewInvoiceModal = ({
@@ -48,10 +50,23 @@ const ViewInvoiceModal = ({
         });
     };
 
+    const handleDownload = async (e) =>{
+        e.preventDefault();
+        setIsDownloading(true)
+
+        const data = await downloadInvoice(invoiceData._id);
+
+        if(data){
+            pdfDownloader(data);
+        }
+
+        setIsDownloading(false);
+    }
+
     return (
         <div className="modal-overlay position-fixed d-flex justify-content-center align-items-center">
 
-            <div className="modal-container position-relative" style={{ maxWidth: '800px', width: '100%' }}>
+            <form className="modal-container position-relative" style={{ maxWidth: '800px', width: '100%' }} onSubmit={handleDownload}>
 
                 <ModalHeader
                     modalIcon={<i className="bi bi-file-earmark-text"></i>}
@@ -243,7 +258,7 @@ const ViewInvoiceModal = ({
                     loading={isDownloading}
                     loadingName={'Preparing'}
                 />
-            </div>
+            </form>
         </div>
     );
 };
