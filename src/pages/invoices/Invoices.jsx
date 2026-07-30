@@ -12,6 +12,7 @@ import InvoiceRows from './InvoiceRows.jsx';
 import GenerateInvoiceModal1 from '../../components/modals/GenerateInvoiceModal1.jsx';
 import GenerateInvoiceModal2 from '../../components/modals/GenerateInvoiceModal2.jsx';
 import ViewInvoiceModal from '../../components/modals/ViewInvoiceModal.jsx';
+import EditInvoiceModal from '../../components/modals/EditInvoiceModal.jsx';
 
 import getInvoices from './fetchInvoices.js';
 import getInvoiceDetails from '../../pages/invoices/viewInvoice.js';
@@ -41,6 +42,7 @@ export default function Invoices() {
     const [ledgerData, setLedgerData] = useState({});
     const [selectedInvoice, setSelectedInvoice] = useState(null);
     const [viewLedgerData, setViewLedgerData] = useState({});
+    const [editLedgerData, setEditLedgerData] = useState({});
 
     // Modal Form States
     const [form1Data, setForm1Data] = useState({
@@ -51,6 +53,7 @@ export default function Invoices() {
     const [generateModal1, setGenerateModal1] = useState(false);
     const [generateModal2, setGenerateModal2] = useState(false);
     const [viewModalOpen, setViewModalOpen] = useState(false);
+    const [editModalOpen, setEditModalOpen] = useState(false);
 
     const fetchViewLedgersPage = async (page, invoiceId = selectedInvoice?._id) => {
         const data = await getInvoiceDetails(navigate, toast, {
@@ -62,6 +65,23 @@ export default function Invoices() {
         if (data) {
             setViewLedgerData(data);
             setViewModalOpen(true);
+            return true;
+        }
+
+        return false;
+    };
+
+    const fetchEditLedgersPage = async (page, invoiceId = selectedInvoice?._id) => {
+        // Reusing the same API endpoint to get paginated ledgers for the invoice
+        const data = await getInvoiceDetails(navigate, toast, {
+            invoiceId: invoiceId,
+            page: page,
+            limit: 5
+        });
+
+        if (data) {
+            setEditLedgerData(data);
+            setEditModalOpen(true);
             return true;
         }
 
@@ -179,6 +199,7 @@ export default function Invoices() {
                                                         key={inv._id} 
                                                         inv={inv} 
                                                         fetchViewLedgersPage={fetchViewLedgersPage}   
+                                                        fetchEditLedgersPage={fetchEditLedgersPage}
                                                         setSelectedInvoice={setSelectedInvoice}
                                                     />
                                                 ))
@@ -251,6 +272,15 @@ export default function Invoices() {
                 invoiceData={selectedInvoice}
                 ledgerData={viewLedgerData}
                 onPageChange={fetchViewLedgersPage}
+            />
+
+            <EditInvoiceModal
+                isOpen={editModalOpen}
+                onClose={() => { setEditModalOpen(false) }}
+                pageRefresh={setPageLoader}
+                invoiceData={selectedInvoice}
+                ledgerData={editLedgerData}
+                onPageChange={fetchEditLedgersPage}
             />
         </>
     );

@@ -7,9 +7,9 @@ const api = new Api();
 
 export default async function downloadInvoice(invoiceId) {
 	try {
-		const response = await api.postApi(
+		const response = await api.getApi(
 			`${configaruration.BASE_URL}/user/download-invoice/${invoiceId}`,
-			{},
+			null,
 		);
 		const result = await response.json();
 

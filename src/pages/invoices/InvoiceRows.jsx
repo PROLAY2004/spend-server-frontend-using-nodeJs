@@ -1,19 +1,52 @@
 import { useState } from 'react';
-import formatDate from '../../utils/dateFormater.js';
+import { useNavigate } from 'react-router-dom';
+import { toast } from 'react-toastify';
 
-export default function InvoiceRows({ inv, fetchViewLedgersPage, setSelectedInvoice }) {
-    const [loading, setLoading] = useState(false)
+import formatDate from '../../utils/dateFormater.js';
+import shareInvoice from '../../pages/invoices/shareInvoice.js';
+
+
+export default function InvoiceRows({ inv, fetchViewLedgersPage, fetchEditLedgersPage, setSelectedInvoice }) {
+    const navigate = useNavigate();
+    const [viewBtnloading, setviewBtnLoading] = useState(false)
+    const [shareBtnLoading, setShareBtnLoading] = useState(false);
+    const [editBtnLoading, setEditBtnLoading] = useState(false);
+
     const handleView = async () => {
-        setLoading(true)
-        
+        setviewBtnLoading(true)
+
         const isSuccess = await fetchViewLedgersPage(1, inv._id);
 
         if (isSuccess) {
             setSelectedInvoice(inv);
         }
 
-        setLoading(false)
+        setviewBtnLoading(false);
     };
+
+    const handleEdit = async () => {
+        setEditBtnLoading(true);
+        const isSuccess = await fetchEditLedgersPage(1, inv._id);
+
+        if (isSuccess) {
+            setSelectedInvoice(inv);
+        }
+        setEditBtnLoading(false);
+    };
+
+    const handleShare = async (invoiceId) => {
+        setShareBtnLoading(true);
+
+        const data = await shareInvoice(navigate, toast, invoiceId);
+
+        if(data){
+            setTimeout(() => {
+                window.open(`/invoice/${data.token}`);
+            }, 2000);
+        }
+
+        setShareBtnLoading(false);
+    }
 
     return (
         <tr>
@@ -34,17 +67,29 @@ export default function InvoiceRows({ inv, fetchViewLedgersPage, setSelectedInvo
                         title="View Invoice"
                         onClick={() => handleView()}
                     >
-                        {loading ?
+                        {viewBtnloading ?
                             <div className="spinner-border" role="status" style={{ width: '16px', height: '16px', borderWidth: '2px' }}></div>
-                         : 
+                            :
                             <i className="bi bi-file-earmark-text"></i>
-                         }
+                        }
                     </button>
-                    <button className="btn-action share" title="Share" onClick={() => handleShare(inv._id)}>
-                        <i className="bi bi-share"></i>
+                    <button
+                        className="btn-action share"
+                        title="Share"
+                        onClick={() => handleShare(inv._id)}
+                    >
+                        {shareBtnLoading ?
+                            <div className="spinner-border" role="status" style={{ width: '16px', height: '16px', borderWidth: '2px' }}></div>
+                            :
+                            <i className="bi bi-share"></i>
+                        }
                     </button>
-                    <button className="btn-action edit" title="Change Status" onClick={() => handleEdit(inv._id)}>
-                        <i className="bi bi-repeat"></i>
+                    <button className="btn-action edit" title="Change Status" onClick={() => handleEdit()}>
+                        {editBtnLoading ?
+                            <div className="spinner-border" role="status" style={{ width: '16px', height: '16px', borderWidth: '2px' }}></div>
+                            :
+                            <i className="bi bi-pencil"></i>
+                        }
                     </button>
                     <button className="btn-action delete" title="Delete" onClick={() => handleDelete(inv._id)}>
                         <i className="bi bi-trash"></i>

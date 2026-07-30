@@ -56,9 +56,12 @@ const GenerateInvoiceModal2 = ({
     const handleGenerate = async () => {
         setIsGenerating(true)
 
-        const isSuccess = await generateInvoice(navigate, toast, { payerId: payerInfo._id, recordIds: selectedLedgerIds });
+        const data = await generateInvoice(navigate, toast, { 
+            payerId: payerInfo._id, 
+            recordIds: selectedLedgerIds 
+        });
 
-        if (isSuccess) {
+        if (data) {
             setGenerateModal1(false)
             onClose();
             pageRefresh((prev) => prev + 1);

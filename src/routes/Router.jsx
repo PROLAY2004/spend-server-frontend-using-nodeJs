@@ -9,6 +9,7 @@ import Dashboard from '../pages/dashboard/Dashboard.jsx';
 import Payers from '../pages/payers/Payers.jsx';
 import Invoices from '../pages/invoices/Invoices.jsx';
 import Ledgers from '../pages/ledger/Ledgers.jsx';
+import PublicInvoice from '../pages/public_invoice/PublicInvoice.jsx';
 
 const router = createBrowserRouter([
     {
@@ -22,6 +23,10 @@ const router = createBrowserRouter([
                 <Login />
             </GoogleOAuthProvider>
         ),
+    },
+    {
+        path: '/invoice/:invoiceToken',
+        element: <PublicInvoice />
     },
     {
         path: '/dashboard',

@@ -1,13 +1,13 @@
 import apiInterceptor from '../../api/interceptor.js';
 
-export default async function generateInvoice(navigate, toast, invoiceData) {
+export default async function shareInvoice(navigate, toast, invoiceId) {
 	try {
 		const response = await apiInterceptor(
 			navigate,
 			toast,
-			'POST',
-			'/user/dashboard/invoice',
-			invoiceData,
+			'GET',
+			`/user/dashboard/share-invoice/${invoiceId}`,
+			null,
 		);
 		const result = await response.json();
 

@@ -1,13 +1,13 @@
 import apiInterceptor from '../../api/interceptor.js';
 
-export default async function generateInvoice(navigate, toast, invoiceData) {
+export default async function updateInvoice(navigate, toast, payload) {
 	try {
 		const response = await apiInterceptor(
 			navigate,
 			toast,
-			'POST',
-			'/user/dashboard/invoice',
-			invoiceData,
+			'PUT',
+			`/user/dashboard/invoice`,
+			payload,
 		);
 		const result = await response.json();
 
@@ -18,7 +18,7 @@ export default async function generateInvoice(navigate, toast, invoiceData) {
 				theme: 'dark',
 			});
 
-			return result.data;
+			return true;
 		} else {
 			toast.error(result.message, {
 				position: 'top-right',
