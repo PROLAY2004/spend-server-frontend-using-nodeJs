@@ -13,6 +13,7 @@ import GenerateInvoiceModal1 from '../../components/modals/GenerateInvoiceModal1
 import GenerateInvoiceModal2 from '../../components/modals/GenerateInvoiceModal2.jsx';
 import ViewInvoiceModal from '../../components/modals/ViewInvoiceModal.jsx';
 import EditInvoiceModal from '../../components/modals/EditInvoiceModal.jsx';
+import DeleteInvoiceModal from '../../components/modals/DeleteInvoiceModal.jsx';
 
 import getInvoices from './fetchInvoices.js';
 import getInvoiceDetails from '../../pages/invoices/viewInvoice.js';
@@ -54,6 +55,7 @@ export default function Invoices() {
     const [generateModal2, setGenerateModal2] = useState(false);
     const [viewModalOpen, setViewModalOpen] = useState(false);
     const [editModalOpen, setEditModalOpen] = useState(false);
+    const [deleteModalOpen, setDeleteModalOpen] = useState(false);
 
     const fetchViewLedgersPage = async (page, invoiceId = selectedInvoice?._id) => {
         const data = await getInvoiceDetails(navigate, toast, {
@@ -201,6 +203,7 @@ export default function Invoices() {
                                                         fetchViewLedgersPage={fetchViewLedgersPage}   
                                                         fetchEditLedgersPage={fetchEditLedgersPage}
                                                         setSelectedInvoice={setSelectedInvoice}
+                                                        setDeleteModalOpen={setDeleteModalOpen}
                                                     />
                                                 ))
                                             )}
@@ -281,6 +284,13 @@ export default function Invoices() {
                 invoiceData={selectedInvoice}
                 ledgerData={editLedgerData}
                 onPageChange={fetchEditLedgersPage}
+            />
+
+            <DeleteInvoiceModal
+                isOpen={deleteModalOpen}
+                onClose={() => setDeleteModalOpen(false)}
+                pageRefresh={setPageLoader}
+                invoiceData={selectedInvoice}
             />
         </>
     );

@@ -6,7 +6,7 @@ import formatDate from '../../utils/dateFormater.js';
 import shareInvoice from '../../pages/invoices/shareInvoice.js';
 
 
-export default function InvoiceRows({ inv, fetchViewLedgersPage, fetchEditLedgersPage, setSelectedInvoice }) {
+export default function InvoiceRows({ inv, fetchViewLedgersPage, fetchEditLedgersPage, setSelectedInvoice, setDeleteModalOpen }) {
     const navigate = useNavigate();
     const [viewBtnloading, setviewBtnLoading] = useState(false)
     const [shareBtnLoading, setShareBtnLoading] = useState(false);
@@ -91,7 +91,14 @@ export default function InvoiceRows({ inv, fetchViewLedgersPage, fetchEditLedger
                             <i className="bi bi-pencil"></i>
                         }
                     </button>
-                    <button className="btn-action delete" title="Delete" onClick={() => handleDelete(inv._id)}>
+                    <button
+                        className="btn-action delete"
+                        title="Delete"
+                        onClick={() => {
+                            setDeleteModalOpen(true)
+                            setSelectedInvoice(inv)
+                        }}
+                    >
                         <i className="bi bi-trash"></i>
                     </button>
                 </div>
