@@ -1,0 +1,273 @@
+@import './mixins/root';
+
+// --- Base Wrapper ---
+.public-invoice-wrapper {
+    background-color: $bg-dark; // Solid black vercel style
+    min-height: 100vh;
+    width: 100%;
+    color: $text-main;
+    font-family: $font-family-base;
+    -webkit-font-smoothing: antialiased;
+}
+
+// --- Minimal Header ---
+.public-header {
+    background: rgba(10, 10, 10, 0.85);
+    backdrop-filter: blur(12px);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    position: sticky;
+    top: 0;
+    z-index: 100;
+
+    .brand {
+        .logo-image {
+            width: 24px;
+            height: 24px;
+            border-radius: 4px;
+        }
+
+        .tracking-tight {
+            letter-spacing: -0.02em;
+        }
+    }
+}
+
+// --- Buttons ---
+.btn-public {
+    padding: 0.5rem 1rem;
+    border-radius: $radius-sm;
+    font-size: $font-size-xs;
+    font-weight: 500;
+    transition: all $transition-base;
+    cursor: pointer;
+    letter-spacing: 0.01em;
+
+    &.primary {
+        background: $text-inverse;
+        color: $bg-dark;
+        border: 1px solid $text-inverse;
+
+        &:hover:not(:disabled) {
+            background: #e5e5e5;
+            border-color: #e5e5e5;
+            transform: translateY(-1px);
+        }
+
+        &:disabled {
+            opacity: 0.7;
+            cursor: not-allowed;
+        }
+    }
+
+    &.secondary {
+        background: transparent;
+        color: $text-muted;
+        border: 1px solid $text-muted;
+
+        &:hover {
+            color: $text-inverse;
+            border-color: rgba(255, 255, 255, 0.2);
+            background: rgba(255, 255, 255, 0.02);
+        }
+    }
+}
+
+// --- Container & Layout ---
+.public-container {
+    max-width: 900px;
+    width: 100%;
+}
+
+.info-grid {
+    display: grid;
+    grid-template-columns: repeat(1, 1fr);
+    gap: 1.5rem;
+
+    @media (min-width: 768px) {
+        grid-template-columns: repeat(3, 1fr);
+    }
+}
+
+.info-card {
+    background: rgba(255, 255, 255, 0.015);
+    border: 1px solid rgba(255, 255, 255, 0.06);
+
+    .info-label {
+        font-size: 0.65rem;
+        color: #666;
+        letter-spacing: 0.05em;
+        font-weight: 600;
+    }
+}
+
+.meta-card {
+    background: linear-gradient(145deg, rgba(255, 255, 255, 0.02) 0%, rgba(255, 255, 255, 0.005) 100%);
+    border-color: rgba(255, 255, 255, 0.08);
+}
+
+// --- Status Badges ---
+.public-badge {
+    padding: 0.2rem 0.6rem;
+    border-radius: 999px;
+    font-size: 0.65rem;
+    font-weight: 500;
+    letter-spacing: 0.02em;
+    border: 1px solid transparent;
+
+    &.status-paid {
+        color: #34d399;
+        background: rgba(52, 211, 153, 0.1);
+        border-color: rgba(52, 211, 153, 0.2);
+    }
+
+    &.status-partially-paid {
+        color: #fbbf24;
+        background: rgba(251, 191, 36, 0.1);
+        border-color: rgba(251, 191, 36, 0.2);
+    }
+
+    &.status-non-paid {
+        color: #f87171;
+        background: rgba(248, 113, 113, 0.1);
+        border-color: rgba(248, 113, 113, 0.2);
+    }
+}
+
+// --- Table Styles (Vercel Style) ---
+.border-white-5 {
+    border-color: rgba(255, 255, 255, 0.05) !important;
+}
+
+.public-table-wrapper {
+    background: rgba(0, 0, 0, 0.2);
+    border-color: rgba(255, 255, 255, 0.06) !important;
+}
+
+.public-table {
+    border-collapse: collapse;
+    font-size: $font-size-xs;
+
+    th {
+        color: #666;
+        font-weight: 500;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+        padding: 1rem;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+        background: rgba(255, 255, 255, 0.01);
+        font-size: 0.65rem;
+        min-width: 130px;
+    }
+
+    td {
+        padding: 1rem;
+        vertical-align: middle;
+        transition: background $transition-base;
+    }
+}
+
+.public-ledger-row {
+    cursor: pointer;
+    transition: background 0.2s ease;
+
+    &:hover {
+        background: rgba(255, 255, 255, 0.02);
+    }
+}
+
+.public-status-dot {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+    font-size: 0.7rem;
+    text-transform: capitalize;
+    color: #888;
+
+    &::before {
+        content: '';
+        width: 6px;
+        height: 6px;
+        border-radius: 50%;
+    }
+
+    &.paid::before {
+        background-color: #34d399;
+        box-shadow: 0 0 6px rgba(52, 211, 153, 0.4);
+    }
+
+    &.unpaid::before {
+        background-color: #f87171;
+        box-shadow: 0 0 6px rgba(248, 113, 113, 0.4);
+    }
+}
+
+// --- Accordion Content ---
+.accordion-row {
+    animation: slideDownFade 0.2s ease-out;
+}
+
+.description-box {
+    background: rgba(0, 0, 0, 0.3);
+    border: 1px solid rgba(255, 255, 255, 0.03);
+}
+
+.text-primary-light {
+    color: $primary-light;
+}
+
+.tracking-wide {
+    letter-spacing: 0.05em;
+}
+
+// --- Pagination ---
+.btn-page {
+    background: transparent;
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    color: $text-muted;
+    width: 28px;
+    height: 28px;
+    border-radius: 4px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.75rem;
+    transition: all $transition-base;
+
+    &:hover:not(:disabled) {
+        background: rgba(255, 255, 255, 0.05);
+        color: $text-inverse;
+        border-color: rgba(255, 255, 255, 0.15);
+    }
+
+    &:disabled {
+        opacity: 0.3;
+        cursor: not-allowed;
+    }
+}
+
+// --- Summary Section ---
+.summary-box {
+    background: rgba(255, 255, 255, 0.015);
+    min-width: 280px;
+}
+
+// --- Utilities & Animations ---
+.fs-xs {
+    font-size: $font-size-xs;
+}
+
+.fs-sm {
+    font-size: $font-size-sm;
+}
+
+@keyframes slideDownFade {
+    from {
+        opacity: 0;
+        transform: translateY(-5px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}

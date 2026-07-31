@@ -108,3 +108,47 @@
     height: 22px;
     border-radius: 4px;
 }
+// --- Skeleton Sizing Utilities ---
+// Append this to loader.scss
+
+.skeleton-h-12 {
+    height: 12px;
+}
+
+.skeleton-h-16 {
+    height: 16px;
+    border-radius: 4px;
+}
+
+.skeleton-h-20 {
+    height: 20px;
+    border-radius: 4px;
+}
+
+.skeleton-h-24 {
+    height: 24px;
+    border-radius: 6px;
+}
+
+.skeleton-w-25 {
+    width: 25%;
+}
+
+.skeleton-w-50 {
+    width: 50%;
+}
+
+.skeleton-w-75 {
+    width: 75%;
+}
+
+.skeleton-w-100 {
+    width: 100%;
+}
+
+// Ensure border utility matches the public invoice style for internal card dividers
+.skeleton-card {
+    .border-white-5 {
+        border-color: rgba(255, 255, 255, 0.05) !important;
+    }
+}

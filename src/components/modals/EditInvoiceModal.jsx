@@ -235,7 +235,7 @@ const EditInvoiceModal = ({
                     </div>
 
                     {/* Backend-Driven Pagination Controls */}
-                    {!loading && records.length > 0 && totalPages > 1 && (
+                    {!loading && records.length > 0 && totalPages > 0 && (
                         <div className="ledger-pagination d-flex flex-sm-row gap-2 justify-content-between align-items-center pt-2 border-0">
                             <span className="pagination-text text-start fs-xs">
                                 Showing Page {currentPage} of {totalPages}

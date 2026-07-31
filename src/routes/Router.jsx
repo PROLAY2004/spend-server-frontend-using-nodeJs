@@ -25,7 +25,7 @@ const router = createBrowserRouter([
         ),
     },
     {
-        path: '/invoice/:invoiceToken',
+        path: '/invoice/:token',
         element: <PublicInvoice />
     },
     {

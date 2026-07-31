@@ -19,5 +19,5 @@ export default function pdfDownloader(data) {
 	document.body.removeChild(link);
 	URL.revokeObjectURL(blobUrl);
 
-    return true
+    return true;
 }
