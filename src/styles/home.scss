@@ -1,0 +1,361 @@
+@import './mixins/root';
+
+// Navigation
+main::before {
+    content: '';
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background:
+        radial-gradient(circle at 50% 0%, $primary-glow 0%, transparent 50%),
+        radial-gradient(circle at 100% 100%, rgba(255, 255, 255, 0.02) 0%, transparent 30%);
+    z-index: -1;
+    pointer-events: none;
+}
+
+nav {
+    background: rgba(0, 0, 0, 0.7);
+    backdrop-filter: blur(16px);
+    border-bottom: 1px solid $border-subtle;
+
+    .logo {
+        font-size: $font-size-base;
+        letter-spacing: -0.02em;
+        @include text-gradient($text-inverse, $text-muted);
+    }
+
+    .mobile-toggle {
+        color: $text-inverse;
+        font-size: 1.5rem;
+        transition: transform $transition-base;
+    }
+
+    .nav-menu {
+        display: flex;
+        align-items: center;
+        gap: 2.5rem;
+        transition: all $transition-smooth;
+
+        .nav-links {
+            button {
+                font-size: $font-size-sm;
+                color: $text-muted;
+
+                &:hover,
+                &.active {
+                    color: $text-inverse;
+                }
+            }
+        }
+
+        .signup {
+            font-size: $font-size-sm;
+            background: $text-inverse;
+            transition: all $transition-base;
+            color: $bg-dark;
+
+            &:hover {
+                background: $text-inverse;
+                transform: scale(0.98);
+            }
+        }
+    }
+}
+
+// Hero Section
+.hero {
+    min-height: 100vh;
+    padding: 8rem 2rem 4rem;
+
+    &::after {
+        content: '';
+        position: absolute;
+        inset: 0;
+        background-image:
+            linear-gradient(to right, $border-subtle 1px, transparent 1px),
+            linear-gradient(to bottom, $border-subtle 1px, transparent 1px);
+        background-size: 4rem 4rem;
+        mask-image: radial-gradient(circle at center, black 10%, transparent 70%);
+        z-index: -1;
+    }
+
+    .pill {
+        border-radius: 99px;
+        border: 1px solid $border-primary;
+        background: rgba(124, 58, 237, 0.1);
+        color: $primary-light;
+        font-size: $font-size-xs;
+        letter-spacing: 0.05em;
+    }
+
+    h1 {
+        font-size: clamp(2.5rem, 6vw, $font-size-hero);
+        line-height: 1.1;
+        letter-spacing: -0.04em;
+        margin-bottom: 1.5rem;
+        @include text-gradient($text-inverse, #737373);
+        max-width: 800px;
+    }
+
+    p {
+        font-size: $font-size-lg;
+        color: $text-muted;
+        max-width: 600px;
+    }
+
+    .cta-button {
+        font-size: $font-size-base;
+        background: $primary;
+        color: $text-inverse;
+        border: 1px solid $primary-light;
+        box-shadow: 0 4px 14px 0 $primary-glow;
+        transition: all $transition-smooth;
+
+        &:hover {
+            background: $primary-light;
+            box-shadow: 0 6px 20px rgba(124, 58, 237, 0.4);
+            transform: translateY(-1px);
+        }
+    }
+
+}
+
+// Global Section Styles
+.section {
+    padding: clamp(4rem, 10vw, 8rem) 2rem;
+    max-width: 1200px;
+
+    h2 {
+        font-size: $font-size-2xl;
+        letter-spacing: -0.03em;
+        color: $text-inverse;
+    }
+
+    >p {
+        color: $text-muted;
+        font-size: $font-size-base;
+        max-width: 600px;
+        margin-bottom: 3rem;
+    }
+}
+
+// Features
+.features {
+    grid-template-columns: repeat(auto-fit, minmax(270px, 1fr));
+
+    .feature {
+        @include glass-panel;
+        @include hover-lift;
+
+        .icon-wrapper {
+            width: 40px;
+            height: 40px;
+            border-radius: $radius-sm;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid $border-subtle;
+            color: $primary-light;
+            font-size: 1.2rem;
+        }
+
+        h3 {
+            font-size: $font-size-base;
+            color: $text-inverse;
+        }
+
+        p {
+            font-size: $font-size-sm;
+            color: $text-muted;
+            line-height: 1.7;
+        }
+    }
+}
+
+// Contact Form
+.contact-form {
+    @include glass-panel;
+    max-width: 600px;
+
+    .form-group {
+        margin-bottom: 1.5rem;
+
+        input,
+        textarea {
+            width: 100%;
+            padding: 0.875rem 1rem;
+            border-radius: $radius-sm;
+            background: $bg-dark;
+            border: 1px solid $border-subtle;
+            color: $text-inverse;
+            font-size: $font-size-sm;
+            font-family: $font-family-base;
+            transition: border-color $transition-base;
+
+            &::placeholder {
+                color: #555;
+            }
+
+            &:focus {
+                outline: none;
+                border-color: $primary;
+                box-shadow: 0 0 0 1px $primary;
+            }
+        }
+
+        textarea {
+            resize: vertical;
+            min-height: 120px;
+        }
+    }
+
+    .cta-button {
+        width: 100%;
+        padding: 0.875rem;
+        border-radius: $radius-sm;
+        border: none;
+        background: $text-inverse;
+        color: $bg-dark;
+        font-weight: 500;
+        font-size: $font-size-sm;
+        cursor: pointer;
+        transition: all $transition-base;
+
+        &:hover {
+            background: #d4d4d8;
+        }
+    }
+}
+
+// Footer
+footer {
+    border-top: 1px solid $border-subtle;
+    padding: 4rem 2rem 2rem;
+    background: $bg-dark;
+
+    .footer-content {
+        max-width: 1200px;
+        grid-template-columns: 1fr 1fr;
+        gap: clamp(2rem, 5vw, 4rem);
+
+        .footer-logo {
+            .logo {
+                font-size: $font-size-base;
+                font-weight: 600;
+                color: $text-inverse;
+                display: block;
+                margin-bottom: 1rem;
+            }
+
+            p {
+                color: $text-muted;
+                font-size: $font-size-sm;
+                max-width: 400px;
+            }
+        }
+
+        .link-group {
+            h4 {
+                color: $text-inverse;
+                font-size: $font-size-sm;
+                font-weight: 500;
+                margin-bottom: 1.5rem;
+            }
+
+            a,
+            button {
+                display: block;
+                color: $text-muted;
+                font-size: $font-size-sm;
+                margin-bottom: 0.875rem;
+
+                &:hover {
+                    color: $primary-light;
+                }
+            }
+
+            .social-links {
+                display: flex;
+                gap: 1rem;
+                margin-top: 1rem;
+
+                a {
+                    font-size: 1.2rem;
+                }
+            }
+        }
+    }
+
+    .footer-bottom {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding-top: 2rem;
+        border-top: 1px solid $border-subtle;
+        color: #555;
+        font-size: $font-size-xs;
+    }
+}
+
+
+// Responsive
+
+@media (max-width: 768px) {
+    nav {
+
+        .nav-menu {
+            position: absolute;
+            top: 100%;
+            left: 0;
+            width: 100%;
+            flex-direction: column;
+            background: rgba(10, 10, 10, 0.98);
+            backdrop-filter: blur(20px);
+            border-bottom: 1px solid $border-subtle;
+            padding: 2rem;
+            gap: 2rem;
+
+            // Hidden State
+            opacity: 0;
+            visibility: hidden;
+            transform: translateY(-20px);
+
+            // Active State
+            &.active {
+                opacity: 1;
+                visibility: visible;
+                transform: translateY(0);
+            }
+
+            .nav-links {
+                flex-direction: column;
+                width: 100%;
+                text-align: center;
+                gap: 1.5rem;
+
+                a {
+                    font-size: 1rem;
+                }
+            }
+
+            .auth-buttons {
+                width: 100%;
+                justify-content: center;
+
+                .signup {
+                    width: 100%;
+                    text-align: center;
+                    padding: 0.75rem;
+                }
+            }
+        }
+    }
+
+    .hero {
+        padding: 8rem 1.5rem 4rem;
+
+    }
+
+    footer .footer-content {
+        grid-template-columns: 1fr;
+    }
+}

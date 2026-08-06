@@ -1,0 +1,98 @@
+import { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
+
+import delInvoice from '../../pages/invoices/deleteInvoice.js';
+import ModalHeader from "./common/ModalHeader.jsx";
+import "../../styles/common/modal.scss";
+
+const DeleteInvoiceModal = ({
+    isOpen,
+    onClose,
+    pageRefresh,
+    invoiceData,
+}) => {
+    const navigate = useNavigate();
+    const [loading, setLoading] = useState(false);
+
+    if (!isOpen) return null;
+
+    const handleDelete = async () => {
+        setLoading(true);
+
+        const isDeleted = await delInvoice(navigate, toast, invoiceData._id);
+
+        setLoading(false);
+
+        if (isDeleted) {
+            onClose();
+            pageRefresh((prev) => prev + 1);
+        }
+    };
+
+    return (
+        <div className="modal-overlay position-fixed d-flex justify-content-center align-items-center">
+            <div className="modal-container w-100 position-relative overflow-hidden">
+                <ModalHeader
+                    modalIcon={<i className="bi bi-trash3"></i>}
+                    modalName={'Confirm Delete'}
+                    onClose={onClose}
+                />
+
+                <div className="modal-body">
+                    <p
+                        className="mb-0"
+                        style={{
+                            fontSize: "0.9rem",
+                            lineHeight: "1.7",
+                            color: "var(--text-secondary)",
+                        }}
+                    >
+                        Are you sure you want to delete this invoice ?
+                        <br />
+                        This action cannot be undone.
+
+                    </p>
+                </div>
+
+
+
+                <div className="modal-footer d-flex justify-content-end gap-2 mt-3 p-0 border-0">
+                    <button
+                        type="button"
+                        className="btn-modal-cancel"
+                        disabled={loading}
+                        onClick={onClose}
+                    >
+                        Cancel
+                    </button>
+
+                    <button
+                        type="button"
+                        className="btn-modal-delete d-flex align-items-center justify-content-center gap-2"
+                        disabled={loading}
+                        onClick={handleDelete}
+                    >
+                        {loading ? (
+                            <>
+                                <div
+                                    className="spinner-border"
+                                    role="status"
+                                    style={{ width: "20px", height: "20px" }}
+                                ></div>
+                                Deleting...
+                            </>
+                        ) : (
+                            <>
+                                <i className="bi bi-trash3"></i>
+                                Delete
+                            </>
+                        )}
+                    </button>
+                </div>
+            </div>
+        </div>
+    );
+};
+
+export default DeleteInvoiceModal;

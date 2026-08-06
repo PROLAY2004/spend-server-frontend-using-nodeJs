@@ -1,0 +1,185 @@
+@import '../mixins/root';
+
+// Shimmer Keyframes
+@keyframes shimmer {
+    0% {
+        background-position: -200% 0;
+    }
+
+    100% {
+        background-position: 200% 0;
+    }
+}
+
+.skeleton-card {
+    pointer-events: none;
+    box-shadow: none !important;
+    background-color: rgba(255, 255, 255, 0.02) !important;
+
+    // Ensure the structure holds its shape without content
+    .payer-header {
+        cursor: default;
+    }
+}
+
+// Base Skeleton Block
+.skeleton-box {
+    background: linear-gradient(90deg,
+            rgba(255, 255, 255, 0.03) 25%,
+            rgba(255, 255, 255, 0.08) 50%,
+            rgba(255, 255, 255, 0.03) 75%);
+    background-size: 200% 100%;
+    animation: shimmer 1.8s infinite linear;
+    border-radius: $radius-sm;
+}
+
+// Specific Component Dimensions matching your SCSS
+.skeleton-avatar {
+    width: 40px;
+    height: 40px;
+}
+
+.skeleton-text {
+    border-radius: 4px;
+}
+
+.skeleton-name {
+    width: 140px;
+    height: 16px;
+
+    @media (max-width: 576px) {
+        width: 110px;
+    }
+}
+
+.skeleton-contact {
+    width: 90px;
+    height: 12px;
+}
+
+.skeleton-label {
+    width: 28px;
+    height: 10px;
+}
+
+.skeleton-value {
+    width: 55px;
+    height: 18px;
+}
+
+.skeleton-badge {
+    width: 75px;
+    height: 22px;
+    border-radius: 20px;
+}
+
+.skeleton-btn {
+    width: 28px;
+    height: 28px;
+    border-radius: $radius-sm;
+}
+
+.skeleton-row {
+    pointer-events: none;
+
+    td {
+        // Keeps the border consistent with your ledger-table td styles
+        border-bottom: 1px solid rgba(255, 255, 255, 0.03);
+        vertical-align: middle;
+    }
+}
+
+// Matches your custom-checkbox dimensions (18x18)
+.skeleton-checkbox {
+    width: 18px;
+    height: 18px;
+    border-radius: 4px;
+}
+
+// Generic text line for table cells
+.skeleton-table-text {
+    height: 14px;
+    border-radius: 4px;
+}
+
+// Matches your .static-status badge dimensions
+.skeleton-table-badge {
+    width: 65px;
+    height: 22px;
+    border-radius: 4px;
+}
+// --- Skeleton Sizing Utilities ---
+// Append this to loader.scss
+
+.skeleton-h-12 {
+    height: 12px;
+}
+
+.skeleton-h-16 {
+    height: 16px;
+    border-radius: 4px;
+}
+
+.skeleton-h-20 {
+    height: 20px;
+    border-radius: 4px;
+}
+
+.skeleton-h-24 {
+    height: 24px;
+    border-radius: 6px;
+}
+
+.skeleton-w-25 {
+    width: 25%;
+}
+
+.skeleton-w-50 {
+    width: 50%;
+}
+
+.skeleton-w-75 {
+    width: 75%;
+}
+
+.skeleton-w-100 {
+    width: 100%;
+}
+
+// Ensure border utility matches the public invoice style for internal card dividers
+.skeleton-card {
+    .border-white-5 {
+        border-color: rgba(255, 255, 255, 0.05) !important;
+    }
+}
+// --- Extra Table Skeleton Utilities ---
+// Append to loader.scss
+
+.skeleton-w-24 {
+    width: 24px;
+    min-width: 24px;
+}
+
+.skeleton-h-24 {
+    height: 24px;
+}
+
+.skeleton-h-10 {
+    height: 10px;
+}
+
+.skeleton-w-70 {
+    width: 70px;
+}
+
+.skeleton-w-80 {
+    width: 80px;
+}
+
+.skeleton-w-100 {
+    width: 100px;
+}
+
+.skeleton-w-120 {
+    width: 120px;
+}

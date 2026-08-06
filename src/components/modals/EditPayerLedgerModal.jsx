@@ -1,0 +1,239 @@
+import { useState, useEffect } from 'react';
+import { toast } from 'react-toastify';
+import { useNavigate } from 'react-router-dom';
+
+import updateRecord from '../../pages/payers/editPayerRecord.js';
+import ModalHeader from './common/ModalHeader.jsx';
+import ModalFooter from './common/ModalFooter.jsx';
+import '../../styles/common/modal.scss';
+
+const EditPayerLedgerModal = ({ isOpen, onClose, pageRefresh, recordData }) => {
+    const navigate = useNavigate();
+    const [loading, setLoading] = useState(false);
+
+    const recordDetails = {
+        date: new Date().toISOString().split('T')[0],
+        category: '',
+        payerId: '',
+        originalAmount: '',
+        spendAmount: '',
+        dueAmount: '',
+        status: '',
+        description: '',
+    }
+
+    const [formData, setFormData] = useState(recordDetails);
+
+    useEffect(() => {
+        if (recordData) {
+            const date = new Date(recordData.date);
+
+            const formattedDate =
+                date.getFullYear() +
+                "-" +
+                String(date.getMonth() + 1).padStart(2, "0") +
+                "-" +
+                String(date.getDate()).padStart(2, "0");
+
+            setFormData({
+                date: formattedDate || new Date().toISOString().split('T')[0],
+                category: recordData.category || '',
+                payerId: recordData.payerId || '',
+                originalAmount: recordData.originalAmount || '',
+                spendAmount: recordData.spendAmount || '',
+                dueAmount: recordData.dueAmount ?? '',
+                status: recordData.status || '',
+                description: recordData.description || '',
+            });
+        }
+    }, [recordData, isOpen]);
+
+    if (!isOpen) return null;
+
+    const handleChange = (e) => {
+        const { name, value } = e.target;
+
+        setFormData((prev) => ({
+            ...prev,
+            [name]:
+                name === "date" && !value
+                    ? new Date().toISOString().split("T")[0]
+                    : value,
+        }));
+    };
+
+    const handleSubmit = async (e) => {
+        e.preventDefault();
+        setLoading(true);
+
+        const isSuccess = await updateRecord(navigate, toast, recordData._id, {
+            ...formData,
+            payerId: recordData.payerId,
+        });
+
+        setLoading(false);
+
+        if (isSuccess) {
+            onClose();
+            setFormData(recordDetails);
+            pageRefresh((prev) => prev + 1);
+        }
+    };
+
+    if (!isOpen) return;
+
+    return (
+        <div className="modal-overlay position-fixed d-flex justify-content-center align-items-center">
+            <div className="modal-container w-100 position-relative">
+                <ModalHeader
+                    modalIcon={<i className="bi bi-journal-plus"></i>}
+                    modalName={'Edit Record'}
+                    onClose={() => {
+                        if (loading) return;
+                        onClose();
+                        setFormData(recordDetails);
+                    }}
+                />
+
+                <form className="modal-body" onSubmit={handleSubmit}>
+                    <div className="row g-2">
+                        <div className="col-12 form-group">
+                            <label className="form-label fs-xs fw-medium mb-1 text-uppercase">Date</label>
+                            <div className="input-wrapper position-relative">
+                                <i className="bi bi-calendar3 position-absolute top-50 start-0 translate-middle-y ms-3 icon-text"></i>
+                                <input
+                                    type="date"
+                                    name="date"
+                                    value={formData.date}
+                                    onChange={handleChange}
+                                    className="custom-input text-uppercase form-control shadow-none ps-5"
+                                />
+                            </div>
+                        </div>
+
+                        <div className="col-12 form-group">
+                            <label className="form-label  fs-xs fw-medium mb-1 text-uppercase">Category</label>
+                            <div className="input-wrapper position-relative">
+                                <i className="bi bi-tags position-absolute top-50 start-0 translate-middle-y ms-3 icon-text"></i>
+                                <select
+                                    className="custom-input form-select shadow-none ps-5"
+                                    value={formData.category}
+                                    name='category'
+                                    onChange={handleChange}
+                                >
+                                    <option value="" disabled>Select Category</option>
+                                    <option value="Bills & Utilities">Bills & Utilities</option>
+                                    <option value="Food & Dining">Food & Dining</option>
+                                    <option value="Medicine & Healthcare">Medicine & Healthcare</option>
+                                    <option value="Money Transfer">Money Transfer</option>
+                                    <option value="Shopping">Shopping</option>
+                                    <option value="Travel & Transport">Travel & Transport</option>
+                                    <option value="Income or Cashback">Income or Cashback</option>
+                                    <option value="Fuel">Fuel</option>
+                                    <option value="Grocerry">Grocerry</option>
+                                    <option value="Entertelment & Subscription">Entertelment & Subscription</option>
+                                    <option value="Investment">Investment</option>
+                                    <option value="Others">Others</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div className="col-12 col-sm-6 form-group">
+                            <label className="form-label  fs-xs fw-medium mb-1 text-uppercase">Original Amt</label>
+                            <div className="input-wrapper position-relative">
+                                <i className="bi bi-currency-rupee position-absolute top-50 start-0 translate-middle-y ms-3 icon-text"></i>
+                                <input
+                                    type="text"
+                                    className="custom-input form-control shadow-none ps-5"
+                                    placeholder="0.00"
+                                    name='originalAmount'
+                                    value={formData.originalAmount}
+                                    onChange={handleChange}
+                                />
+                            </div>
+                        </div>
+
+                        <div className="col-12 col-sm-6 form-group">
+                            <label className="form-label  fs-xs fw-medium mb-1 text-uppercase">Spend Amt</label>
+                            <div className="input-wrapper position-relative">
+                                <i className="bi bi-currency-rupee position-absolute top-50 start-0 translate-middle-y ms-3 icon-text"></i>
+                                <input
+                                    type="text"
+                                    className="custom-input form-control shadow-none ps-5"
+                                    placeholder="0.00"
+                                    name='spendAmount'
+                                    value={formData.spendAmount}
+                                    onChange={handleChange}
+                                />
+                            </div>
+                        </div>
+
+                        {/* Row 3: Due Amount & Status */}
+                        <div className="col-12 col-sm-6 form-group">
+                            <label className="form-label  fs-xs fw-medium mb-1 text-uppercase">Due Amt</label>
+                            <div className="input-wrapper position-relative">
+                                <i className="bi bi-currency-rupee position-absolute top-50 start-0 translate-middle-y ms-3 icon-text"></i>
+                                <input
+                                    type="text"
+                                    className="custom-input form-control shadow-none ps-5"
+                                    placeholder="0.00"
+                                    name='dueAmount'
+                                    onChange={handleChange}
+                                    value={formData.dueAmount}
+                                />
+                            </div>
+                        </div>
+
+                        <div className="col-12 col-sm-6 form-group">
+                            <label className="form-label  fs-xs fw-medium mb-1 text-uppercase">Status</label>
+                            <div className="input-wrapper position-relative">
+                                <i className="bi bi-check2-circle position-absolute top-50 start-0 translate-middle-y ms-3 icon-text"></i>
+                                <select
+                                    className="custom-input form-select shadow-none ps-5"
+                                    name='status'
+                                    value={formData.status}
+                                    onChange={handleChange}
+                                >
+                                    <option value="" disabled>Select Status</option>
+                                    <option value="paid">Paid</option>
+                                    <option value="non-paid">Non-Paid</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        {/* Row 4: Description (Full Width) */}
+                        <div className="col-12 form-group">
+                            <label className="form-label  fs-xs fw-medium mb-1 text-uppercase">Description</label>
+                            <div className="input-wrapper position-relative">
+                                <i className="bi bi-list-columns-reverse position-absolute top-0 start-0 ms-3 mt-3 icon-text"></i>
+                                <textarea
+                                    className="custom-input form-control shadow-none ps-5 pt-3"
+                                    placeholder="Enter ledger details or notes..."
+                                    rows="3"
+                                    value={formData.description}
+                                    name='description'
+                                    onChange={handleChange}
+                                ></textarea>
+                            </div>
+                        </div>
+                    </div>
+
+                    <ModalFooter
+                        onClose={() => {
+                            if (loading) return;
+                            onClose();
+                            setFormData(recordDetails);
+                        }}
+                        isDisabled={loading}
+                        iconText={'check-circle'}
+                        btnName={'Update Ledger'}
+                        loading={loading}
+                        loadingName={'Updating'}
+                    />
+                </form>
+            </div>
+        </div>
+    );
+};
+
+export default EditPayerLedgerModal;

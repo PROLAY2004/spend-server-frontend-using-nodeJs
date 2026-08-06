@@ -1,0 +1,81 @@
+@import './mixins/root';
+
+// Dashboard Layout Shell
+.dashboard-wrapper {
+    background-color: $bg-dark;
+}
+
+// Main Content Area
+.main-content {
+    .dashboard-body {
+        max-width: 1200px;
+    }
+
+    @media (max-width: 992px) and (min-width: 576px) {
+        margin-left: 76px;
+    }
+
+    @media(min-width: 993px) {
+        margin-left: 260px;
+    }
+}
+
+// Analytics Cards
+.stats-grid {
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+}
+
+// Charts Section 
+.charts-grid {
+    grid-template-columns: 1fr 1fr;
+
+    @media (max-width: 768px) {
+        grid-template-columns: 1fr;
+    }
+}
+
+.chart-card {
+    @include glass-panel;
+    min-width: 0;
+
+    &.full-width {
+        grid-column: 1 / -1;
+    }
+
+    .chart-header {
+        border-bottom: 1px solid rgba(255, 255, 255, 0.03);
+
+        h3 {
+            font-size: $font-size-base;
+            color: $text-inverse;
+        }
+
+        select {
+            background: rgba(0, 0, 0, 0.8) !important;
+            border: 1px solid $border-subtle;
+            color: $text-muted;
+            font-size: $font-size-xs;
+            border-radius: $radius-sm;
+            outline: none;
+            cursor: pointer;
+            transition: all $transition-base;
+
+            &:hover,
+            &:focus {
+                border-color: $border-hover;
+                color: $text-inverse;
+            }
+        }
+    }
+
+    .chart-container {
+        height: 260px;
+        min-width: 0;
+            width: 100%;
+        overflow: hidden;
+
+        &.tall {
+            height: 350px;
+        }
+    }
+}

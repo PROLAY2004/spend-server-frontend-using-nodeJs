@@ -1,0 +1,343 @@
+@import '../mixins/root';
+
+.modal-overlay {
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background: rgba(0, 0, 0, 0.6);
+    backdrop-filter: blur(2px);
+    z-index: 1050; // Ensures it floats above your sidebar
+    animation: fadeIn $transition-base forwards;
+}
+
+.modal-container {
+    @include glass-panel;
+    max-width: 400px; // Minimalist footprint
+    margin: 0 1rem;
+    overflow-x: hidden;
+    overflow-y: auto;
+    max-height: 95vh;
+    padding: 1.5rem;
+    background: $bg-surface-elevated;
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    box-shadow: 0 24px 48px rgba(0, 0, 0, 0.5), inset 0 1px 0 rgba(255, 255, 255, 0.05);
+    animation: slideUpFade 0.3s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+
+    // Ambient top-right glow matching stat-card aesthetics
+    .modal-glow {
+        top: -50px;
+        right: -50px;
+        width: 150px;
+        height: 150px;
+        background: radial-gradient(circle, $primary-glow 0%, transparent 70%);
+        z-index: 0;
+        pointer-events: none;
+    }
+
+    >* {
+        position: relative;
+        z-index: 1;
+    }
+
+    &::-webkit-scrollbar {
+        width: 2px;
+    }
+
+    &::-webkit-scrollbar-thumb {
+        background: rgba(255, 255, 255, 0.15);
+        border-radius: 100px;
+    }
+}
+
+.modal-title {
+    font-size: 1.1rem;
+    color: $text-inverse;
+    letter-spacing: -0.02em;
+}
+
+.btn-close-custom {
+    color: $text-muted;
+    border-radius: $radius-sm;
+    transition: all $transition-base;
+    cursor: pointer;
+
+    &:hover {
+        background: rgba(255, 255, 255, 0.08);
+        color: $text-inverse;
+    }
+}
+
+.modal-body {
+    .form-label {
+        font-size: 0.7rem;
+        letter-spacing: 0.05em;
+        color: #7c7c81 !important;
+    }
+
+    .custom-input {
+        background-color: rgba(0, 0, 0, 0.25) !important; // Deeper inset look
+        border: 1px solid rgba(255, 255, 255, 0.08) !important;
+        color: $text-inverse !important;
+        border-radius: $radius-sm;
+        transition: all $transition-smooth;
+        height: 42px;
+        font-size: $font-size-sm;
+
+        &:hover {
+            border-color: rgba(255, 255, 255, 0.15) !important;
+        }
+
+        &:focus {
+            background-color: rgba(0, 0, 0, 0.4) !important;
+            border-color: $primary-light !important;
+            box-shadow: 0 0 0 2px rgba(124, 58, 237, 0.15) !important;
+        }
+
+        &::placeholder {
+            color: rgba(255, 255, 255, 0.25);
+        }
+    }
+
+    select.custom-input {
+        appearance: none;
+        background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3e%3cpath fill='none' stroke='%23888888' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='m2 5 6 6 6-6'/%3e%3c/svg%3e");
+        background-repeat: no-repeat;
+        background-position: right 0.75rem center;
+        background-size: 16px 12px;
+        cursor: pointer;
+
+        option {
+            background-color: #111;
+            color: $text-inverse;
+        }
+    }
+
+    textarea.custom-input {
+        height: auto;
+        min-height: 80px;
+        resize: vertical; // Allow vertical scaling only
+        line-height: 1.5;
+
+        &::-webkit-scrollbar {
+            width: 4px;
+        }
+
+        &::-webkit-scrollbar-thumb {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 4px;
+        }
+    }
+
+    // Fix icon alignment for native date inputs
+    input[type="date"].custom-input {
+        color-scheme: dark;
+
+        &::-webkit-calendar-picker-indicator {
+            filter: none;
+            opacity: 0.5;
+            cursor: pointer;
+
+            &:hover {
+                opacity: 0.8;
+            }
+        }
+    }
+}
+
+.modal-footer {
+    .btn-modal-cancel {
+        background: transparent;
+        border: 1px solid rgba(255, 255, 255, 0.08);
+        color: $text-inverse;
+        padding: 0.5rem 1rem;
+        border-radius: $radius-sm;
+        font-size: $font-size-sm;
+        font-weight: 500;
+        transition: all $transition-base;
+        cursor: pointer;
+
+        &:hover {
+            background: rgba(255, 255, 255, 0.05);
+            border-color: rgba(255, 255, 255, 0.15);
+        }
+    }
+
+    .btn-modal-save {
+        background: $primary;
+        border: 1px solid $primary;
+        color: #fff;
+        padding: 0.5rem 1.25rem;
+        border-radius: $radius-sm;
+        font-size: $font-size-sm;
+        font-weight: 500;
+        transition: all $transition-base;
+        box-shadow: 0 4px 12px rgba(124, 58, 237, 0.2);
+        cursor: pointer;
+
+        &:hover {
+            background: $primary-light;
+            border-color: $primary-light;
+            transform: translateY(-1px);
+            box-shadow: 0 6px 16px rgba(91, 43, 175, 0.3);
+        }
+
+        &:active {
+            transform: translateY(1px);
+        }
+    }
+
+    .btn-modal-save:disabled {
+        background: #5a3f87;
+        border: 1px solid #5a3f87;
+        transition: all 500ms;
+    }
+}
+
+// Entrance Animations
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+
+    to {
+        opacity: 1;
+    }
+}
+
+@keyframes slideUpFade {
+    from {
+        opacity: 0;
+        transform: translateY(15px) scale(0.97);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
+}
+
+// Destructive Delete Button
+.btn-modal-delete {
+    background: rgba(239, 68, 68, 0.1);
+    border: 1px solid rgba(239, 68, 68, 0.2);
+    color: #ef4444; // Standard danger red
+    padding: 0.5rem 1.25rem;
+    border-radius: $radius-sm;
+    font-size: $font-size-sm;
+    font-weight: 500;
+    transition: all $transition-base;
+    cursor: pointer;
+
+    i {
+        transition: transform $transition-base;
+    }
+
+    &:hover {
+        background: #ef4444;
+        border-color: #ef4444;
+        color: #ffffff;
+        transform: translateY(-1px);
+        box-shadow: 0 6px 16px rgba(239, 68, 68, 0.25);
+
+        i {
+            transform: scale(1.1) rotate(-5deg); // Slight aggressive tilt on hover
+        }
+    }
+
+    &:active {
+        transform: translateY(1px);
+    }
+}
+
+.search-dropdown {
+    background: #111;
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    max-height: 180px;
+    overflow-Y: auto !important;
+    z-index: 1500;
+
+    &::-webkit-scrollbar {
+        width: 2px;
+    }
+
+    &::-webkit-scrollbar-thumb {
+        background: rgba(255, 255, 255, 0.15);
+        border-radius: 100px;
+    }
+
+    .dropdown-payer-info {
+        cursor: pointer;
+        transition: background 0.2s;
+        font-size: 0.85rem;
+
+        &:hover {
+            background-color: rgba(255, 255, 255, 0.08);
+        }
+    }
+}
+
+.description-content {
+    background: rgba(0, 0, 0, 0.25);
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    color: #a1a1aa;
+    font-size: 0.8rem;
+    white-space: pre-wrap;
+    line-height: 1.6;
+}
+
+.view-invoice-ledger-header{
+    cursor: pointer;
+    transition: background 0.2s ease;
+    background-color: transparent;
+
+    &:hover{
+        background-color: rgba(255, 255, 255, 0.03);
+    }
+
+    td{
+        min-width: 130px;
+    }
+
+    td:last-child {
+        min-width: 140px !important;
+    }
+}
+
+@media(min-width: 480px){
+    .payer-info-banner{
+        flex-direction: row !important;
+    }
+}
+// Add this to the bottom of your modal.scss file
+
+.modal-search-dropdown {
+    top: 100%; // Push it directly beneath the input
+    left: 0;
+    background-color: #111111;
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.8);
+
+    // Ensure dropdown goes over the next rows in the grid
+    z-index: 2000 !important;
+
+    // Smooth appearance animation
+    animation: fadeIn 0.2s ease-in-out;
+
+    .dropdown-payer-info {
+        border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+
+        &:last-child {
+            border-bottom: none;
+        }
+
+        &:active {
+            background-color: rgba(124, 58, 237, 0.3); // Uses your primary color on click
+        }
+    }
+}
+
+// Prevents the modal container from clipping the dropdown if it overflows the bottom
+.modal-container {
+    overflow-y: visible !important;
+}

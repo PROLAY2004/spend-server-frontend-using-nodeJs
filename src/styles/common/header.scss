@@ -1,0 +1,49 @@
+@import '../mixins/root';
+
+.top-header {
+    border-bottom: 1px solid $border-subtle;
+    background: rgba(10, 10, 10, 0.85);
+    backdrop-filter: blur(16px);
+
+    .header-left {
+        .header-title-group {
+            h1 {
+                font-size: $font-size-lg;
+                color: $text-inverse;
+            }
+
+            .breadcrumbs {
+                font-size: $font-size-xs;
+                color: $text-muted;
+
+                span {
+                    color: $border-subtle;
+                }
+
+                .current {
+                    color: $primary-light;
+                    font-weight: 500;
+                }
+            }
+        }
+    }
+
+    .header-right {
+        .export-btn {
+            background: $bg-surface-elevated;
+            border: 1px solid $border-subtle;
+            color: $text-inverse;
+            transition: all $transition-base;
+
+            i {
+                color: $primary-light;
+            }
+
+            &:hover {
+                border-color: $border-hover;
+                background: rgba(255, 255, 255, 0.05);
+                transform: translateY(-1px);
+            }
+        }
+    }
+}

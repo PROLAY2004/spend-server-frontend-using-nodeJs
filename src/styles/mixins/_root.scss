@@ -1,0 +1,116 @@
+@import './variables';
+
+@mixin text-gradient($color1, $color2) {
+    background: linear-gradient(135deg, $color1 0%, $color2 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+}
+
+@mixin glass-panel {
+    background: $bg-surface-elevated;
+    border: 1px solid $border-subtle;
+    backdrop-filter: blur(12px);
+    border-radius: $radius-md;
+}
+
+@mixin hover-lift {
+    transition: transform $transition-smooth, border-color $transition-smooth, box-shadow $transition-smooth;
+
+    &:hover {
+        transform: translateY(-2px);
+        border-color: $border-hover;
+        box-shadow: 0 8px 30px rgba(0, 0, 0, 0.5);
+    }
+}
+
+// Global Resets
+*,
+*::before,
+*::after {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+html {
+    scroll-behavior: smooth;
+}
+
+body {
+    font-family: $font-family-base;
+    background-color: $bg-dark;
+    color: $text-main;
+    line-height: 1.6;
+    font-size: $font-size-sm; // Smaller, cleaner base font
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    overflow-x: hidden;
+    position: relative;
+}
+
+a {
+    text-decoration: none;
+    color: inherit;
+    transition: color $transition-base;
+}
+
+ul {
+    list-style: none;
+}
+
+.empty-state-card {
+    background-color: rgba(10, 10, 10, 0.4) !important; // Slightly darker for depth
+    border: 1px dashed rgba(255, 255, 255, 0.12) !important; // Dashed border for empty states
+
+    // The Sexy Dot Texture
+    background-image:
+        radial-gradient(rgba(255, 255, 255, 0.04) 1px, transparent 1px),
+        radial-gradient(rgba(255, 255, 255, 0.02) 1px, transparent 1px);
+    background-size: 24px 24px;
+    background-position: 0 0, 12px 12px;
+
+    overflow: hidden;
+
+    // Ambient Purple Glow in the center
+    &::before {
+        content: '';
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        width: 250px;
+        height: 250px;
+        background: radial-gradient(circle, rgba(124, 58, 237, 0.12) 0%, transparent 60%);
+        border-radius: 50%;
+        pointer-events: none; // Ensures it doesn't block clicks
+        z-index: 0;
+    }
+
+    // Keep text and icons above the glow
+    >* {
+        z-index: 1;
+    }
+
+    // Make the icon pop a bit more with the theme
+    .empty-icon {
+        i {
+            color: #c4b5fd !important; // Matches your primary light purple
+            filter: drop-shadow(0 4px 16px rgba(124, 58, 237, 0.2));
+            transition: transform 0.3s ease;
+        }
+    }
+
+    &:hover {
+        background-color: rgba(15, 15, 15, 0.6) !important;
+        border-color: rgba(255, 255, 255, 0.2) !important;
+
+        .empty-icon i {
+            transform: scale(1.05);
+        }
+    }
+}
+
+.icon-text{
+    color : gray !important;
+}
