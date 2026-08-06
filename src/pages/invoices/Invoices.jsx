@@ -102,6 +102,7 @@ export default function Invoices() {
             setLedgerData(data);
             return true;
         }
+
         return false;
     };
 

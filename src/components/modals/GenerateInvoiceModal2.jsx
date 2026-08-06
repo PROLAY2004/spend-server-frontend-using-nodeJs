@@ -36,13 +36,13 @@ const GenerateInvoiceModal2 = ({
 
     const handleSelectAll = (e) => {
         if (e.target.checked) {
-            const visibleIds = ledgerData.recordData.map(l => l._id);
+            const visibleIds = ledgerData.ledgers.map(l => l._id);
             setSelectedLedgerIds(prev => {
                 const newSelection = new Set([...prev, ...visibleIds]);
                 return Array.from(newSelection);
             });
         } else {
-            const visibleIds = ledgerData.recordData.map(l => l._id);
+            const visibleIds = ledgerData.ledgers.map(l => l._id);
             setSelectedLedgerIds(prev => prev.filter(id => !visibleIds.includes(id)));
         }
     };
@@ -104,7 +104,7 @@ const GenerateInvoiceModal2 = ({
                         <div className="mt-3 mt-sm-0 d-flex align-items-center gap-3">
                             <div className="text-end d-flex flex-column">
                                 <span className="icon-text text-uppercase fw-medium" style={{ fontSize: '0.65rem', letterSpacing: '0.05em' }}>Total Found</span>
-                                <span className="text-white fw-medium">{ledgerData.totalLedgers} Records</span>
+                                <span className="text-white fw-medium">{ledgerData.totalRecords} Records</span>
                             </div>
                             <div className="divider d-none d-sm-block" style={{ width: '1px', height: '24px', backgroundColor: 'rgba(255,255,255,0.08)' }}></div>
                             <div className="text-end d-flex flex-column">
@@ -125,8 +125,8 @@ const GenerateInvoiceModal2 = ({
                                                 type="checkbox"
                                                 onChange={handleSelectAll}
                                                 checked={
-                                                    ledgerData.recordData.length > 0 &&
-                                                    ledgerData.recordData.every(record =>
+                                                    ledgerData.ledgers.length > 0 &&
+                                                    ledgerData.ledgers.every(record =>
                                                         selectedLedgerIds.includes(record._id)
                                                     )
                                                 }
@@ -144,7 +144,7 @@ const GenerateInvoiceModal2 = ({
                             <tbody>
                                 <LedgerRowSkeleton loading={loading} rows={2} />
 
-                                {!loading && ledgerData.recordData.length > 0 && ledgerData.recordData.map((record) => {
+                                {!loading && ledgerData.ledgers.length > 0 && ledgerData.ledgers.map((record) => {
                                     const isSelected = selectedLedgerIds.includes(record._id);
 
                                     return (
@@ -174,7 +174,7 @@ const GenerateInvoiceModal2 = ({
                                     );
                                 })}
 
-                                {!loading && ledgerData.recordData.length === 0 && (
+                                {!loading && ledgerData.ledgers.length === 0 && (
                                     <tr>
                                         <td colSpan="6" className="text-center py-4 pagination-text">No ledgers found for this selection.</td>
                                     </tr>
@@ -184,7 +184,7 @@ const GenerateInvoiceModal2 = ({
                     </div>
 
                     {/* Pagination[cite: 14] */}
-                    {ledgerData.recordData.length > 0 && (
+                    {ledgerData.ledgers.length > 0 && (
                         <div className="ledger-pagination d-flex flex-sm-row gap-2 justify-content-between align-items-center pt-2 border-0">
                             <span className="pagination-text text-start fs-xs">
                                 Showing Page {ledgerData.currentPage} of {ledgerData.totalPages}

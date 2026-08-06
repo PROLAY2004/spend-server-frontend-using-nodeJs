@@ -152,3 +152,34 @@
         border-color: rgba(255, 255, 255, 0.05) !important;
     }
 }
+// --- Extra Table Skeleton Utilities ---
+// Append to loader.scss
+
+.skeleton-w-24 {
+    width: 24px;
+    min-width: 24px;
+}
+
+.skeleton-h-24 {
+    height: 24px;
+}
+
+.skeleton-h-10 {
+    height: 10px;
+}
+
+.skeleton-w-70 {
+    width: 70px;
+}
+
+.skeleton-w-80 {
+    width: 80px;
+}
+
+.skeleton-w-100 {
+    width: 100px;
+}
+
+.skeleton-w-120 {
+    width: 120px;
+}

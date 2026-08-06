@@ -309,3 +309,35 @@
         flex-direction: row !important;
     }
 }
+// Add this to the bottom of your modal.scss file
+
+.modal-search-dropdown {
+    top: 100%; // Push it directly beneath the input
+    left: 0;
+    background-color: #111111;
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.8);
+
+    // Ensure dropdown goes over the next rows in the grid
+    z-index: 2000 !important;
+
+    // Smooth appearance animation
+    animation: fadeIn 0.2s ease-in-out;
+
+    .dropdown-payer-info {
+        border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+
+        &:last-child {
+            border-bottom: none;
+        }
+
+        &:active {
+            background-color: rgba(124, 58, 237, 0.3); // Uses your primary color on click
+        }
+    }
+}
+
+// Prevents the modal container from clipping the dropdown if it overflows the bottom
+.modal-container {
+    overflow-y: visible !important;
+}

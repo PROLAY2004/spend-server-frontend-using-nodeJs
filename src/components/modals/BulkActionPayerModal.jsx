@@ -19,18 +19,31 @@ const BulkActionPayerModal = ({
     const navigate = useNavigate();
     const [loading, setLoading] = useState(false);
     const [action, setAction] = useState('');
-    const [canShowAllOptions, setCanShowAllOptions] = useState(false);
+
+    // Separate states for status and invoice requirements
+    const [canChangeStatus, setCanChangeStatus] = useState(false);
+    const [canGenerateInvoice, setCanGenerateInvoice] = useState(false);
 
     useEffect(() => {
         if (!isOpen) {
-            setAction(''); // Reset action on close
+            setAction('');
             return;
         }
 
-        setCanShowAllOptions(
+        // 1. Check if all records have the same status
+        const isSameStatus =
             selectedLedgersList.every(item => item.status === "paid") ||
-            selectedLedgersList.every(item => item.status === "non-paid")
+            selectedLedgersList.every(item => item.status === "non-paid");
+
+        // 2. Check if all records have the exact same payerId
+        const isSamePayer = selectedLedgersList.length > 0 && selectedLedgersList.every(
+            item => item.payerId === selectedLedgersList[0].payerId
         );
+
+        setCanChangeStatus(isSameStatus);
+
+        // Generating an invoice requires BOTH the same status AND the same payer
+        setCanGenerateInvoice(isSameStatus && isSamePayer);
 
     }, [isOpen, selectedLedgersList]);
 
@@ -40,11 +53,14 @@ const BulkActionPayerModal = ({
         e.preventDefault();
         setLoading(true);
 
-        let isSuccess = false; 
+        let isSuccess = false;
 
         if (action === 'invoice') {
             const selectedLedgerIds = selectedLedgersList.map(record => record.id);
-            isSuccess = await generateInvoice(navigate, toast, { payerId: payerData._id, recordIds : selectedLedgerIds });
+            // Uses the uniform payerId from the first selected record
+            const targetPayerId = selectedLedgersList[0]?.payerId || payerData._id;
+
+            isSuccess = await generateInvoice(navigate, toast, { payerId: targetPayerId, recordIds: selectedLedgerIds });
         }
         else {
             isSuccess = await handleBulkAction(navigate, toast, { action, records: selectedLedgersList })
@@ -91,22 +107,30 @@ const BulkActionPayerModal = ({
                             <option value="" disabled>Choose an action...</option>
                             <option value="delete">Delete Records</option>
 
-                            {canShowAllOptions ? (
-                                <>
-                                    <option value="status">Change Status</option>
-                                    <option value="invoice">Generate Invoice</option>
-                                </>
+                            {/* Status Option */}
+                            {canChangeStatus ? (
+                                <option value="status">Change Status</option>
                             ) : (
-                                <>
-                                    <option value="status" disabled>Change Status</option>
-                                    <option value="invoice" disabled>Generate Invoice</option>
-                                </>
+                                <option value="status" disabled>Change Status (Mixed Statuses)</option>
+                            )}
+
+                            {/* Invoice Option */}
+                            {canGenerateInvoice ? (
+                                <option value="invoice">Generate Invoice</option>
+                            ) : (
+                                    <option value="invoice" disabled>Generate Invoice (Requires Same Payer & Status)</option>
                             )}
                         </select>
 
-                        {!canShowAllOptions && (
-                            <small className="icon-text d-block mt-2" style={{ fontSize: '0.7rem' }}>
-                                *Status and Invoice options are disabled because the selected records have mixed statuses.
+                        {/* Dynamic Warning Messages based on what is disabled */}
+                        {!canChangeStatus && (
+                            <small className="icon-text d-block mt-2 text-warning" style={{ fontSize: '0.7rem' }}>
+                                *Status and Invoice options are disabled because selected records have mixed statuses.
+                            </small>
+                        )}
+                        {canChangeStatus && !canGenerateInvoice && (
+                            <small className="icon-text d-block mt-2 text-warning" style={{ fontSize: '0.7rem' }}>
+                                *Invoice generation is disabled because selected records belong to different payers.
                             </small>
                         )}
                     </div>

@@ -10,7 +10,6 @@ const DeleteLedgerModal = ({
     isOpen,
     onClose,
     pageRefresh,
-    payerData,
     ledgerData,
 }) => {
     const navigate = useNavigate();
@@ -22,7 +21,6 @@ const DeleteLedgerModal = ({
         setLoading(true);
 
         const isDeleted = await delRecord(navigate, toast, {
-            payerId: payerData._id,
             recordId: ledgerData._id,
         });
 

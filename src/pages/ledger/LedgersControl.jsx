@@ -1,158 +1,163 @@
 import React, { useState, useRef, useEffect } from 'react';
 
 export default function LedgersControl({
-    searchQuery, setSearchQuery,
-    statusFilter, setStatusFilter,
-    dateFrom, setDateFrom,
-    dateTo, setDateTo,
-    selectedPayer, setSelectedPayer,
-    payersList, setCurrentPage
+    filters,
+    payersList,
+    setFilters,
+    setCurrentPage
 }) {
     const [isDropdownOpen, setIsDropdownOpen] = useState(false);
-    const [payerSearchTerm, setPayerSearchTerm] = useState(selectedPayer?.name || '');
+    const [payerSearchTerm, setPayerSearchTerm] = useState(filters.selectedPayer?.name || '');
     const dropdownRef = useRef(null);
 
-    // Close dropdown on outside click
+    const handleFilterChange = (key, value) => {
+        setFilters(prev => ({ ...prev, [key]: value }));
+        setCurrentPage(1);
+    };
+
     useEffect(() => {
         const handleClickOutside = (event) => {
             if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
                 setIsDropdownOpen(false);
+
+                // Optional UI Fix: If the user clicks outside without selecting a new payer, 
+                // revert the text back to the currently selected payer (or clear it).
+                if (filters.selectedPayer) {
+                    setPayerSearchTerm(filters.selectedPayer.name);
+                } else {
+                    setPayerSearchTerm('');
+                }
             }
         };
         document.addEventListener('mousedown', handleClickOutside);
         return () => document.removeEventListener('mousedown', handleClickOutside);
-    }, []);
+    }, [filters.selectedPayer]); // Added dependency to keep track of current selection
 
+    // --- 1. ADD LOCAL FILTERING BACK ---
     const filteredPayers = payersList.filter(payer =>
-        payer.name.toLowerCase().includes(payerSearchTerm.toLowerCase())
+        payer.name.toLowerCase().includes(payerSearchTerm.toLowerCase()) ||
+        payer.mobile.includes(payerSearchTerm)
     );
 
     return (
-        <div className="controls-bar d-flex flex-column flex-xl-row gap-2 mb-4 w-100">
-
-            {/* Global Search */}
-            <div className="search-wrapper position-relative flex-grow-1">
-                <i className="bi bi-search position-absolute top-50 start-0 translate-middle-y ms-3 text-lighter"></i>
-                <input
-                    type="text"
-                    className="custom-input form-control shadow-none ps-5 py-2 pe-3"
-                    placeholder="Search ledgers by category or amount..."
-                    value={searchQuery}
-                    onChange={(e) => {
-                        setSearchQuery(e.target.value);
-                        setCurrentPage(1);
-                    }}
-                />
-            </div>
-
-            <div className="filters-wrapper d-flex flex-column flex-md-row gap-2">
-
-                {/* Searchable Payer Dropdown */}
-                <div className="position-relative" ref={dropdownRef} style={{ minWidth: '200px' }}>
-                    <div className="input-wrapper position-relative h-100">
-                        <i className="bi bi-person position-absolute top-50 start-0 translate-middle-y ms-3 text-lighter"></i>
+        <div className="controls-bar mb-4 w-100">
+            <div className="row g-2">
+                <div className="col-12 col-md-6 col-xl-4">
+                    <div className="search-wrapper position-relative w-100">
+                        <i className="bi bi-search position-absolute top-50 start-0 translate-middle-y ms-3 text-lighter"></i>
                         <input
                             type="text"
-                            className="custom-input form-control shadow-none ps-5 py-2"
-                            placeholder="Filter by Payer..."
-                            value={payerSearchTerm}
-                            onChange={(e) => {
-                                setPayerSearchTerm(e.target.value);
-                                setSelectedPayer(null); // Clear selection if typing
-                                setCurrentPage(1);
-                                setIsDropdownOpen(true);
-                            }}
-                            onFocus={() => setIsDropdownOpen(true)}
+                            className="custom-input form-control shadow-none ps-5 py-2 pe-3 w-100"
+                            placeholder="Search ledgers by category or amount..."
+                            value={filters.searchQuery}
+                            style={{ minWidth: 0 }}
+                            onChange={(e) => handleFilterChange('searchQuery', e.target.value)}
                         />
-                        {/* Clear Selection Button */}
-                        {selectedPayer && (
-                            <i
-                                className="bi bi-x-circle position-absolute top-50 end-0 translate-middle-y me-3 text-lighter"
-                                style={{ cursor: 'pointer' }}
-                                onClick={() => {
-                                    setSelectedPayer(null);
-                                    setPayerSearchTerm('');
-                                    setCurrentPage(1);
-                                }}
-                            ></i>
-                        )}
                     </div>
+                </div>
 
-                    {isDropdownOpen && (
-                        <div
-                            className="position-absolute w-100 mt-1 rounded-2 shadow-lg overflow-hidden"
-                            style={{
-                                background: '#111',
-                                border: '1px solid rgba(255,255,255,0.08)',
-                                maxHeight: '200px',
-                                overflowY: 'auto',
-                                zIndex: 1050
-                            }}
-                        >
-                            {filteredPayers.length > 0 ? (
-                                filteredPayers.map(payer => (
-                                    <div
-                                        key={payer._id}
-                                        className="px-3 py-2 text-white"
-                                        style={{ cursor: 'pointer', transition: 'background 0.2s', fontSize: '0.85rem' }}
-                                        onMouseDown={() => {
-                                            setSelectedPayer(payer);
-                                            setPayerSearchTerm(payer.name);
-                                            setIsDropdownOpen(false);
-                                            setCurrentPage(1);
-                                        }}
-                                        onMouseEnter={(e) => e.target.style.background = 'rgba(255,255,255,0.08)'}
-                                        onMouseLeave={(e) => e.target.style.background = 'transparent'}
-                                    >
-                                        {payer.name}
-                                    </div>
-                                ))
-                            ) : (
-                                <div className="px-3 py-2 text-muted text-center" style={{ fontSize: '0.85rem' }}>No payers found</div>
+                <div className="col-12 col-sm-6 col-md-6 col-xl-3">
+                    <div className="position-relative w-100" ref={dropdownRef}>
+                        <div className="input-wrapper position-relative h-100 w-100">
+                            <i className="bi bi-person position-absolute top-50 start-0 translate-middle-y ms-3 text-lighter"></i>
+                            <input
+                                type="text"
+                                className="custom-input form-control shadow-none ps-5 py-2 w-100"
+                                placeholder="Filter by Payer..."
+                                value={payerSearchTerm}
+                                style={{ minWidth: 0 }}
+                                onChange={(e) => {
+                                    setPayerSearchTerm(e.target.value);
+
+                                    // --- 2. PREVENT UNNECESSARY BACKEND REFETCHES ---
+                                    // Only clear the global filter if one was already selected.
+                                    // This stops the page from reloading on every keystroke.
+                                    if (filters.selectedPayer !== null) {
+                                        handleFilterChange('selectedPayer', null);
+                                    }
+
+                                    setIsDropdownOpen(true);
+                                }}
+                                onFocus={() => setIsDropdownOpen(true)}
+                            />
+                            {filters.selectedPayer && (
+                                <i
+                                    className="bi bi-x-circle position-absolute top-50 end-0 translate-middle-y me-3 text-lighter"
+                                    style={{ cursor: 'pointer' }}
+                                    onClick={() => {
+                                        handleFilterChange('selectedPayer', null);
+                                        setPayerSearchTerm('');
+                                    }}
+                                ></i>
                             )}
                         </div>
-                    )}
+
+                        {isDropdownOpen && (
+                            <div className="ledger-filter-dropdown position-absolute w-100 mt-1 rounded-2 shadow-lg overflow-auto">
+                                {/* --- 3. USE filteredPayers INSTEAD OF payersList --- */}
+                                {filteredPayers.length > 0 ? (
+                                    filteredPayers.map(payer => (
+                                        <div
+                                            key={payer._id}
+                                            className="ledger-filter-dropdown-list px-3 py-2 text-white"
+                                            onMouseDown={() => {
+                                                // Selecting a name updates the full page data
+                                                handleFilterChange('selectedPayer', payer);
+                                                setPayerSearchTerm(payer.name);
+                                                setIsDropdownOpen(false);
+                                            }}
+                                        >
+                                            <div className="d-flex justify-content-between">
+                                                <span>{payer.name}</span>
+                                                <span className="icon-text">{payer.mobile}</span>
+                                            </div>
+                                        </div>
+                                    ))
+                                ) : (
+                                    <div className="ledger-filter-dropdown-list p-3 icon-text text-center">
+                                        No Payers Found
+                                    </div>
+                                )}
+                            </div>
+                        )}
+                    </div>
                 </div>
 
-                {/* Status Dropdown */}
-                <select
-                    className="custom-select py-2 form-select shadow-none"
-                    style={{ minWidth: '140px' }}
-                    value={statusFilter}
-                    onChange={(e) => {
-                        setStatusFilter(e.target.value);
-                        setCurrentPage(1);
-                    }}
-                >
-                    <option value="All">All Status</option>
-                    <option value="Paid">Paid</option>
-                    <option value="Non-Paid">Non-Paid</option>
-                </select>
-
-                {/* Date Filters */}
-                <div className="d-flex align-items-center gap-2">
-                    <input
-                        type="date"
-                        className="custom-input form-control shadow-none py-2 px-3"
-                        title="From Date"
-                        value={dateFrom}
-                        onChange={(e) => {
-                            setDateFrom(e.target.value);
-                            setCurrentPage(1);
-                        }}
-                    />
-                    <span className="text-muted fs-xs fw-medium px-1">TO</span>
-                    <input
-                        type="date"
-                        className="custom-input form-control shadow-none py-2 px-3"
-                        title="To Date"
-                        value={dateTo}
-                        onChange={(e) => {
-                            setDateTo(e.target.value);
-                            setCurrentPage(1);
-                        }}
-                    />
+                <div className="col-12 col-sm-6 col-md-4 col-xl-2">
+                    <select
+                        className="custom-select py-2 form-select shadow-none w-100"
+                        value={filters.statusFilter}
+                        style={{ minWidth: 0 }}
+                        onChange={(e) => handleFilterChange('statusFilter', e.target.value)}
+                    >
+                        <option value="All">All Status</option>
+                        <option value="Paid">Paid</option>
+                        <option value="Non-Paid">Non-Paid</option>
+                    </select>
                 </div>
+
+                <div className="col-12 col-md-8 col-xl-3">
+                    <div className="d-flex align-items-center gap-1 w-100">
+                        <input
+                            type="date"
+                            className="custom-input shadow-none py-2 px-2 w-100"
+                            title="From Date"
+                            value={filters.dateFrom}
+                            style={{ minWidth: 0, flex: '1 1 auto' }}
+                            onChange={(e) => handleFilterChange('dateFrom', e.target.value)}
+                        />
+                        <span className="icon-text fs-xs fw-medium px-1">TO</span>
+                        <input
+                            type="date"
+                            className="custom-input shadow-none py-2 px-2 w-100"
+                            title="To Date"
+                            value={filters.dateTo}
+                            style={{ minWidth: 0, flex: '1 1 auto' }}
+                            onChange={(e) => handleFilterChange('dateTo', e.target.value)}
+                        />
+                    </div>
+                </div>
+
             </div>
         </div>
     );

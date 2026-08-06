@@ -25,7 +25,8 @@ function PayerCard({
     setSelectedLedgersList,
     resetSelection,
     expandedPayerId,
-    setExpandedPayerId
+    setExpandedPayerId,
+    innerCardRefresh
 }) {
     const navigate = useNavigate();
     const [ledgers, setLedgers] = useState([]);
@@ -50,18 +51,18 @@ function PayerCard({
         const payload = {
             page: ledgerCurrentPage,
             limit: paginetionLimit,
-            search: ledgerSearch,
-            filter: ledgerFilter,
+            searchQuery: ledgerSearch,
+            statusFilter: ledgerFilter,
             payerId: payerData._id,
         };
 
         const data = await getLedgers(navigate, toast, payload);
 
-        if (data && data.recordData.length) {
+        if (data && data.ledgers.length) {
             setEmptyState(false);
-            setLedgers(data.recordData);
+            setLedgers(data.ledgers);
             setLedgerTotalPages(data.totalPages);
-            setTotalLedgersCount(data.totalLedgers);
+            setTotalLedgersCount(data.totalRecords);
         }
         else {
             setLedgers([]);
@@ -73,9 +74,9 @@ function PayerCard({
         setLoading(false);
     };
 
-    useEffect(()=>{
-        setSelectedLedgers([])
-    }, [resetSelection])    
+    useEffect(() => {
+        setSelectedLedgers([]);
+    }, [resetSelection, ledgerSearch, ledgerFilter]);
 
     useEffect(() => {
         if (expandedPayerId !== payerData._id) return;
@@ -85,7 +86,7 @@ function PayerCard({
         }, 300);
 
         return () => clearTimeout(delayDebounceFn);
-    }, [expandedPayerId, payerData._id, pageRefresh, ledgerCurrentPage, ledgerSearch, ledgerFilter]);
+    }, [expandedPayerId, payerData._id, pageRefresh, ledgerCurrentPage, ledgerSearch, ledgerFilter, innerCardRefresh]);
 
     const handleSelectAll = (e) => {
         const currentPageRecords = ledgers.map(l => ({

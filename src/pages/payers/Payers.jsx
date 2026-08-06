@@ -29,6 +29,7 @@ export default function Payers() {
     const [pageLoader, setPageLoader] = useState(true);
     const [emptyState, setEmptyState] = useState(false);
     const [pageRefresh, setPageRefresh] = useState(0);
+    const [innerCardRefresh, setInnerCardRefresh] = useState(0);
     const [resetSelection, setResetSelection] = useState(0);
 
     const [currentPage, setCurrentPage] = useState(1);
@@ -141,6 +142,7 @@ export default function Payers() {
                                 resetSelection={resetSelection}
                                 expandedPayerId={expandedPayerId}
                                 setExpandedPayerId={setExpandedPayerId}
+                                innerCardRefresh={innerCardRefresh}
                             />
                         ))}
                     </div>
@@ -202,7 +204,7 @@ export default function Payers() {
         <AddPayerLedgerModal 
             isOpen={addLedgerModal}
             onClose={() => setAddLedgerModal(false)}
-            pageRefresh={setPageRefresh}
+            pageRefresh={setInnerCardRefresh}
             payerData={payerData}
         />
 
@@ -215,22 +217,21 @@ export default function Payers() {
         <EditPayerLedgerModal 
             isOpen={editLedgerModal}
             onClose={() => setEditLedgerModal(false)}
-            pageRefresh={setPageRefresh}
+            pageRefresh={setInnerCardRefresh}
             recordData={recordData}
         />
 
         <DeleteLedgerModal 
             isOpen={deleteLedgerModal}
             onClose={() => setDeleteLedgerModal(false)}
-            pageRefresh={setPageRefresh}
-            payerData={payerData}
+            pageRefresh={setInnerCardRefresh}
             ledgerData={recordData}
         />
 
         <BulkActionPayerModal
             isOpen={bulkActionModal}
             onClose={()=> setbulkActionModal(false)}
-            pageRefresh={setPageRefresh}
+            pageRefresh={setInnerCardRefresh}
             selectedLedgersList={selectedLedgersList}
             setSelectedLedgersList={setSelectedLedgersList}
             setResetSelection={setResetSelection}

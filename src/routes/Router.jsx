@@ -10,6 +10,7 @@ import Payers from '../pages/payers/Payers.jsx';
 import Invoices from '../pages/invoices/Invoices.jsx';
 import Ledgers from '../pages/ledger/Ledgers.jsx';
 import PublicInvoice from '../pages/public_invoice/PublicInvoice.jsx';
+import NotFound from '../components/common/NotFound.jsx';
 
 const router = createBrowserRouter([
     {
@@ -62,7 +63,7 @@ const router = createBrowserRouter([
     },
     {
         path: '*',
-        element: <h1>404 Not Found</h1>,
+        element: <NotFound />,
     },
 ]);
 

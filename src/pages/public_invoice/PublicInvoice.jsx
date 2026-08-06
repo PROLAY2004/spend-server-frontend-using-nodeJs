@@ -81,6 +81,7 @@ export default function PublicInvoice() {
                     Invoice - Spend Server
                 </title>
             </Helmet>
+
             <div className="public-invoice-wrapper position-relative">
                 <Header invoiceData={invoiceData} />
 

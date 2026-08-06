@@ -6,10 +6,18 @@ import { toast } from 'react-toastify';
 import Sidebar from '../../components/common/Sidebar.jsx';
 import Header from '../../components/common/Header.jsx';
 import EmptyCard from '../../components/common/EmptyCard.jsx';
-import LedgerRows from '../../components/dashboard/LedgerRow.jsx';
+import LedgerRows from './LedgerRow.jsx';
 import LedgersControl from './LedgersControl.jsx';
+import LedgerSkeletonRow from '../../components/common/LedgerSkeletonRow.jsx';
 
-// (Assuming you import your modal components and fetch logic here)
+import DescriptionModal from '../../components/modals/DescriptionModal.jsx';
+import BulkActionPayerModal from '../../components/modals/BulkActionPayerModal.jsx';
+import DeleteLedgerModal from '../../components/modals/DeleteLedgerModal.jsx';
+import AddLedgerModal from '../../components/modals/AddLedgerModal.jsx';
+import EditLedgerModal from '../../components/modals/EditLedgerModal.jsx';
+
+import getLedgers from './fetchLedgers.js';
+import '../../styles/ledger.scss';
 
 export default function Ledgers() {
     const navigate = useNavigate();
@@ -18,160 +26,342 @@ export default function Ledgers() {
     // Layout States
     const [isMobileOpen, setIsMobileOpen] = useState(false);
     const [pageLoader, setPageLoader] = useState(false);
+    const [pageRefresh, setPageRefresh] = useState(0);
+    const [loading, setLoading] = useState(true);
+    const [resetSelection, setResetSelection] = useState(0);
 
     // Pagination & Filter States
     const [currentPage, setCurrentPage] = useState(1);
-    const [totalPages, setTotalPages] = useState(5);
-    const [searchQuery, setSearchQuery] = useState('');
-    const [statusFilter, setStatusFilter] = useState('All');
-    const [selectedPayer, setSelectedPayer] = useState(null);
-    const [dateFrom, setDateFrom] = useState('');
-    const [dateTo, setDateTo] = useState('');
+    const [totalPages, setTotalPages] = useState(1);
+
+    const [filters, setFilters] = useState({
+        searchQuery: '',
+        statusFilter: 'All',
+        selectedPayer: null,
+        dateFrom: '',
+        dateTo: ''
+    });
 
     // Data States
-    const [ledgers, setLedgers] = useState([]); // Array of ledgers
-    const [payersList, setPayersList] = useState([]); // Array of payers for the dropdown
-    const [selectedLedgerIds, setSelectedLedgerIds] = useState([]); // For checkboxes
+    const [ledgers, setLedgers] = useState([]);
+    const [payersList, setPayersList] = useState([]);
 
-    // Placeholder Modal states for LedgerRows to function
+    // Updated to hold objects: [{ id: '...', status: '...' }]
+    const [selectedLedgers, setSelectedLedgers] = useState([]);
+    const [ignoredLedgerIds, setIgnoredLedgerIds] = useState([]);
+
+    // Server-Side Totals
+    const [globalTotalDue, setGlobalTotalDue] = useState(0);
+    const [totalRecords, setTotalRecords] = useState(0);
+
+    // Modal states
     const [detailsModal, setDetailsModal] = useState(false);
     const [editLedgerModal, setEditLedgerModal] = useState(false);
     const [deleteLedgerModal, setDeleteLedgerModal] = useState(false);
+    const [bulkActionModal, setBulkActionModal] = useState(false);
+    const [addLedgerModal, setAddLedgerModal] = useState(false);
     const [recordData, setRecordData] = useState({});
 
-    // Checkbox Handlers
+    useEffect(() => {
+        setSelectedLedgers([]);
+        setIgnoredLedgerIds([]);
+    }, [
+        filters.searchQuery,
+        filters.statusFilter,
+        filters.selectedPayer?._id,
+        filters.dateFrom,
+        filters.dateTo,
+        resetSelection,
+    ]);
+
+    // Fetch Function
+    const fetchLedgerData = async () => {
+        setLoading(true);
+
+        const payload = {
+            page: currentPage,
+            limit: 10,
+            searchQuery: filters.searchQuery,
+            statusFilter: filters.statusFilter,
+            dateFrom: filters.dateFrom,
+            dateTo: filters.dateTo,
+            payerId: filters.selectedPayer?._id || null
+        };
+
+        const data = await getLedgers(navigate, toast, payload);
+
+        if (data) {
+            setLedgers(data.ledgers);
+            setPayersList(data.payersList);
+            setTotalPages(data.totalPages);
+            setTotalRecords(data.totalRecords);
+            setGlobalTotalDue(data.totalDueAmount);
+        }
+
+        setLoading(false);
+    };
+
+    useEffect(() => {
+        const delayDebounceFn = setTimeout(() => {
+            fetchLedgerData();
+        }, 300);
+        return () => clearTimeout(delayDebounceFn);
+    }, [currentPage, filters, pageLoader, pageRefresh]);
+
+    const ignoredDueAmount = ledgers
+        .filter(record => ignoredLedgerIds.includes(record._id))
+        .reduce((acc, curr) => {
+            if (curr.status === 'non-paid') {
+                return acc + (curr.dueAmount || 0);
+            }
+            return acc;
+        }, 0);
+
+    const adjustedTotalDue = globalTotalDue - ignoredDueAmount;
+
+    // --- Object-Based Selection Logic ---
+    const handleToggleIgnore = (recordId) => {
+        setIgnoredLedgerIds(prev =>
+            prev.includes(recordId)
+                ? prev.filter(id => id !== recordId)
+                : [...prev, recordId]
+        );
+
+        if (!ignoredLedgerIds.includes(recordId)) {
+            setSelectedLedgers(prev => prev.filter(item => item.id !== recordId));
+        }
+    };
+
     const handleSelectAll = (e) => {
+        const activePageRecords = ledgers
+            .filter(l => !ignoredLedgerIds.includes(l._id))
+            .map(l => ({
+                id: l._id,
+                status: l.status,
+                payerId: typeof l.payerId === 'object' ? l.payerId._id : l.payerId
+            }));
+
         if (e.target.checked) {
-            setSelectedLedgerIds(ledgers.map(l => l._id));
+            setSelectedLedgers(prev => [
+                ...prev,
+                ...activePageRecords.filter(
+                    record => !prev.some(item => item.id === record.id)
+                )
+            ]);
         } else {
-            setSelectedLedgerIds([]);
+            setSelectedLedgers(prev =>
+                prev.filter(
+                    item => !activePageRecords.some(record => record.id === item.id)
+                )
+            );
         }
     };
 
     const handleCheckbox = (record) => {
-        setSelectedLedgerIds(prev =>
-            prev.includes(record._id)
-                ? prev.filter(id => id !== record._id)
-                : [...prev, record._id]
-        );
+        if (ignoredLedgerIds.includes(record._id)) return;
+
+        setSelectedLedgers((prev) => {
+            const exists = prev.some(item => item.id === record._id);
+
+            if (exists) {
+                return prev.filter(item => item.id !== record._id);
+            }
+
+            return [
+                ...prev,
+                {
+                    id: record._id,
+                    status: record.status,
+                    payerId: typeof record.payerId === 'object' ? record.payerId._id : record.payerId,
+                }
+            ];
+        });
     };
 
+    const activeLedgers = ledgers.filter(l => !ignoredLedgerIds.includes(l._id));
+    const isAllOnPageSelected = activeLedgers.length > 0 && activeLedgers.every(l => selectedLedgers.some(item => item.id === l._id));
+
     return (
-        <div className="dashboard-wrapper d-flex h-100 overflow-hidden position-relative">
-            <Sidebar isMobileOpen={isMobileOpen} sidebarRef={sidebarRef} setIsMobileOpen={setIsMobileOpen} />
+        <>
+            <div className="dashboard-wrapper d-flex h-100 overflow-hidden position-relative">
+                <Sidebar isMobileOpen={isMobileOpen} sidebarRef={sidebarRef} setIsMobileOpen={setIsMobileOpen} />
 
-            <main className="main-content d-flex flex-column h-100 flex-grow-1 overflow-auto overflow-x-hidden">
-                <Header
-                    setIsMobileOpen={setIsMobileOpen}
-                    pageName={"All Ledgers"}
-                    breadCrumb={"Finance"}
-                    btnIcon={
-                        <>
-                            <i className="bi bi-file-earmark-spreadsheet"></i>
-                            <span>Export CSV</span>
-                        </>
-                    }
-                    btnFunc={() => toast.info("Exporting ledgers...")}
-                />
-
-                {/* You can reuse the .payers-body class as it simply sets max-width and min-height */}
-                <div className="payers-body w-100 my-0 mx-auto p-3 p-md-4 d-flex flex-column h-100">
-
-                    <LedgersControl
-                        searchQuery={searchQuery}
-                        setSearchQuery={setSearchQuery}
-                        statusFilter={statusFilter}
-                        setStatusFilter={setStatusFilter}
-                        dateFrom={dateFrom}
-                        setDateFrom={setDateFrom}
-                        dateTo={dateTo}
-                        setDateTo={setDateTo}
-                        selectedPayer={selectedPayer}
-                        setSelectedPayer={setSelectedPayer}
-                        payersList={payersList}
-                        setCurrentPage={setCurrentPage}
+                <main className="main-content d-flex flex-column h-100 flex-grow-1 overflow-auto overflow-x-hidden">
+                    <Header
+                        setIsMobileOpen={setIsMobileOpen}
+                        pageName={"All Ledgers"}
+                        breadCrumb={"Finance"}
+                        btnIcon={
+                            <>
+                                <i className="bi bi-plus-circle"></i>
+                                <span>Add Ledger</span>
+                            </>
+                        }
+                        btnFunc={() => setAddLedgerModal(true)}
                     />
 
-                    <div className="ledgers-list position-relative d-flex flex-column gap-2 mb-4 flex-grow-1">
-                        <EmptyCard isActive={!pageLoader && ledgers.length === 0} />
+                    <div className="payers-body w-100 my-0 mx-auto p-3 p-md-4 d-flex flex-column h-100">
 
-                        {ledgers.length > 0 && (
-                            <div className="ledger-table-wrapper rounded-3 border overflow-auto">
-                                <table className="w-100 ledger-table">
-                                    <thead>
-                                        <tr>
-                                            <th className="checkbox-cell">
-                                                <label className="custom-checkbox">
-                                                    <input
-                                                        type="checkbox"
-                                                        onChange={handleSelectAll}
-                                                        checked={ledgers.length > 0 && selectedLedgerIds.length === ledgers.length}
-                                                    />
-                                                    <span className="checkmark"></span>
-                                                </label>
-                                            </th>
-                                            <th>Date</th>
-                                            <th>Category</th>
-                                            <th>Original_Amt</th>
-                                            <th>Spend_Amt</th>
-                                            <th>Due_Amt</th>
-                                            <th>Status</th>
-                                            <th className="text-center">Actions</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        {ledgers.map((record) => (
-                                            <LedgerRows
-                                                key={record._id}
-                                                record={record}
-                                                setDetailsModal={setDetailsModal}
-                                                setEditLedgerModal={setEditLedgerModal}
-                                                setRecordData={setRecordData}
-                                                setDeleteLedgerModal={setDeleteLedgerModal}
-                                                setPayerData={() => { }} // Pass generic function or specific payer info
-                                                payerData={record.payerId} // Adapt based on your data shape
-                                                isSelected={selectedLedgerIds.includes(record._id)}
-                                                onToggleSelect={handleCheckbox}
-                                            />
-                                        ))}
-                                    </tbody>
-                                </table>
+                        <LedgersControl
+                            filters={filters}
+                            payersList={payersList}
+                            setFilters={setFilters}
+                            setCurrentPage={setCurrentPage}
+                        />
+
+                        {/* Stats Bar */}
+                        <div className="d-flex flex-column flex-md-row justify-content-between align-items-md-center gap-3 mb-3 p-3 rounded-3" style={{ background: 'rgba(124, 58, 237, 0.1)', border: '1px solid rgba(124, 58, 237, 0.2)' }}>
+                            <div className="d-flex flex-column">
+                                <span className="text-white fw-medium">Total Due Amount: <span className="text-danger">₹{adjustedTotalDue.toFixed(2)}</span></span>
+                                <span className="icon-text fs-xs">From {totalRecords} total records across all pages</span>
+                            </div>
+
+                            {/* Action Buttons Wrapper */}
+                            <div className="d-flex align-items-center gap-2">
+                                {ignoredLedgerIds.length > 0 && (
+                                    <button
+                                        className="border-0 rounded-1 px-3 py-2 gap-1 fw-medium restore-btn d-flex justify-content-center align-items-center"
+                                        onClick={() => setIgnoredLedgerIds([])}
+                                    >
+                                        <i className="bi bi-arrow-counterclockwise"></i>
+                                        Restore All
+                                    </button>
+                                )}
+
+                                {/* 3-Dot Bulk Action Button */}
+                                {selectedLedgers.length > 0 && (
+                                    <button
+                                        className="btn-bulk btn-status d-flex align-items-center gap-2"
+                                        onClick={() => setBulkActionModal(true)}
+                                    >
+                                        <i className="bi bi-list-task"></i>
+                                    </button>
+                                )}
+                            </div>
+                        </div>
+
+                        <div className="ledgers-list position-relative d-flex flex-column gap-2 mb-4 flex-grow-1">
+                            {
+                                <div className="ledger-table-wrapper rounded-3 border overflow-auto">
+                                    <table className="w-100 ledger-table">
+                                        <thead>
+                                            <tr>
+                                                <th className="text-center" style={{ width: '40px' }}>Ex</th>
+                                                <th className="checkbox-cell px-0" style={{ width: '40px' }}>
+                                                    <label className="custom-checkbox">
+                                                        <input
+                                                            type="checkbox"
+                                                            onChange={handleSelectAll}
+                                                            checked={!loading && isAllOnPageSelected}
+                                                        />
+                                                        <span className="checkmark"></span>
+                                                    </label>
+                                                </th>
+                                                <th>Date</th>
+                                                <th>Payer Details</th>
+                                                <th>Category</th>
+                                                <th style={{ minWidth: '80px' }}>Org_Amt</th>
+                                                <th style={{ minWidth: '80px' }}>Spend_Amt</th>
+                                                <th style={{ minWidth: '80px' }}>Due_Amt</th>
+                                                <th className="px-0">Status</th>
+                                                <th className="text-center">Actions</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            {loading && <LedgerSkeletonRow isActive={loading} />}
+
+                                            {!loading && ledgers.map((record) => (
+                                                <LedgerRows
+                                                    key={record._id}
+                                                    record={record}
+                                                    setRecordData={setRecordData}
+                                                    isSelected={selectedLedgers.some(item => item.id === record._id)}
+                                                    isIgnored={ignoredLedgerIds.includes(record._id)}
+                                                    onToggleSelect={handleCheckbox}
+                                                    onToggleIgnore={handleToggleIgnore}
+                                                    setDetailsModal={setDetailsModal}
+                                                    setDeleteLedgerModal={setDeleteLedgerModal}
+                                                    setEditLedgerModal={setEditLedgerModal}
+                                                />
+                                            ))}
+                                        </tbody>
+                                    </table>
+                                </div>
+                            }
+
+                            <EmptyCard isActive={ledgers.length === 0 && !loading} />
+                        </div>
+
+                        {totalPages > 0 && (
+                            <div className="pagination-wrapper d-flex justify-content-center align-items-center gap-2 mt-auto pt-3 pb-2">
+                                <button
+                                    className="page-btn"
+                                    disabled={currentPage === 1}
+                                    onClick={() => setCurrentPage(prev => prev - 1)}
+                                >
+                                    <i className="bi bi-chevron-left"></i>
+                                </button>
+
+                                {[...Array(totalPages)].map((_, index) => (
+                                    <button
+                                        key={index + 1}
+                                        className={`page-btn ${currentPage === index + 1 ? 'active' : ''}`}
+                                        onClick={() => setCurrentPage(index + 1)}
+                                    >
+                                        {index + 1}
+                                    </button>
+                                ))}
+
+                                <button
+                                    className="page-btn"
+                                    disabled={currentPage === totalPages}
+                                    onClick={() => setCurrentPage(prev => prev + 1)}
+                                >
+                                    <i className="bi bi-chevron-right"></i>
+                                </button>
                             </div>
                         )}
                     </div>
+                </main>
+            </div>
 
-                    {/* Identical Bottom Pagination */}
-                    {ledgers.length > 0 && (
-                        <div className="pagination-wrapper d-flex justify-content-center align-items-center gap-2 mt-auto pt-3 pb-2">
-                            <button
-                                className="page-btn"
-                                disabled={currentPage === 1}
-                                onClick={() => setCurrentPage(prev => prev - 1)}
-                            >
-                                <i className="bi bi-chevron-left"></i>
-                            </button>
+            <DescriptionModal
+                isOpen={detailsModal}
+                onClose={() => setDetailsModal(false)}
+                recordData={recordData}
+            />
 
-                            {[...Array(totalPages)].map((_, index) => (
-                                <button
-                                    key={index + 1}
-                                    className={`page-btn ${currentPage === index + 1 ? 'active' : ''}`}
-                                    onClick={() => setCurrentPage(index + 1)}
-                                >
-                                    {index + 1}
-                                </button>
-                            ))}
+            <BulkActionPayerModal
+                isOpen={bulkActionModal}
+                onClose={() => setBulkActionModal(false)}
+                pageRefresh={setPageRefresh}
+                selectedLedgersList={selectedLedgers} // Pass the array of objects directly
+                setSelectedLedgersList={setSelectedLedgers}
+                payerData={recordData}
+                setResetSelection={setResetSelection}
+            />
 
-                            <button
-                                className="page-btn"
-                                disabled={currentPage === totalPages}
-                                onClick={() => setCurrentPage(prev => prev + 1)}
-                            >
-                                <i className="bi bi-chevron-right"></i>
-                            </button>
-                        </div>
-                    )}
-                </div>
-            </main>
-        </div>
+            <DeleteLedgerModal
+                isOpen={deleteLedgerModal}
+                onClose={() => setDeleteLedgerModal(false)}
+                pageRefresh={setPageRefresh}
+                ledgerData={recordData}
+            />
+
+            <AddLedgerModal
+                isOpen={addLedgerModal}
+                onClose={() => setAddLedgerModal(false)}
+                pageRefresh={setPageRefresh}
+                payersList={payersList}
+            />
+
+            <EditLedgerModal
+                isOpen={editLedgerModal}
+                onClose={() => setEditLedgerModal(false)}
+                pageRefresh={setPageRefresh}
+                recordData={recordData}
+                payersList={payersList}
+            />
+        </>
     );
 }
