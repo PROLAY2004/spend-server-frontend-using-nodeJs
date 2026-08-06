@@ -16,7 +16,7 @@ const router = createBrowserRouter([
     {
         path: '/',
         element: <Home />,
-    }, 
+    },
     {
         path: '/login',
         element: (
@@ -49,7 +49,7 @@ const router = createBrowserRouter([
         path: '/invoices',
         element: (
             <ProtectedRoute>
-                <Invoices/>
+                <Invoices />
             </ProtectedRoute>
         )
     },
@@ -63,7 +63,11 @@ const router = createBrowserRouter([
     },
     {
         path: '*',
-        element: <NotFound />,
+        element: (
+            <ProtectedRoute>
+                <NotFound />
+            </ProtectedRoute>
+        ),
     },
 ]);
 

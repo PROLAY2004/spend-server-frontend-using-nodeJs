@@ -52,10 +52,10 @@ function Sidebar({ isMobileOpen, sidebarRef, setIsMobileOpen }) {
                         <NavLink to="/invoices">Invoices</NavLink>
                     </div>
 
-                    <div className={`side-links ${location.pathname === '/documents' ? 'active' : ''}`}>
+                    {/* <div className={`side-links ${location.pathname === '/documents' ? 'active' : ''}`}>
                         <i className="bi bi-file-earmark-text"></i>
                         <NavLink to="/documents">Documents</NavLink>
-                    </div>
+                    </div> */}
                 </nav>
 
                 {/* Bottom Section - Fixed */}

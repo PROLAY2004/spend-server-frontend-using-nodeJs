@@ -71,12 +71,6 @@ const AddLedgerModal = ({ isOpen, onClose, pageRefresh, payersList = [] }) => {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-
-        if (!formData.payerId) {
-            toast.warning("Please select a payer to continue.", { theme: 'dark' });
-            return;
-        }
-
         setLoading(true);
 
         const isSuccess = await addRecord(navigate, toast, formData);
@@ -170,7 +164,6 @@ const AddLedgerModal = ({ isOpen, onClose, pageRefresh, payersList = [] }) => {
                                     value={formData.date}
                                     onChange={handleChange}
                                     className="custom-input text-uppercase form-control shadow-none ps-5"
-                                    required
                                 />
                             </div>
                         </div>
@@ -185,7 +178,6 @@ const AddLedgerModal = ({ isOpen, onClose, pageRefresh, payersList = [] }) => {
                                     value={formData.category}
                                     name='category'
                                     onChange={handleChange}
-                                    required
                                 >
                                     <option value="" disabled>Select Category</option>
                                     <option value="Bills & Utilities">Bills & Utilities</option>
@@ -210,13 +202,12 @@ const AddLedgerModal = ({ isOpen, onClose, pageRefresh, payersList = [] }) => {
                             <div className="input-wrapper position-relative">
                                 <i className="bi bi-currency-rupee position-absolute top-50 start-0 translate-middle-y ms-3 icon-text"></i>
                                 <input
-                                    type="number"
+                                    type="text"
                                     className="custom-input form-control shadow-none ps-5"
                                     placeholder="0.00"
                                     name='originalAmount'
                                     value={formData.originalAmount}
                                     onChange={handleChange}
-                                    required
                                 />
                             </div>
                         </div>
@@ -227,13 +218,12 @@ const AddLedgerModal = ({ isOpen, onClose, pageRefresh, payersList = [] }) => {
                             <div className="input-wrapper position-relative">
                                 <i className="bi bi-currency-rupee position-absolute top-50 start-0 translate-middle-y ms-3 icon-text"></i>
                                 <input
-                                    type="number"
+                                    type="text"
                                     className="custom-input form-control shadow-none ps-5"
                                     placeholder="0.00"
                                     name='spendAmount'
                                     value={formData.spendAmount}
                                     onChange={handleChange}
-                                    required
                                 />
                             </div>
                         </div>
@@ -244,13 +234,12 @@ const AddLedgerModal = ({ isOpen, onClose, pageRefresh, payersList = [] }) => {
                             <div className="input-wrapper position-relative">
                                 <i className="bi bi-currency-rupee position-absolute top-50 start-0 translate-middle-y ms-3 icon-text"></i>
                                 <input
-                                    type="number"
+                                    type="text"
                                     className="custom-input form-control shadow-none ps-5"
                                     placeholder="0.00"
                                     name='dueAmount'
                                     value={formData.dueAmount}
                                     onChange={handleChange}
-                                    required
                                 />
                             </div>
                         </div>
@@ -265,7 +254,6 @@ const AddLedgerModal = ({ isOpen, onClose, pageRefresh, payersList = [] }) => {
                                     name='status'
                                     value={formData.status}
                                     onChange={handleChange}
-                                    required
                                 >
                                     <option value="" disabled>Select Status</option>
                                     <option value="paid">Paid</option>

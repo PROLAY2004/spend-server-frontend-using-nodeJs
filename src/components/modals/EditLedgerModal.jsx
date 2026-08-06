@@ -109,23 +109,17 @@ const EditLedgerModal = ({ isOpen, onClose, pageRefresh, recordData, payersList 
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-
-        if (!formData.payerId) {
-            toast.warning("Please select a payer to continue.", { theme: 'dark' });
-            return;
-        }
-
         setLoading(true);
 
         const isSuccess = await updateRecord(navigate, toast, recordData._id, formData);
-
-        setLoading(false);
 
         if (isSuccess) {
             onClose();
             resetModalState();
             pageRefresh((prev) => prev + 1);
         }
+
+        setLoading(false);
     };
 
     return (
@@ -244,7 +238,6 @@ const EditLedgerModal = ({ isOpen, onClose, pageRefresh, recordData, payersList 
                                     value={formData.category}
                                     name='category'
                                     onChange={handleChange}
-                                    required
                                 >
                                     <option value="" disabled>Select Category</option>
                                     <option value="Bills & Utilities">Bills & Utilities</option>
@@ -269,13 +262,12 @@ const EditLedgerModal = ({ isOpen, onClose, pageRefresh, recordData, payersList 
                             <div className="input-wrapper position-relative">
                                 <i className="bi bi-currency-rupee position-absolute top-50 start-0 translate-middle-y ms-3 icon-text"></i>
                                 <input
-                                    type="number"
+                                    type="text"
                                     className="custom-input form-control shadow-none ps-5"
                                     placeholder="0.00"
                                     name='originalAmount'
                                     value={formData.originalAmount}
                                     onChange={handleChange}
-                                    required
                                 />
                             </div>
                         </div>
@@ -286,13 +278,12 @@ const EditLedgerModal = ({ isOpen, onClose, pageRefresh, recordData, payersList 
                             <div className="input-wrapper position-relative">
                                 <i className="bi bi-currency-rupee position-absolute top-50 start-0 translate-middle-y ms-3 icon-text"></i>
                                 <input
-                                    type="number"
+                                    type="text"
                                     className="custom-input form-control shadow-none ps-5"
                                     placeholder="0.00"
                                     name='spendAmount'
                                     value={formData.spendAmount}
                                     onChange={handleChange}
-                                    required
                                 />
                             </div>
                         </div>
@@ -303,13 +294,12 @@ const EditLedgerModal = ({ isOpen, onClose, pageRefresh, recordData, payersList 
                             <div className="input-wrapper position-relative">
                                 <i className="bi bi-currency-rupee position-absolute top-50 start-0 translate-middle-y ms-3 icon-text"></i>
                                 <input
-                                    type="number"
+                                    type="text"
                                     className="custom-input form-control shadow-none ps-5"
                                     placeholder="0.00"
                                     name='dueAmount'
                                     value={formData.dueAmount}
                                     onChange={handleChange}
-                                    required
                                 />
                             </div>
                         </div>
@@ -324,7 +314,6 @@ const EditLedgerModal = ({ isOpen, onClose, pageRefresh, recordData, payersList 
                                     name='status'
                                     value={formData.status}
                                     onChange={handleChange}
-                                    required
                                 >
                                     <option value="" disabled>Select Status</option>
                                     <option value="paid">Paid</option>

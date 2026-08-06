@@ -8,6 +8,14 @@ import 'bootstrap-icons/font/bootstrap-icons.css';
 
 import router from './routes/Router.jsx';
 
+window.addEventListener('offline', () => {
+  toast.error('Internet connection lost');
+});
+
+window.addEventListener('online', () => {
+  toast.success('Internet connection restored');
+});
+
 createRoot(document.getElementById('root')).render(
   <>
     <ToastContainer
