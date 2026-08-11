@@ -73,7 +73,8 @@ function CardHeader({
                     <div className="divider d-none d-sm-block"></div>
 
                     <button className="btn-chevron">
-                        <i className={`bi bi-chevron-${expandedPayerId === null ? 'down' : 'up'} toggle-icon`}></i>
+                        {/* CHANGED THIS LINE: Now checks against this specific payer's ID */}
+                        <i className={`bi bi-chevron-${expandedPayerId === payerData._id ? 'up' : 'down'} toggle-icon`}></i>
                     </button>
                 </div>
             </div>
