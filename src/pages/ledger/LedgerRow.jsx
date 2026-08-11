@@ -25,7 +25,7 @@ function LedgerRows({
                 <button
                     className="btn hover-lift p-1"
                     title={isIgnored ? "Restore to Calculation" : "Remove from Calculation Temporarily"}
-                    onClick={() => onToggleIgnore(record._id)}
+                    onClick={() => onToggleIgnore(record)}
                 >
                     {isIgnored ? (
                         <i className="bi bi-arrow-counterclockwise text-primary fs-6"></i>

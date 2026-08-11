@@ -49,6 +49,7 @@ export default function Ledgers() {
     // Updated to hold objects: [{ id: '...', status: '...' }]
     const [selectedLedgers, setSelectedLedgers] = useState([]);
     const [ignoredLedgerIds, setIgnoredLedgerIds] = useState([]);
+    const [ignoredTotalDue, setIgnoredTotalDue] = useState(0);
 
     // Server-Side Totals
     const [globalTotalDue, setGlobalTotalDue] = useState(0);
@@ -65,6 +66,7 @@ export default function Ledgers() {
     useEffect(() => {
         setSelectedLedgers([]);
         setIgnoredLedgerIds([]);
+        setIgnoredTotalDue(0);
     }, [
         filters.searchQuery,
         filters.statusFilter,
@@ -108,27 +110,23 @@ export default function Ledgers() {
         return () => clearTimeout(delayDebounceFn);
     }, [currentPage, filters, pageLoader, pageRefresh]);
 
-    const ignoredDueAmount = ledgers
-        .filter(record => ignoredLedgerIds.includes(record._id))
-        .reduce((acc, curr) => {
-            if (curr.status === 'non-paid') {
-                return acc + (curr.dueAmount || 0);
-            }
-            return acc;
-        }, 0);
+    const adjustedTotalDue = globalTotalDue - ignoredTotalDue;
 
-    const adjustedTotalDue = globalTotalDue - ignoredDueAmount;
+    const handleToggleIgnore = (record) => {
+        const isIgnored = ignoredLedgerIds.includes(record._id);
+        const amountToDeduct = record.status === 'non-paid' ? (record.dueAmount || 0) : 0;
 
-    // --- Object-Based Selection Logic ---
-    const handleToggleIgnore = (recordId) => {
-        setIgnoredLedgerIds(prev =>
-            prev.includes(recordId)
-                ? prev.filter(id => id !== recordId)
-                : [...prev, recordId]
-        );
+        if (isIgnored) {
+            // Restore it: Remove ID and subtract from ignored total
+            setIgnoredLedgerIds(prev => prev.filter(id => id !== record._id));
+            setIgnoredTotalDue(prev => prev - amountToDeduct);
+        } else {
+            // Ignore it: Add ID and add to ignored total
+            setIgnoredLedgerIds(prev => [...prev, record._id]);
+            setIgnoredTotalDue(prev => prev + amountToDeduct);
 
-        if (!ignoredLedgerIds.includes(recordId)) {
-            setSelectedLedgers(prev => prev.filter(item => item.id !== recordId));
+            // Unselect the checkbox if it gets ignored
+            setSelectedLedgers(prev => prev.filter(item => item.id !== record._id));
         }
     };
 
@@ -221,7 +219,10 @@ export default function Ledgers() {
                                 {ignoredLedgerIds.length > 0 && (
                                     <button
                                         className="border-0 rounded-1 px-3 py-2 gap-1 fw-medium restore-btn d-flex justify-content-center align-items-center"
-                                        onClick={() => setIgnoredLedgerIds([])}
+                                        onClick={() => {
+                                            setIgnoredLedgerIds([]);
+                                            setIgnoredTotalDue(0);
+                                        }}
                                     >
                                         <i className="bi bi-arrow-counterclockwise"></i>
                                         Restore All
