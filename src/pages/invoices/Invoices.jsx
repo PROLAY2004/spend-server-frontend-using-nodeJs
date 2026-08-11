@@ -215,9 +215,9 @@ export default function Invoices() {
 
                         </div>
 
-                        {/* Hide pagination if loading or no data exists */}
                         {!loading && invoices.length > 0 && (
                             <div className="pagination-wrapper d-flex justify-content-center align-items-center gap-2 mt-auto pt-3 pb-2">
+                                {/* Previous Button */}
                                 <button
                                     className="page-btn"
                                     disabled={currentPage === 1}
@@ -226,16 +226,39 @@ export default function Invoices() {
                                     <i className="bi bi-chevron-left"></i>
                                 </button>
 
-                                {[...Array(totalPages)].map((_, index) => (
-                                    <button
-                                        key={index + 1}
-                                        className={`page-btn ${currentPage === index + 1 ? 'active' : ''}`}
-                                        onClick={() => setCurrentPage(index + 1)}
-                                    >
-                                        {index + 1}
-                                    </button>
-                                ))}
+                                {/* Dynamic Page Numbers with Ellipsis Effect */}
+                                {(() => {
+                                    const pages = [];
+                                    if (totalPages <= 5) {
+                                        for (let i = 1; i <= totalPages; i++) pages.push(i);
+                                    } else {
+                                        if (currentPage <= 3) {
+                                            pages.push(1, 2, 3, 4, '...', totalPages);
+                                        } else if (currentPage >= totalPages - 2) {
+                                            pages.push(1, '...', totalPages - 3, totalPages - 2, totalPages - 1, totalPages);
+                                        } else {
+                                            pages.push(1, '...', currentPage - 1, currentPage, currentPage + 1, '...', totalPages);
+                                        }
+                                    }
 
+                                    return pages.map((page, index) => (
+                                        page === '...' ? (
+                                            <span key={`dots-${index}`} className="pagination-dots text-muted px-1" style={{ letterSpacing: '2px' }}>
+                                                ...
+                                            </span>
+                                        ) : (
+                                            <button
+                                                    key={page}
+                                                    className={`page-btn ${currentPage === page ? 'active' : ''}`}
+                                                    onClick={() => setCurrentPage(page)}
+                                                >
+                                                    {page}
+                                                </button>
+                                        )
+                                    ));
+                                })()}
+
+                                {/* Next Button */}
                                 <button
                                     className="page-btn"
                                     disabled={currentPage === totalPages}
