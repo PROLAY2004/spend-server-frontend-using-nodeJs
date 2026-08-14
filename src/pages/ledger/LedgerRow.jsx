@@ -25,7 +25,7 @@ function LedgerRows({
                 <button
                     className="btn hover-lift p-1"
                     title={isIgnored ? "Restore to Calculation" : "Remove from Calculation Temporarily"}
-                    onClick={() => onToggleIgnore(record._id)}
+                    onClick={() => onToggleIgnore(record)}
                 >
                     {isIgnored ? (
                         <i className="bi bi-arrow-counterclockwise text-primary fs-6"></i>
@@ -56,8 +56,8 @@ function LedgerRows({
             </td>
 
             <td>{record.category}</td>
-            <td>₹{record.originalAmount.toFixed(2)}</td>
             <td>₹{record.spendAmount.toFixed(2)}</td>
+            <td>₹{record.originalAmount.toFixed(2)}</td>
             <td className={`${isIgnored ? 'text-muted' : 'text-danger'} fw-medium`}>
                 ₹{record.dueAmount.toFixed(2)}
             </td>
