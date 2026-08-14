@@ -198,8 +198,8 @@ function PayerCard({
                                     </th>
                                     <th>Date</th>
                                     <th>Category</th>
-                                    <th>Original_Amt</th>
                                     <th>Spend_Amt</th>
+                                    <th>Original_Amt</th>
                                     <th>Due_Amt</th>
                                     <th>Status</th>
                                     <th className="text-center">Actions</th>

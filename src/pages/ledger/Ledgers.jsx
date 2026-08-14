@@ -261,8 +261,8 @@ export default function Ledgers() {
                                                 <th>Date</th>
                                                 <th>Payer Details</th>
                                                 <th>Category</th>
-                                                <th style={{ minWidth: '80px' }}>Org_Amt</th>
                                                 <th style={{ minWidth: '80px' }}>Spend_Amt</th>
+                                                <th style={{ minWidth: '80px' }}>Org_Amt</th>
                                                 <th style={{ minWidth: '80px' }}>Due_Amt</th>
                                                 <th className="px-0">Status</th>
                                                 <th className="text-center">Actions</th>

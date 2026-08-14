@@ -29,8 +29,8 @@ function LedgerRows({
             </td>
             <td>{formatDate(record.date)}</td>
             <td>{record.category}</td>
-            <td>₹{record.originalAmount.toFixed(2)}</td>
             <td>₹{record.spendAmount.toFixed(2)}</td>
+            <td>₹{record.originalAmount.toFixed(2)}</td>
             <td className='text-danger fw-medium'>
                 ₹{record.dueAmount.toFixed(2)}
             </td>
