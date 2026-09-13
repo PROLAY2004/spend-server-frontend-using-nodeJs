@@ -36,7 +36,7 @@ export default function Payers() {
     const [totalPages, setTotalPages] = useState(1);
     const [searchQuery, setSearchQuery] = useState('');
     const [filterOption, setFilterOption] = useState('All');
-    const [sortOption, setSortOption] = useState('Newest First');
+    const [sortOption, setSortOption] = useState('Due: High to Low');
 
     const [isMobileOpen, setIsMobileOpen] = useState(false);
     const [payerDetails, setPayerDetails] = useState([]);
@@ -180,12 +180,12 @@ export default function Payers() {
                                         </span>
                                     ) : (
                                         <button
-                                                key={page}
-                                                className={`page-btn ${currentPage === page ? 'active' : ''}`}
-                                                onClick={() => setCurrentPage(page)}
-                                            >
-                                                {page}
-                                            </button>
+                                            key={page}
+                                            className={`page-btn ${currentPage === page ? 'active' : ''}`}
+                                            onClick={() => setCurrentPage(page)}
+                                        >
+                                            {page}
+                                        </button>
                                     )
                                 ));
                             })()}
@@ -225,27 +225,27 @@ export default function Payers() {
             payerData={payerData}
         />
 
-        <AddPayerLedgerModal 
+        <AddPayerLedgerModal
             isOpen={addLedgerModal}
             onClose={() => setAddLedgerModal(false)}
             pageRefresh={setInnerCardRefresh}
             payerData={payerData}
         />
 
-        <DescriptionModal 
+        <DescriptionModal
             isOpen={detailsModal}
             onClose={() => setDetailsModal(false)}
             recordData={recordData}
         />
 
-        <EditPayerLedgerModal 
+        <EditPayerLedgerModal
             isOpen={editLedgerModal}
             onClose={() => setEditLedgerModal(false)}
             pageRefresh={setInnerCardRefresh}
             recordData={recordData}
         />
 
-        <DeleteLedgerModal 
+        <DeleteLedgerModal
             isOpen={deleteLedgerModal}
             onClose={() => setDeleteLedgerModal(false)}
             pageRefresh={setInnerCardRefresh}
@@ -254,7 +254,7 @@ export default function Payers() {
 
         <BulkActionPayerModal
             isOpen={bulkActionModal}
-            onClose={()=> setbulkActionModal(false)}
+            onClose={() => setbulkActionModal(false)}
             pageRefresh={setInnerCardRefresh}
             selectedLedgersList={selectedLedgersList}
             setSelectedLedgersList={setSelectedLedgersList}
